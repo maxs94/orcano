@@ -19,7 +19,7 @@ class RandomImageExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('random_background_image', [$this->randomImageService, 'getRandomBackgroundImageAsUrl']),
+            new TwigFunction('random_background_image', $this->randomImageService->getRandomBackgroundImageAsUrl(...)),
         ];
     }
 }

@@ -23,7 +23,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
  */
 class ScriptsServiceTest extends TestCase
 {
-    public const FAKE_PATH = '/../../Fakes/FakeScripts';
+    final public const FAKE_PATH = '/../../Fakes/FakeScripts';
 
     public function testGetAllScriptsFromFilesystem(): void
     {

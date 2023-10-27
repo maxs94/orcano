@@ -26,7 +26,7 @@ class RegisterUserCommand extends Command
         parent::__construct();
     }
 
-    public function configure()
+    public function configure(): void
     {
         $this->addArgument('email', InputArgument::REQUIRED, 'The email of the user.');
         $this->addArgument('password', InputArgument::REQUIRED, 'The password of the user.');

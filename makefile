@@ -52,3 +52,10 @@ ifndef mode
 else ifeq ($(mode), no-dry-run)
 	php ./vendor/bin/php-cs-fixer fix --config=./.php-cs-fixer.php
 endif
+
+rector: ## Starts rector [mode=no-dry-run] default is dry-run
+ifndef mode
+	@php ./vendor/bin/rector process --dry-run
+else ifeq ($(mode), no-dry-run)
+	php ./vendor/bin/rector process
+endif

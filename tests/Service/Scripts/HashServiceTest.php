@@ -16,7 +16,7 @@ use PHPUnit\Framework\TestCase;
  */
 class HashServiceTest extends TestCase
 {
-    public const FAKE_PATH = '/../../Fakes/FakeScripts';
+    final public const FAKE_PATH = '/../../Fakes/FakeScripts';
 
     public function testCreateHashFromFile(): void
     {

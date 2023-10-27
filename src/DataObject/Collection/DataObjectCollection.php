@@ -56,7 +56,7 @@ class DataObjectCollection implements DataObjectCollectionInterface
 
     public function mergeInto(DataObjectCollectionInterface $obj): void
     {
-        $this->objects = array_merge($this->objects, $obj->getElements());
+        $this->objects = [...$this->objects, ...$obj->getElements()];
     }
 
     public function add(DataObjectInterface $dataObject, string $key = null): void
@@ -101,11 +101,11 @@ class DataObjectCollection implements DataObjectCollectionInterface
 
         $firstObject = $this->getFirst();
 
-        if ($firstObject === null) {
+        if (!$firstObject instanceof \App\DataObject\DataObjectInterface) {
             return [];
         }
 
-        $objectClass = get_class($firstObject);
+        $objectClass = $firstObject::class;
 
         if (!method_exists($objectClass, $getter)) {
             throw new \Exception('Object ' . $objectClass . ' does not have method ' . $getter);
@@ -135,7 +135,7 @@ class DataObjectCollection implements DataObjectCollectionInterface
     public function findOneBy(string $property, string $value): ?DataObjectInterface
     {
         $result = $this->findBy($property, $value);
-        if (count($result) > 0) {
+        if ($result !== []) {
             return reset($result);
         }
 
@@ -192,7 +192,7 @@ class DataObjectCollection implements DataObjectCollectionInterface
         foreach ($dataObjects as $dataObject) {
             $getter = 'get' . ucfirst($indexBy);
             if (!method_exists($dataObject, $getter)) {
-                throw new \Exception('Object ' . get_class($dataObject) . ' does not have method ' . $getter);
+                throw new \Exception('Object ' . $dataObject::class . ' does not have method ' . $getter);
             }
 
             $indexed[$dataObject->{$getter}()] = $dataObject;

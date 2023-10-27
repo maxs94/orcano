@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
  */
 class RandomImageServiceTest extends TestCase
 {
-    public const FAKE_PATH = '/../../Fakes';
+    final public const FAKE_PATH = '/../../Fakes';
 
     /** @var MockObject&Packages */
     private Packages $packages;

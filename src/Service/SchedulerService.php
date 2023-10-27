@@ -15,7 +15,6 @@ use App\Entity\ServiceCheck;
 use App\Entity\ServiceCheckWorkerStats;
 use App\Message\CheckNotification;
 use App\Repository\AssetGroupRepository;
-use App\Repository\AssetRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -33,8 +32,7 @@ class SchedulerService
         /* @var AssetGroupRepository $assetGroupRepo */
         $assetGroupRepo = $this->em->getRepository(AssetGroup::class);
 
-        /** @var AssetRepository $assetRepo */
-        $assetRepo = $this->em->getRepository(Asset::class);
+        $this->em->getRepository(Asset::class);
 
         $assetGroups = $assetGroupRepo->findAll();
 

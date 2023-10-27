@@ -16,7 +16,7 @@ use PHPUnit\Framework\TestCase;
  */
 class FileIteratorServiceTest extends TestCase
 {
-    public const FAKE_PATH = '/../Fakes/FakeFiles/';
+    final public const FAKE_PATH = '/../Fakes/FakeFiles/';
 
     public function testFileIteratorService(): void
     {

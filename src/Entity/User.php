@@ -132,12 +132,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, DataObj
 
     public function removeUserSetting(UserSetting $userSetting): static
     {
-        if ($this->userSettings->removeElement($userSetting)) {
-            // set the owning side to null (unless already changed)
-            if ($userSetting->getUser() === $this) {
-                $userSetting->setUser(null);
-            }
+        // set the owning side to null (unless already changed)
+        if (!$this->userSettings->removeElement($userSetting)) {
+            return $this;
         }
+        if ($userSetting->getUser() !== $this) {
+            return $this;
+        }
+        $userSetting->setUser(null);
 
         return $this;
     }

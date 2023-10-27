@@ -10,7 +10,7 @@ use App\DataObject\Scripts\MetaDataObject;
 
 class MetaDataService
 {
-    public const MAX_LINES_TO_READ = 20;
+    final public const MAX_LINES_TO_READ = 20;
     private string $commentStartsWith = '#';
 
     /**
@@ -34,7 +34,7 @@ class MetaDataService
 
             $data = $this->extractMetaDataFromString($line, $validKeys);
 
-            if (!empty($data)) {
+            if ($data !== []) {
                 $metaData = array_merge($metaData, $data);
             }
 
@@ -43,17 +43,15 @@ class MetaDataService
             }
         }
 
-        if (empty($metaData)) {
+        if ($metaData === []) {
             throw new \Exception('No metadata found in file: ' . $filename);
         }
 
-        $metaData = (new MetaDataObject())
+        return (new MetaDataObject())
             ->setFilename($filename)
             ->setName($metaData['name'])
             ->setDescription($metaData['desc'])
         ;
-
-        return $metaData;
     }
 
     /**
@@ -65,7 +63,7 @@ class MetaDataService
     {
         $metaData = [];
         $content = trim($content);
-        if (strpos($content, $this->commentStartsWith) === 0) {
+        if (str_starts_with($content, $this->commentStartsWith)) {
             $content = substr($content, strlen($this->commentStartsWith));
             $content = trim($content);
             $content = explode(':', $content, 2);

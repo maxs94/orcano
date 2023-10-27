@@ -8,7 +8,7 @@ namespace App\Condition;
 
 class Criteria
 {
-    public const VALID_OPERATORS = [
+    final public const VALID_OPERATORS = [
         'equals',
         'contains',
         'between',
@@ -16,10 +16,10 @@ class Criteria
 
     /** @param array<mixed> $values */
     public function __construct(
-        private string $field,
-        private string $operator,
-        private mixed $value = null,
-        private ?array $values = null,
+        private readonly string $field,
+        private readonly string $operator,
+        private readonly mixed $value = null,
+        private readonly ?array $values = null,
     ) {
         $this->validateOperator($operator);
     }

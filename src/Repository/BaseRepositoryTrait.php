@@ -57,7 +57,7 @@ trait BaseRepositoryTrait
             $qb->orderBy('a.' . $field, $direction);
         }
 
-        if (!empty($searches)) {
+        if ($searches !== []) {
             $this->buildSearch($searches, $qb);
         }
 

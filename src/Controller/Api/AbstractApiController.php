@@ -16,9 +16,9 @@ use Symfony\Component\HttpFoundation\Request;
 
 abstract class AbstractApiController extends AbstractController
 {
-    private DataObjectCollectionInterface $errors;
+    private readonly DataObjectCollectionInterface $errors;
 
-    private DataObjectCollectionInterface $warnings;
+    private readonly DataObjectCollectionInterface $warnings;
 
     public function __construct(
         protected readonly EntityManagerInterface $em
@@ -33,8 +33,8 @@ abstract class AbstractApiController extends AbstractController
             'success' => $this->errors->getCount() === 0,
             'errors' => $this->errors->getElements(),
             'warnings' => $this->errors->getElements(),
-            'data' => $collection !== null ? $collection->getElements() : [],
-            'count' => $collection !== null ? $collection->getCount() : 0,
+            'data' => $collection instanceof \App\DataObject\Collection\DataObjectCollectionInterface ? $collection->getElements() : [],
+            'count' => $collection instanceof \App\DataObject\Collection\DataObjectCollectionInterface ? $collection->getCount() : 0,
         ];
 
         return $this->json($res);

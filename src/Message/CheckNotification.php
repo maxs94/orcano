@@ -11,7 +11,7 @@ use Symfony\Component\Uid\Uuid;
 
 class CheckNotification
 {
-    private string $id;
+    private readonly string $id;
 
     public function __construct(
         private readonly string $hostname,

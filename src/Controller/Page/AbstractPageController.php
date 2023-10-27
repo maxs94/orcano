@@ -27,7 +27,7 @@ abstract class AbstractPageController extends AbstractController
 
     private function getContext(Request $request): Context
     {
-        if ($this->context === null) {
+        if (!$this->context instanceof \App\Context\Context) {
             $this->context = Context::createContextFromRequest($request);
         }
 

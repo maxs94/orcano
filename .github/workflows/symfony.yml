@@ -64,5 +64,8 @@ jobs:
     - name: execute stan
       run: make stan
 
+    - name: execute rector
+      run: make rector
+
     - name: execute csfix
       run: make csfix

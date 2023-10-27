@@ -35,7 +35,6 @@ class ApiSearchController extends AbstractApiController
 
     private function getEntityRepository(string $entity): AbstractServiceEntityRepository
     {
-        $entityName = trim(strtolower($entity));
         $entityName = CaseConverter::kebabCaseToCamelCase($entity);
         $entityClassName = sprintf('App\Entity\%s', ucfirst($entityName));
 
