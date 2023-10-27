@@ -21,7 +21,6 @@ dev: ## installs all vendors in dev mode
 	patch -t vendor/symfony/error-handler/ErrorHandler.php custom/patches/dev/SymfonyErrorHandler.patch
 	yarn install --production=false
 	yarn encore dev
-	bin/console d:s:u -f 
 
 watch: ## webpack watcher 
 	yarn encore dev --watch
