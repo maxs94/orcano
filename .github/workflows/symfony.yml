@@ -38,7 +38,10 @@ jobs:
     - name: Install Dependencies
       run: make dev
     - name: execute tests
-      run: make test
+      uses: php-actions/phpunit@v3
+      with:
+        configuration: "phpunit.xml"
+        memory_limit: "256M"
     - name: execute stan
       run: make stan
     - name: execute csfix
