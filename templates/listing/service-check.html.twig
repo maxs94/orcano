@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block page_heading_wrapper %}{% endblock %}
+
+{% block page_content %}
+
+{% set tableColumns = [
+{ name: 'name', label: 'label.name'|trans },
+{ name: 'checkIntervalSeconds', label: 'label.checkIntervalSeconds'|trans },
+{ name: 'retryIntervalSeconds', label: 'label.retryIntervalSeconds'|trans },
+{ name: 'max_retries', label: 'label.maxRetries'|trans },
+{ name: 'notificationsEnabled', label: 'label.notificationsEnabled'|trans },
+{ name: 'enabled', label: 'label.enabled'|trans },
+{ name: 'createdAt', label: 'label.createdAt'|trans, type: 'datetime', format: 'd-m-Y H:i:s' },
+]
+%}
+
+{% include 'partials/data-table.html.twig' with { 'page': page, 'tableColumns': tableColumns } %}
+
+{% endblock %}

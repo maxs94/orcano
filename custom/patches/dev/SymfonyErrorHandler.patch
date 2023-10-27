@@ -1,0 +1,4 @@
+181c181
+<     public function __construct(BufferingLogger $bootstrappingLogger = null, bool $debug = true)
+---
+>     public function __construct(BufferingLogger $bootstrappingLogger = null, bool $debug = false)

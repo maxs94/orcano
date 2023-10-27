@@ -1,0 +1,44 @@
+{% block top_bar %}
+<div class="topbar-container d-flex flex-row">
+    <div class="me-1">
+        <a href="#" class="burger-btn d-block d-xl-none">
+            <i class="bi bi-justify fs-3"></i>
+        </a>
+    </div>
+    <div class="me-auto align-middle">
+        <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+            <ol class="breadcrumb">
+                <li class="me-1"><a href="{{ path('index') }}">Dashboard</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ context.pathInfo }}</li>
+            </ol>
+        </nav>
+    </div>
+    
+    <div class="me-1">
+        <span id="topbar-spinner">
+            {% include 'partials/spinner.html.twig' %}
+        </span>
+    </div>
+
+    <div class="me-1">
+        {% include 'partials/theme-toggler.html.twig' %}
+    </div>
+
+    <div>
+        <span id="topbar-account">
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle me-1" type="button" id="dropdownMenuButtonIcon" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="bi bi-error-circle me-50"></i>{{ context.currentUser.name ?? context.currentUser.email }}
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButtonIcon">
+                    <a class="dropdown-item" href="{{ path('account') }}"><i class="bi bi-person me-50"></i> {{ 'label.user.profile'|trans }}</a>
+                    <a class="dropdown-item" href="{{ path('app_logout') }}"><i class="bi bi-box-arrow-right me-50"></i> {{ 'label.logout'|trans }}</a>
+                </div>
+            </div>
+        </span>
+    </div>
+
+
+</div>
+    
+{% endblock %}

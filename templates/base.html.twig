@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        {% include('partials/metadata.html.twig') %}
+    
+        <link rel="shortcut icon" href="assets/images/favicon.svg" type="image/x-icon">
+
+        <title>{% block title %}Welcome!{% endblock %}</title>
+
+        {% block stylesheets %}
+            {{ encore_entry_link_tags('app') }}
+        {% endblock %}
+
+        {% block scripts_head %}
+            {{ encore_entry_script_tags('app') }}
+        {% endblock %}
+    
+    </head>
+    <body>
+
+        <div id="app">
+            <div id="sidebar" class="active">
+                {% include "partials/sidebar.html.twig" %}
+            </div>
+            <div id="main">
+
+                <div id="topbar">
+                    {% include 'partials/topbar.html.twig' %}
+                </div>
+
+                {% block content_wrapper %}
+                    {% block page_heading_wrapper %}
+                <div class="page-heading"><h3>{% block page_heading %}{% endblock %}</h3></div>
+                    {% endblock %}
+                    <div class="page-content">{% block page_content %}{% endblock %}</div>
+                {% endblock %}
+
+                {% include 'partials/scroll-up.html.twig' %}
+
+                {% include 'partials/footer.html.twig' %}
+        
+                {% if app.environment == 'dev' %}
+                    {% include 'debug.html.twig' %}
+                {% endif %}
+            </div>
+
+
+        </div>
+ 
+        {% block scripts %}{% endblock %}
+
+    </body>
+</html>

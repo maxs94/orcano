@@ -1,0 +1,42 @@
+framework:
+    messenger:
+        failure_transport: failed
+
+        transports:
+            # https://symfony.com/doc/current/messenger.html#transport-configuration
+            async:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                options:
+                    use_notify: true
+                    check_delayed_interval: 60000
+                retry_strategy:
+                    max_retries: 3
+                    multiplier: 2
+
+            failed: 'doctrine://default?queue_name=failed'
+
+            async_checks:
+              dsn: '%env(MESSENGER_TRANSPORT_CHECKS_DSN)%'
+              options:
+                  use_notify: true
+                  check_delayed_interval: 60000
+              retry_strategy:
+                  max_retries: 3
+                  multiplier: 2
+                  
+
+            async_results:
+              dsn: '%env(MESSENGER_TRANSPORT_RESULTS_DSN)%'
+              options:
+                  use_notify: true
+                  check_delayed_interval: 60000
+              retry_strategy:
+                  max_retries: 3
+                  multiplier: 2
+
+        routing:
+            Symfony\Component\Mailer\Messenger\SendEmailMessage: async
+            Symfony\Component\Notifier\Message\ChatMessage: async
+            Symfony\Component\Notifier\Message\SmsMessage: async
+            App\Message\CheckNotification: async_checks
+            App\Message\CheckResultNotification: async_results

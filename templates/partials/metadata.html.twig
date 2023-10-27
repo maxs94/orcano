@@ -1,0 +1,13 @@
+{% block favicons %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {# Regular Old-Skool Favicon: #}
+    <link rel="icon" sizes="32x32" href="{{ asset('images/favicons/favicon-32x32.png') }}" />
+    {# For Chrome for Android: #}
+    <link rel="icon" sizes="192x192" href="{{ asset('images/favicons/android-chrome-192x192.png') }}" />
+    {# For non-Retina iPhone, iPod Touch, and Android 2.1+ devices: #}
+    <link rel="apple-touch-icon-precomposed" href="{{ asset('images/favicons/apple-touch-icon.png') }}" />
+
+    <link rel="manifest" href="{{ asset('images/favicons/manifest.json') }}" />
+{% endblock %}

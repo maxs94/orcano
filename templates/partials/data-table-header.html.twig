@@ -1,0 +1,24 @@
+{% block data_table_header %}
+<thead>
+    <tr class="dataTable-searchColumns">
+    {% for column in columns %}
+        <td><input 
+            type="text" 
+            name="search-column-{{ column.name }}" 
+            placeholder="{{ 'label.colSearch'|trans }}"
+            data-col-name="{{ column.name }}"
+        ></td>
+
+    {% endfor %}
+    </tr>
+    <tr>
+    {% for column in columns %}
+        <th 
+            data-col-name="{{ column.name }}"
+            data-col-type="{{ column.type ?? '' }}"
+            data-col-format="{{ column.format ?? '' }}"
+        >{{ column.label }}</th>
+    {% endfor %}
+    </tr>
+</thead>
+{% endblock %}

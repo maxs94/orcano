@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block page_heading %}{{ 'title.account.profile'|trans }}{% endblock %}
+
+{% block page_content %}
+{% block account_profile %}
+
+<div class="card">
+    <div class="card-body">
+        <form data-form="true" data-form-entity="user" data-form-validator="validateUserForm">
+            <div class="form-group">
+                <label for="name" class="form-label">{{ 'label.name'|trans }}</label>
+                <input type="text" name="name" id="name" class="form-control" placeholder="{{ 'label.name.hint'|trans }}" value="{{ context.currentUser.name }}">
+            </div>
+            <div class="form-group">
+                <label for="email" class="form-label">{{ 'label.email'|trans }}</label>
+                <input type="text" name="email" id="email" class="form-control" placeholder="{{ 'label.email.hint'|trans }}" value="{{ context.currentUser.email }}">
+            </div>
+            <div class="form-group">
+                <label for="password" class="form-label">{{ 'label.password'|trans }}</label>
+                <input type="password" name="password" id="password" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="password-repeat" class="form-label">{{ 'label.password-repeat'|trans }}</label>
+                <input type="password" name="password-repeat" id="password-repeat" class="form-control">
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">{{ 'label.save'|trans }}</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+{% endblock %}
+
+{% block scripts %}
+{{ parent() }}
+<script>
+function validateUserForm(formInputs) {
+
+    if (formInputs['password'].value !== formInputs['password-repeat'].value) {
+        return('{{ 'alert.passwords-not-match'|trans }}');
+    }
+
+    return true;
+}
+</script>
+{% endblock %}

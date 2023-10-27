@@ -1,0 +1,54 @@
+<div id="sidebar" class="active">
+   <div class="sidebar-wrapper active">
+        <div class="sidebar-header">
+            <div class="d-flex justify-content-between">
+                <div class="logo">
+                    <a href="{{ path('index') }}"><img src="{{ asset('images/logo/logo.png') }}" alt="Logo" srcset=""></a>
+                </div>
+                <div class="toggler">
+                    <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar-menu">
+            <ul class="menu">
+                <li class="sidebar-title">{{ 'sidebar.menu'|trans }}</li>
+
+                <li class="sidebar-item {% if context.activeRoute == 'index' %}active{% endif %}">
+                    <a href="{{ path('index') }}" class="sidebar-link">
+                        <i class="bi bi-grid-fill"></i>
+                        <span>{{ 'sidebar.dashboard'|trans }}</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-item {% if context.pathInfo == '/listing/asset' %}active{% endif %}"> <a href="{{ path('listing', {'entity': 'asset'}) }}" class="sidebar-link">
+                        <i class="bi bi-grid-fill"></i>
+                    <span>{{ 'sidebar.assets'|trans }}</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-item {% if context.pathInfo == '/listing/service-check' %}active{% endif %}"> <a href="{{ path('listing', {'entity': 'service-check'} ) }}" class="sidebar-link">
+                        <i class="bi bi-grid-fill"></i>
+                    <span>{{ 'sidebar.services'|trans }}</span>
+                    </a>
+                </li> 
+
+                <li class="sidebar-item {% if context.pathInfo == '/listing/check-script' %}active{% endif %}"> <a href="{{ path('listing', {'entity': 'check-script'} ) }}" class="sidebar-link">
+                        <i class="bi bi-grid-fill"></i>
+                    <span>{{ 'sidebar.scripts'|trans }}</span>
+                    </a>
+                </li> 
+
+                <li class="sidebar-item">
+                    <a href="{{ path('app_logout') }}" class="sidebar-link">
+                        <i class="bi bi-box-arrow-right"></i>
+                        <span>{{ 'label.logout'|trans }}</span>
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+        <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
+    </div>
+</div>

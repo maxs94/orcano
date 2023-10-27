@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block page_heading_wrapper %}{% endblock %}
+
+{% block page_content %}
+
+{% set tableColumns = [
+{ name: 'hostname', label: 'label.hostname'|trans },
+{ name: 'ipv4Address', label: 'label.ipv4Address'|trans },
+{ name: 'ipv6Address', label: 'label.ipv6Address'|trans },
+{ name: 'createdAt', label: 'label.createdAt'|trans, type: 'datetime', format: 'd-m-Y H:i:s' },
+]
+%}
+
+{% include 'partials/data-table.html.twig' with { 'page': page, 'tableColumns': tableColumns } %}
+
+{% endblock %}

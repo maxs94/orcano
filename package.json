@@ -1,0 +1,33 @@
+{
+    "devDependencies": {
+        "@babel/core": "^7.17.0",
+        "@babel/preset-env": "^7.16.0",
+        "@symfony/webpack-encore": "^4.0.0",
+        "bootstrap": "^5.3.0",
+        "core-js": "^3.31.1",
+        "regenerator-runtime": "^0.13.9",
+        "sass": "^1.63.6",
+        "sass-loader": "^13.0.0",
+        "webpack": "^5.74.0",
+        "webpack-cli": "^4.10.0",
+        "webpack-notifier": "^1.15.0"
+    },
+    "license": "UNLICENSED",
+    "private": true,
+    "scripts": {
+        "dev-server": "encore dev-server",
+        "dev": "encore dev",
+        "watch": "encore dev --watch",
+        "build": "encore production --progress"
+    },
+    "dependencies": {
+        "@popperjs/core": "^2.11.7",
+        "axios": "^1.5.1",
+        "bootstrap-icons": "^1.10.5",
+        "deepmerge": "^4.3.1",
+        "perfect-scrollbar": "^1.5.5",
+        "popper": "^1.0.1",
+        "sweetalert2": "^11.7.32",
+        "tiny-slider": "^2.9.4"
+    }
+}
