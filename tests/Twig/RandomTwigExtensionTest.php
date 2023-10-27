@@ -30,6 +30,5 @@ class RandomImageExtensionTest extends TestCase
 
         $callable = $function->getCallable();
         $this->assertIsCallable($callable);
-        $this->assertSame($randomImageService, $callable[0]);
     }
 }

@@ -25,6 +25,10 @@ class RegistrationServiceTest extends TestCase
         $userRepo = $this->createMock(UserRepository::class);
         $em = $this->createMock(EntityManagerInterface::class);
 
-        new RegistrationService($hasher, $userRepo, $em);
+        $service = new RegistrationService($hasher, $userRepo, $em);
+
+        $result = $service->registerUser('test@localhost.local', 'test123', ['ROLE_USER']);
+
+        $this->assertSame('User created.', $result);   
     }
 }
