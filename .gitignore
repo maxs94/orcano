@@ -25,6 +25,7 @@ var/cameras/
 ###> symfony/webpack-encore-bundle ###
 /node_modules/
 /public/build/
+/public/mazer-main/
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
