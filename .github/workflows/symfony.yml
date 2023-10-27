@@ -3,7 +3,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Symfony
+name: Orcano
 
 on:
   push:
@@ -25,8 +25,10 @@ jobs:
       with:
         php-version: '8.2'
     - uses: actions/checkout@v3
+
     - name: Copy .env.test.local
       run: php -r "file_exists('.env.test.local') || copy('.env.test', '.env.test.local');"
+
     - name: Cache Composer packages
       id: composer-cache
       uses: actions/cache@v3
@@ -35,11 +37,30 @@ jobs:
         key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
         restore-keys: |
           ${{ runner.os }}-php-
+
     - name: Install Dependencies
       run: make dev
+
     - name: execute tests
       run: make test
+
+    - name: make code coverage badge 
+      uses: timkrase/phpunit-coverage-badge@v1.2.10
+      with:
+        coverage_badge_path: output/coverage.svg
+        push_badge: false
+
+    - name: git push to image-data branch
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        publish_dir: ./output
+        publish_branch: image-data
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        user_name: 'github-actions[bot]'
+        user_email: 'github-actions[bot]@users.noreply.github.com'
+
     - name: execute stan
       run: make stan
+
     - name: execute csfix
       run: make csfix
