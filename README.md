@@ -1,3 +1,3 @@
-timelapse.markus-steindl.de
+orcano monitoring framework
 
 type `make` to start 
