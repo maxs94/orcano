@@ -8,14 +8,12 @@ namespace App\MessageHandler;
 
 use App\Message\CheckResultNotification;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
 class CheckResultNotificationHandler
 {
     public function __construct(
-        private readonly ParameterBagInterface $parameterBag,
         private readonly LoggerInterface $logger
     ) {
     }

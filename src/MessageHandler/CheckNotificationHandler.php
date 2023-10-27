@@ -68,7 +68,7 @@ class CheckNotificationHandler
 
         // todo: move result parsing to CheckResultNotificationHandler maybe?
         // then we would not have to send the Conditions along...
-        // and the CheckNotificationHandler would only need to do one thing 
+        // and the CheckNotificationHandler would only need to do one thing
         try {
             $result = $this->resultParserService->parse($output, $conditions);
         } catch (\Exception $e) {
