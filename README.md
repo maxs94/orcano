@@ -5,6 +5,6 @@
 ![license](https://img.shields.io/badge/license-MIT-blue)
 ![status](https://img.shields.io/badge/status-IN_DEVELOPMENT-red)
 
-# orcano monitoring framework
+![logo](https://github.com/maxs94/orcano/blob/master/public/images/logo/logo.png)
 
 Work in progress. Stay tuned. 
