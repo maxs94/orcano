@@ -15,8 +15,7 @@ class CheckResultNotificationHandler
 {
     public function __construct(
         private readonly LoggerInterface $logger
-    ) {
-    }
+    ) {}
 
     public function __invoke(CheckResultNotification $message): void
     {

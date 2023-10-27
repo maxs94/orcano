@@ -11,8 +11,7 @@ class RandomImageDataObject implements DataObjectInterface
     public function __construct(
         public readonly string $imageUrl,
         public readonly string $imageCredits
-    ) {
-    }
+    ) {}
 
     public function getImageUrl(): string
     {

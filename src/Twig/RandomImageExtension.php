@@ -14,8 +14,7 @@ class RandomImageExtension extends AbstractExtension
 {
     public function __construct(
         private readonly RandomImageService $randomImageService
-    ) {
-    }
+    ) {}
 
     public function getFunctions(): array
     {

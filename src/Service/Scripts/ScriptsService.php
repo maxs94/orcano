@@ -33,8 +33,7 @@ class ScriptsService
         private readonly HashService $hashService,
         private readonly EntityManagerInterface $em,
         private readonly LoggerInterface $logger
-    ) {
-    }
+    ) {}
 
     public function refreshScripts(): bool
     {

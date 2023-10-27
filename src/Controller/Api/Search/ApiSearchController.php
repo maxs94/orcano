@@ -7,7 +7,7 @@ declare(strict_types=1);
 namespace App\Controller\Api\Search;
 
 use App\Controller\Api\AbstractApiController;
-use App\Repository\OrcanoServiceEntityRepository;
+use App\Repository\AbstractServiceEntityRepository;
 use App\Service\Converter\CaseConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,7 +33,7 @@ class ApiSearchController extends AbstractApiController
         return $this->getJson($results);
     }
 
-    private function getEntityRepository(string $entity): OrcanoServiceEntityRepository
+    private function getEntityRepository(string $entity): AbstractServiceEntityRepository
     {
         $entityName = trim(strtolower($entity));
         $entityName = CaseConverter::kebabCaseToCamelCase($entity);
@@ -43,7 +43,7 @@ class ApiSearchController extends AbstractApiController
             throw new \Exception(sprintf('Repository class not found for entity: %s', $entity));
         }
 
-        /** @var OrcanoServiceentityRepository $repository */
+        /** @var AbstractServiceEntityRepository $repository */
         $repository = $this->em->getRepository($entityClassName);
 
         return $repository;

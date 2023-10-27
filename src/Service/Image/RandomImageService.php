@@ -17,8 +17,7 @@ class RandomImageService
     public function __construct(
         private readonly Packages $packages,
         private readonly ParameterBagInterface $parameterBag
-    ) {
-    }
+    ) {}
 
     public function getRandomBackgroundImageAsUrl(): RandomImageDataObject
     {

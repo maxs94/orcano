@@ -26,12 +26,11 @@ class SchedulerService
         private readonly EntityManagerInterface $em,
         private readonly MessageBusInterface $bus,
         private readonly LoggerInterface $logger
-    ) {
-    }
+    ) {}
 
     public function run(): void
     {
-        /*@var AssetGroupRepository $assetGroupRepo  */
+        /* @var AssetGroupRepository $assetGroupRepo */
         $assetGroupRepo = $this->em->getRepository(AssetGroup::class);
 
         /** @var AssetRepository $assetRepo */

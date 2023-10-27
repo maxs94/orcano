@@ -15,8 +15,10 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method CheckScript[] findAll()
  * @method CheckScript[] findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class CheckScriptRepository extends OrcanoServiceEntityRepository
+class CheckScriptRepository extends AbstractServiceEntityRepository
 {
+    use BaseRepositoryTrait;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, CheckScript::class);

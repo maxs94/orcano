@@ -12,8 +12,7 @@ class ApiInfoMessageDataObject implements DataObjectInterface
 {
     public function __construct(
         private readonly string $message
-    ) {
-    }
+    ) {}
 
     public function getMessage(): string
     {

@@ -26,8 +26,7 @@ class CheckNotificationHandler
         private readonly ResultParserService $resultParserService,
         private readonly MessageBusInterface $bus,
         private readonly LoggerInterface $logger
-    ) {
-    }
+    ) {}
 
     public function __invoke(CheckNotification $message): void
     {

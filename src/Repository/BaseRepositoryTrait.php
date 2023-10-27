@@ -10,15 +10,14 @@ use App\Condition\Criteria;
 use App\DataObject\Collection\DataObjectCollection;
 use App\DataObject\Collection\DataObjectCollectionInterface;
 use App\DataObject\Page\ListingPageDataObject;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
-class OrcanoServiceEntityRepository extends ServiceEntityRepository
+trait BaseRepositoryTrait
 {
     public function findAllAsCollection(string $indexBy = null): DataObjectCollectionInterface
     {
-        $result = parent::findAll();
+        $result = $this->findAll();
 
         return new DataObjectCollection($result, $indexBy);
     }
@@ -34,7 +33,7 @@ class OrcanoServiceEntityRepository extends ServiceEntityRepository
      */
     public function findByAsCollection(array $criteria, array $orderBy = null, string $indexBy = null, $limit = null, $offset = null): DataObjectCollectionInterface
     {
-        $result = parent::findBy($criteria, $orderBy, $limit, $offset);
+        $result = $this->findBy($criteria, $orderBy, $limit, $offset);
 
         return new DataObjectCollection($result, $indexBy);
     }
