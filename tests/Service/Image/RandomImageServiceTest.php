@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 /**
  * @internal
  *
- * @coversNothing
+ * @covers \App\Service\Image\RandomImageService
  */
 class RandomImageServiceTest extends TestCase
 {

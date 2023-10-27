@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * @internal
  *
- * @coversNothing
+ * @covers \App\Condition\MinMaxCondition
  */
 class MinMaxConditionTest extends TestCase
 {

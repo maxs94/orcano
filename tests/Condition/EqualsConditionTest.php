@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * @internal
  *
- * @coversNothing
+ * @covers \App\Condition\EqualsCondition
  */
 class EqualsConditionTest extends TestCase
 {

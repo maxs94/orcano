@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * @internal
  *
- * @coversNothing
+ * @covers \App\DataObject\Collection\DataObjectCollection
  */
 class DataObjectCollectionTest extends TestCase
 {
