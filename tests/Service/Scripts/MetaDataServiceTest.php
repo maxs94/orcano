@@ -17,7 +17,7 @@ use PHPUnit\Framework\TestCase;
  */
 class MetaDataServiceTest extends TestCase
 {
-    public const FAKE_PATH = '/../../Fakes/FakeScripts';
+    final public const FAKE_PATH = '/../../Fakes/FakeScripts';
 
     private MetaDataService $metaDataService;
 

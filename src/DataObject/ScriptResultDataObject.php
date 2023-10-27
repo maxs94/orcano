@@ -8,10 +8,10 @@ namespace App\DataObject;
 
 class ScriptResultDataObject implements DataObjectInterface
 {
-    public const RESULT_OK = 'OK';
-    public const RESULT_WARNING = 'WARNING';
-    public const RESULT_ERROR = 'ERROR';
-    public const RESULT_UNKNOWN = 'UNKNOWN';
+    final public const RESULT_OK = 'OK';
+    final public const RESULT_WARNING = 'WARNING';
+    final public const RESULT_ERROR = 'ERROR';
+    final public const RESULT_UNKNOWN = 'UNKNOWN';
 
     private string $result;
 

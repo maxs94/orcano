@@ -28,7 +28,7 @@ class RegisterAssetGroupCommand extends Command
         parent::__construct();
     }
 
-    public function configure()
+    public function configure(): void
     {
         $this
             ->addOption('name', null, InputOption::VALUE_REQUIRED, 'The name of the asset group')
@@ -52,8 +52,8 @@ class RegisterAssetGroupCommand extends Command
 
         $hostnameOption = $input->getOption('hostname');
         $hostnames = [];
-        if ($hostnameOption !== null && stristr($hostnameOption, ',')) {
-            $hostnames = explode(',', $hostnameOption);
+        if ($hostnameOption !== null && stristr((string) $hostnameOption, ',')) {
+            $hostnames = explode(',', (string) $hostnameOption);
         } elseif ($hostnameOption !== null) {
             $hostnames[] = $hostnameOption;
         }
@@ -69,15 +69,13 @@ class RegisterAssetGroupCommand extends Command
 
         $assetGroup->setName($name);
 
-        if (!empty($hostnames)) {
-            foreach ($hostnames as $hostname) {
-                $asset = $assetRepo->findOneBy(['hostname' => $hostname]);
-                if ($asset === null) {
-                    $io->warning(sprintf('Asset with hostname %s not found.', $hostname));
-                }
-                $io->text(sprintf('Adding asset %s to asset group %s ...', $hostname, $name));
-                $assetGroup->addAsset($asset);
+        foreach ($hostnames as $hostname) {
+            $asset = $assetRepo->findOneBy(['hostname' => $hostname]);
+            if ($asset === null) {
+                $io->warning(sprintf('Asset with hostname %s not found.', $hostname));
             }
+            $io->text(sprintf('Adding asset %s to asset group %s ...', $hostname, $name));
+            $assetGroup->addAsset($asset);
         }
 
         $this->em->persist($assetGroup);

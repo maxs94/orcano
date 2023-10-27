@@ -16,12 +16,12 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class ScriptsService
 {
-    public const VALID_SCRIPT_EXTENSIONS = [
+    final public const VALID_SCRIPT_EXTENSIONS = [
         'sh',
         'py',
     ];
 
-    public const VALID_METADATA_KEYS = [
+    final public const VALID_METADATA_KEYS = [
         'name',
         'desc',
     ];

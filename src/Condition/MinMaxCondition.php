@@ -8,35 +8,16 @@ namespace App\Condition;
 
 class MinMaxCondition extends AbstractCondition
 {
-    public const VALID_OPERATORS = [
+    final public const VALID_OPERATORS = [
         'and',
         'or',
     ];
 
-    public const DEFAULT_OPERATOR = 'and';
-
-    /** @var int|float */
-    private mixed $warnMax = null;
-
-    /** @var int|float */
-    private mixed $okMax = null;
-
-    /** @var int|float */
-    private mixed $warnMin = null;
-
-    /** @var int|float */
-    private mixed $okMin = null;
+    final public const DEFAULT_OPERATOR = 'and';
 
     private string $operator = self::DEFAULT_OPERATOR;
 
-    public function __construct(mixed $okMin, mixed $okMax, mixed $warnMin = null, mixed $warnMax = null)
-    {
-        $this->warnMin = $warnMin;
-        $this->warnMax = $warnMax;
-
-        $this->okMin = $okMin;
-        $this->okMax = $okMax;
-    }
+    public function __construct(private mixed $okMin, private mixed $okMax, private mixed $warnMin = null, private mixed $warnMax = null) {}
 
     /**
      * @return array<string, int|string|null>
@@ -98,10 +79,10 @@ class MinMaxCondition extends AbstractCondition
             return false;
         }
 
-        if ($max !== null && $value > $max) {
-            return false;
+        if ($max === null) {
+            return true;
         }
 
-        return true;
+        return $value <= $max;
     }
 }

@@ -8,7 +8,7 @@ namespace App\DataObject\Page;
 
 class ListingPageDataObject extends AbstractPageDataObject
 {
-    public const DEFAULT_LIMIT = 25;
+    final public const DEFAULT_LIMIT = 25;
 
     private string $entityName;
 

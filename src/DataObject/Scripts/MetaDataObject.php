@@ -14,7 +14,7 @@ class MetaDataObject implements DataObjectInterface
 
     private string $name;
 
-    private ?string $description;
+    private ?string $description = null;
 
     public function getFilename(): string
     {

@@ -9,7 +9,6 @@ namespace App\Context;
 use App\DataObject\DataObjectInterface;
 use App\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class Context implements DataObjectInterface
 {
@@ -26,9 +25,7 @@ class Context implements DataObjectInterface
         $context->pathInfo = $request->getPathInfo();
 
         $session = $request->getSession();
-        if ($session instanceof SessionInterface) {
-            $context->currentUser = $session->get('currentUser');
-        }
+        $context->currentUser = $session->get('currentUser');
 
         return $context;
     }

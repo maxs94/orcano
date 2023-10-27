@@ -16,9 +16,9 @@ use Doctrine\ORM\Mapping as ORM;
 class ServiceCheck implements DataObjectInterface
 {
     use Trait\IdTrait;
-    public const DEFAULT_CHECK_INTERVAL = 60;
+    final public const DEFAULT_CHECK_INTERVAL = 60;
 
-    public const DEFAULT_MAX_RETRIES = 3;
+    final public const DEFAULT_MAX_RETRIES = 3;
 
     #[ORM\Column(length: 255)]
     private ?string $name = null;

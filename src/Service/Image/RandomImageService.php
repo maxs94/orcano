@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class RandomImageService
 {
-    public const BACKGROUND_IMAGES_PATH = '/images/backgrounds';
+    final public const BACKGROUND_IMAGES_PATH = '/images/backgrounds';
 
     public function __construct(
         private readonly Packages $packages,
@@ -24,7 +24,7 @@ class RandomImageService
         $dir = $this->parameterBag->get('kernel.project_dir') . '/public/' . self::BACKGROUND_IMAGES_PATH;
         $images = glob($dir . '/*.{jpg,jpeg,png,gif}', GLOB_BRACE);
 
-        if (empty($images)) {
+        if ($images === [] || $images === false) {
             throw new \RuntimeException('No images found in ' . $dir);
         }
 

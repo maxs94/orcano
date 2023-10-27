@@ -14,7 +14,7 @@ final class HttpExceptionListener
     public function onKernelException(ExceptionEvent $event): void
     {
         $exception = $event->getThrowable();
-        if (strpos($event->getRequest()->getRequestUri(), '/api/') === false) {
+        if (!str_contains($event->getRequest()->getRequestUri(), '/api/')) {
             return;
         }
 

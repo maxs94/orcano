@@ -30,7 +30,7 @@ class RegisterAssetCommand extends Command
         parent::__construct();
     }
 
-    public function configure()
+    public function configure(): void
     {
         $this
             ->addOption('hostname', null, InputOption::VALUE_REQUIRED, 'The hostname of the asset')
@@ -71,7 +71,7 @@ class RegisterAssetCommand extends Command
 
         $groups = $input->getOption('groups');
         if ($groups !== null) {
-            $assetGroups = $this->assetGroupService->getAssetGroupsByNames(explode(',', $groups));
+            $assetGroups = $this->assetGroupService->getAssetGroupsByNames(explode(',', (string) $groups));
 
             /** @var AssetGroup $assetGroup */
             foreach ($assetGroups as $assetGroup) {

@@ -39,6 +39,11 @@ $config
         'yoda_style' => false,
         'return_assignment' => false,
         'declare_strict_types' => true,
+        'no_unused_imports' => true,
+        'fully_qualified_strict_types' => false,
+        'long_to_shorthand_operator' => true,
+        'php_unit_test_class_requires_covers' => true,
+        'php_unit_fqcn_annotation' => true,
     ]
 )
 ->setRiskyAllowed(true)

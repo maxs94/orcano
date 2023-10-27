@@ -29,7 +29,7 @@ class RegisterServiceCheckCommand extends Command
         parent::__construct();
     }
 
-    public function configure()
+    public function configure(): void
     {
         $this
             ->addOption('name', null, InputOption::VALUE_REQUIRED, 'The name of the service check')
@@ -76,17 +76,17 @@ class RegisterServiceCheckCommand extends Command
 
         $assetGroupOption = $input->getOption('asset-groups');
         $assetGroups = $this->getAssetGroupsFromOption($assetGroupOption, $availableAssetGroups);
-        if (empty($assetGroups)) {
+        if ($assetGroups === []) {
             $io->error('The asset groups cannot be empty or the given groups have not been found.');
             $io->listing(array_keys($availableAssetGroups));
 
             return Command::FAILURE;
         }
 
-        $checkInterval = intval($input->getOption('interval') ?? ServiceCheck::DEFAULT_CHECK_INTERVAL);
-        $retryInterval = intval($input->getOption('retry-interval') ?? ServiceCheck::DEFAULT_CHECK_INTERVAL);
-        $notificatiosEnabled = boolval($input->getOption('notifications-enabled'));
-        $enabled = boolval($input->getOption('enabled'));
+        $checkInterval = (int) ($input->getOption('interval') ?? ServiceCheck::DEFAULT_CHECK_INTERVAL);
+        $retryInterval = (int) ($input->getOption('retry-interval') ?? ServiceCheck::DEFAULT_CHECK_INTERVAL);
+        $notificatiosEnabled = (bool) $input->getOption('notifications-enabled');
+        $enabled = (bool) $input->getOption('enabled');
 
         $serviceCheck->setName($name);
         $serviceCheck->setCheckScript($checkScript);
