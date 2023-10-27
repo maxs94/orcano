@@ -17,8 +17,7 @@ class ListingController extends AbstractPageController
 {
     public function __construct(
         private readonly ListingPageLoader $listingPageLoader
-    ) {
-    }
+    ) {}
 
     #[Route('/listing/{entity}', name: 'listing')]
     public function listingAction(Request $request, string $entity, Context $context): Response

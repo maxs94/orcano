@@ -26,8 +26,7 @@ class CheckNotificationHandler
         private readonly ResultParserService $resultParserService,
         private readonly MessageBusInterface $bus,
         private readonly LoggerInterface $logger
-    ) {
-    }
+    ) {}
 
     public function __invoke(CheckNotification $message): void
     {
@@ -68,7 +67,7 @@ class CheckNotificationHandler
 
         // todo: move result parsing to CheckResultNotificationHandler maybe?
         // then we would not have to send the Conditions along...
-        // and the CheckNotificationHandler would only need to do one thing 
+        // and the CheckNotificationHandler would only need to do one thing
         try {
             $result = $this->resultParserService->parse($output, $conditions);
         } catch (\Exception $e) {

@@ -15,8 +15,10 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Asset[] findAll()
  * @method Asset[] findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class AssetRepository extends OrcanoServiceEntityRepository
+class AssetRepository extends AbstractServiceEntityRepository
 {
+    use BaseRepositoryTrait;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Asset::class);

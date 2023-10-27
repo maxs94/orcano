@@ -15,8 +15,7 @@ class AssetGroupService
 {
     public function __construct(
         private readonly EntityManagerInterface $em
-    ) {
-    }
+    ) {}
 
     /** @param array<string> $assetGroupNames */
     public function getAssetGroupsByNames(array $assetGroupNames): DataObjectCollectionInterface

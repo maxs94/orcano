@@ -15,8 +15,10 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method ServiceCheck[] findAll()
  * @method ServiceCheck[] findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ServiceCheckRepository extends OrcanoServiceEntityRepository
+class ServiceCheckRepository extends AbstractServiceEntityRepository
 {
+    use BaseRepositoryTrait;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, ServiceCheck::class);

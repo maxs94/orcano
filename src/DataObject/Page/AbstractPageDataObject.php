@@ -8,6 +8,4 @@ namespace App\DataObject\Page;
 
 use App\DataObject\DataObjectInterface;
 
-abstract class AbstractPageDataObject implements DataObjectInterface
-{
-}
+abstract class AbstractPageDataObject implements DataObjectInterface {}

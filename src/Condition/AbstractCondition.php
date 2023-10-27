@@ -6,6 +6,4 @@ declare(strict_types=1);
 
 namespace App\Condition;
 
-abstract class AbstractCondition implements ConditionInterface
-{
-}
+abstract class AbstractCondition implements ConditionInterface {}

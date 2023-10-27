@@ -17,8 +17,7 @@ class RegistrationService
         private readonly UserPasswordHasherInterface $passwordHasher,
         private readonly UserRepository $userRepository,
         private readonly EntityManagerInterface $em
-    ) {
-    }
+    ) {}
 
     /**
      * @param array<string> $roles

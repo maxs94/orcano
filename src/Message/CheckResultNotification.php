@@ -13,8 +13,7 @@ class CheckResultNotification
     public function __construct(
         private readonly ScriptResultDataObject $result,
         private readonly CheckNotification $originalNotification
-    ) {
-    }
+    ) {}
 
     public function getResult(): ScriptResultDataObject
     {

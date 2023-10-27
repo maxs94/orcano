@@ -20,8 +20,10 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
  * @method User[] findAll()
  * @method User[] findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class UserRepository extends OrcanoServiceEntityRepository implements PasswordUpgraderInterface
+class UserRepository extends AbstractServiceEntityRepository implements PasswordUpgraderInterface
 {
+    use BaseRepositoryTrait;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, User::class);
