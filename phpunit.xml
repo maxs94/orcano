@@ -19,15 +19,15 @@
 
     <testsuites>
         <testsuite name="Orcano Test Suite">
-            <directory>tests</directory>
+            <directory>./tests/</directory>
         </testsuite>
     </testsuites>
 
-    <coverage processUncoveredFiles="true">
-        <include>
-            <directory suffix=".php">src</directory>
-        </include>
-    </coverage>
+    <filter>
+        <whitelist>
+            <directory suffix="php">src</directory>
+        </whitelist>
+    </filter>
 
     <listeners>
         <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener" />

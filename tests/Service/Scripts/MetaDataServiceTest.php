@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * @internal
  *
- * @coversNothing
+ * @covers \App\Service\Scripts\MetaDataService
  */
 class MetaDataServiceTest extends TestCase
 {

@@ -15,8 +15,10 @@ permissions:
   contents: read
 
 jobs:
-  symfony-tests:
+  orcano-tests:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
     #  To automatically get bug fixes and new Php versions for shivammathur/setup-php,
     # change this to (see https://github.com/shivammathur/setup-php#bookmark-versioning):
@@ -42,7 +44,7 @@ jobs:
       run: make dev
 
     - name: execute tests
-      run: make test
+      run: make test-coverage
 
     - name: make code coverage badge 
       uses: timkrase/phpunit-coverage-badge@v1.2.1

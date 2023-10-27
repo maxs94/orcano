@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 /**
  * @internal
  *
- * @coversNothing
+ * @covers \App\Service\Scripts\ScriptsService
  */
 class ScriptsServiceTest extends TestCase
 {

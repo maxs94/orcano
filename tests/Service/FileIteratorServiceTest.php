@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * @internal
  *
- * @coversNothing
+ * @covers \App\Service\FileIteratorService
  */
 class FileIteratorServiceTest extends TestCase
 {
