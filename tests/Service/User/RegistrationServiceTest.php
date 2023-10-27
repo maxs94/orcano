@@ -29,6 +29,6 @@ class RegistrationServiceTest extends TestCase
 
         $result = $service->registerUser('test@localhost.local', 'test123', ['ROLE_USER']);
 
-        $this->assertSame('User created.', $result);   
+        $this->assertSame('User created.', $result);
     }
 }

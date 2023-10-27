@@ -46,6 +46,17 @@ test-coverage: ## runs all tests with coverage
 stan: ## starts the PHPStan analyzer
 	php vendor/bin/phpstan --memory-limit=-1 analyse 
 
+checks: ## starts all checks
+	@make test; TEST_EXIT_CODE=$$?; \
+	make stan; STAN_EXIT_CODE=$$?; \
+	make csfix; CSFIX_EXIT_CODE=$$?; \
+	make rector; RECTOR_EXIT_CODE=$$?; \
+	echo "----------------------------------------"; \
+	echo "Test exit code: $$TEST_EXIT_CODE"; \
+	echo "Stan exit code: $$STAN_EXIT_CODE"; \
+	echo "CS Fixer exit code: $$CSFIX_EXIT_CODE"; \
+	echo "Rector exit code: $$RECTOR_EXIT_CODE" 
+
 csfix: ## Starts the PHP CS Fixer [mode=no-dry-run] default is dry-run
 ifndef mode
 	@php ./vendor/bin/php-cs-fixer fix --config=./.php-cs-fixer.php --dry-run
