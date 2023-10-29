@@ -28,8 +28,8 @@ jobs:
         php-version: '8.2'
     - uses: actions/checkout@v3
 
-    - name: Copy .env.test.local
-      run: php -r "file_exists('.env.test.local') || copy('.env.test', '.env.test.local');"
+    - name: Copy .env.test
+      run: php -r "if (file_exists('.env.test')) copy('.env.test', '.env.local');"
 
     - name: Cache Composer packages
       id: composer-cache
