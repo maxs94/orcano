@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * @internal
  *
- * @coversNothing
+ * @covers \App\Service\Page\ListingPageLoader
  */
 class ListingPageLoaderTest extends TestCase
 {

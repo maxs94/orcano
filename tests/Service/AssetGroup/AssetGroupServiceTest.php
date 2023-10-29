@@ -17,7 +17,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * @internal
  *
- * @coversNothing
+ * @covers \App\Service\AssetGroup\AssetGroupService
  */
 class AssetGroupServiceTest extends TestCase
 {
