@@ -40,22 +40,8 @@ class Context implements DataObjectInterface
         return $this->activeRoute;
     }
 
-    public function setActiveRoute(string $activeRoute): self
-    {
-        $this->activeRoute = $activeRoute;
-
-        return $this;
-    }
-
     public function getPathInfo(): string
     {
         return $this->pathInfo;
-    }
-
-    public function setPathInfo(string $pathInfo): self
-    {
-        $this->pathInfo = $pathInfo;
-
-        return $this;
     }
 }

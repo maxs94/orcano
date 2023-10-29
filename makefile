@@ -43,6 +43,9 @@ test: ## runs all tests
 test-coverage: ## runs all tests with coverage 
 	phpdbg -qrr vendor/bin/phpunit --configuration=phpunit.xml --coverage-clover=clover.xml --coverage-text
 
+test-coverage-html: ## runs all tests with coverage and generates html report in http://url/coverage
+	phpdbg -qrr vendor/bin/phpunit --configuration=phpunit.xml --coverage-html=public/coverage
+
 stan: ## starts the PHPStan analyzer
 	php vendor/bin/phpstan --memory-limit=-1 analyse 
 

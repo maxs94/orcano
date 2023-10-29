@@ -6,7 +6,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Service\Scripts;
 
+use App\DataObject\Collection\DataObjectCollection;
 use App\Entity\CheckScript;
+use App\Repository\CheckScriptRepository;
 use App\Service\Scripts\HashService;
 use App\Service\Scripts\MetaDataService;
 use App\Service\Scripts\ScriptsService;
@@ -20,7 +22,12 @@ class ScriptsServiceTest extends TestCase
 {
     public const FAKE_PATH = '/../../Fakes/FakeScripts';
 
-    public function testGetAllScriptsFromFilesystem(): void
+    private ScriptsService $service;
+
+    /** @var MockObject&EntityManagerInterface $em */
+    private EntityManagerInterface $em;
+
+    public function setUp(): void 
     {
         /** @var MockObject&ParameterBagInterface */
         $parameterBag = $this->createMock(ParameterBagInterface::class);
@@ -31,8 +38,7 @@ class ScriptsServiceTest extends TestCase
         /** @var MockObject&HashService $hashService */
         $hashService = $this->createMock(HashService::class);
 
-        /** @var MockObject&EntityManagerInterface $em */
-        $em = $this->createMock(EntityManagerInterface::class);
+        $this->em = $this->createMock(EntityManagerInterface::class);
 
         /** @var MockObject&LoggerInterface $logger */
         $logger = $this->createMock(LoggerInterface::class);
@@ -42,16 +48,55 @@ class ScriptsServiceTest extends TestCase
         ->willReturn(__DIR__)
         ;
 
-        $service = new ScriptsService(
+        $this->service = new ScriptsService(
             self::FAKE_PATH,
             $parameterBag,
             $metaDataService,
             $hashService,
-            $em,
+            $this->em,
             $logger
         );
 
-        $scripts = $service->getAllScriptsFromFilesystem();
+    }
+
+    public function testRefreshScripts(): void 
+    {
+        /** @var MockObject&CheckScriptRepository */
+        $checkScriptRepository = $this->createMock(CheckScriptRepository::class);
+        $this->em->method('getRepository')->willReturn($checkScriptRepository);
+
+        $checkScriptRepository->method('findOneBy')->willReturn(null);
+
+        $result = $this->service->refreshScripts();
+
+        $this->assertTrue($result);
+    }
+
+    public function testGetAllScripts(): void 
+    {
+        /** @var MockObject&CheckScriptRepository */
+        $checkScriptRepository = $this->createMock(CheckScriptRepository::class);
+        $this->em->method('getRepository')->willReturn($checkScriptRepository);
+
+        $checkScriptRepository->method('findAllAsCollection')->willReturn(new DataObjectCollection());
+
+        $result = $this->service->getAllScripts();
+
+        $this->assertInstanceOf(DataObjectCollection::class, $result);
+        $this->assertCount(1, $result);
+
+        /** @var CheckScript $script */
+        $script = $result->getFirst();
+        $this->assertInstanceOf(CheckScript::class, $script);
+
+        $this->assertSame('script1.sh', basename($script->getFilename()));
+        $this->assertTrue($script->getIsChangedInFilesystem());
+    }
+
+
+    public function testGetAllScriptsFromFilesystem(): void
+    {
+        $scripts = $this->service->getAllScriptsFromFilesystem();
 
         $this->assertCount(1, $scripts);
 

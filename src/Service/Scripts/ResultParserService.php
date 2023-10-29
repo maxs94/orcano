@@ -22,7 +22,7 @@ class ResultParserService
 
         $jsonString = substr($result, strpos($result, self::ODATA_STRING) + strlen(self::ODATA_STRING));
 
-        $array = json_decode($jsonString, true, 512, JSON_THROW_ON_ERROR);
+        $array = json_decode($jsonString, true, 512);
 
         if ($array === null) {
             throw new \Exception(sprintf('Could not decode json string: %s', $jsonString));
@@ -57,7 +57,7 @@ class ResultParserService
 
                 $result->setNote(sprintf('"%s" is %s', $key, $value));
             } else {
-                throw new \Exception(sprintf('Key "%s" not found in script "%s" return result: %s', $key, $scriptResult['name'], json_encode($scriptResult, JSON_THROW_ON_ERROR)));
+                throw new \Exception(sprintf('Key "%s" not found in the script return result: %s', $key, json_encode($scriptResult, JSON_THROW_ON_ERROR)));
             }
 
             // if a check fails, we can stop here
