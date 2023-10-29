@@ -1,5 +1,8 @@
-<?PHP 
+<?php
 declare(strict_types=1);
+/**
+ * © 2023-2023 by the orcano team (https://github.com/maxs94/orcano)
+ */
 
 namespace App\Tests\Service\AssetGroup;
 
@@ -11,6 +14,11 @@ use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class AssetGroupServiceTest extends TestCase
 {
     private AssetGroupService $service;
@@ -18,10 +26,10 @@ class AssetGroupServiceTest extends TestCase
     /** @var MockObject&AssetGroupRepository */
     private AssetGroupRepository $repository;
 
-    public function setUp(): void {
-    
+    public function setUp(): void
+    {
         $this->repository = $this->createMock(AssetGroupRepository::class);
-        
+
         /** @var MockObject&EntityManagerInterface $em */
         $em = $this->createMock(EntityManagerInterface::class);
         $em->method('getRepository')->willReturn($this->repository);

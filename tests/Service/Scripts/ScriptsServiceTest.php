@@ -18,16 +18,21 @@ use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class ScriptsServiceTest extends TestCase
 {
     public const FAKE_PATH = '/../../Fakes/FakeScripts';
 
     private ScriptsService $service;
 
-    /** @var MockObject&EntityManagerInterface $em */
+    /** @var MockObject&EntityManagerInterface */
     private EntityManagerInterface $em;
 
-    public function setUp(): void 
+    public function setUp(): void
     {
         /** @var MockObject&ParameterBagInterface */
         $parameterBag = $this->createMock(ParameterBagInterface::class);
@@ -44,8 +49,8 @@ class ScriptsServiceTest extends TestCase
         $logger = $this->createMock(LoggerInterface::class);
 
         $parameterBag->method('get')
-        ->with('kernel.project_dir')
-        ->willReturn(__DIR__)
+            ->with('kernel.project_dir')
+            ->willReturn(__DIR__)
         ;
 
         $this->service = new ScriptsService(
@@ -56,10 +61,9 @@ class ScriptsServiceTest extends TestCase
             $this->em,
             $logger
         );
-
     }
 
-    public function testRefreshScripts(): void 
+    public function testRefreshScripts(): void
     {
         /** @var MockObject&CheckScriptRepository */
         $checkScriptRepository = $this->createMock(CheckScriptRepository::class);
@@ -72,7 +76,7 @@ class ScriptsServiceTest extends TestCase
         $this->assertTrue($result);
     }
 
-    public function testGetAllScripts(): void 
+    public function testGetAllScripts(): void
     {
         /** @var MockObject&CheckScriptRepository */
         $checkScriptRepository = $this->createMock(CheckScriptRepository::class);
@@ -92,7 +96,6 @@ class ScriptsServiceTest extends TestCase
         $this->assertSame('script1.sh', basename($script->getFilename()));
         $this->assertTrue($script->getIsChangedInFilesystem());
     }
-
 
     public function testGetAllScriptsFromFilesystem(): void
     {

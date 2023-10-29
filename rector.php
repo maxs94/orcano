@@ -7,9 +7,9 @@ declare(strict_types=1);
 
 use Rector\CodingStyle\Rector\ClassConst\RemoveFinalFromConstRector;
 use Rector\Config\RectorConfig;
+use Rector\Php81\Rector\ClassConst\FinalizePublicClassConstantRector;
 use Rector\Set\ValueObject\LevelSetList;
 use Rector\Set\ValueObject\SetList;
-use Rector\Php81\Rector\ClassConst\FinalizePublicClassConstantRector;
 
 return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->paths([
@@ -20,7 +20,7 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->importShortClasses();
 
     $rectorConfig->rule(RemoveFinalFromConstRector::class);
-    
+
     $rectorConfig->sets([
         SetList::CODE_QUALITY,
         LevelSetList::UP_TO_PHP_82,
@@ -32,5 +32,4 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->skip([
         FinalizePublicClassConstantRector::class,
     ]);
-    
 };

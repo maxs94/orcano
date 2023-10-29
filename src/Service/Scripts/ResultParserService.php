@@ -22,7 +22,7 @@ class ResultParserService
 
         $jsonString = substr($result, strpos($result, self::ODATA_STRING) + strlen(self::ODATA_STRING));
 
-        $array = json_decode($jsonString, true, 512);
+        $array = json_decode($jsonString, true, 512, JSON_THROW_ON_ERROR);
 
         if ($array === null) {
             throw new \Exception(sprintf('Could not decode json string: %s', $jsonString));
