@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class RandomImageService
 {
-    final public const BACKGROUND_IMAGES_PATH = '/images/backgrounds';
+    public const BACKGROUND_IMAGES_PATH = '/images/backgrounds';
 
     public function __construct(
         private readonly Packages $packages,

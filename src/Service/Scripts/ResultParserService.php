@@ -12,7 +12,7 @@ use App\DataObject\ScriptResultDataObject;
 
 class ResultParserService
 {
-    final public const ODATA_STRING = 'ODATA:';
+    public const ODATA_STRING = 'ODATA:';
 
     public function parse(string $result, ConditionCollection $conditions): ScriptResultDataObject
     {
@@ -57,7 +57,7 @@ class ResultParserService
 
                 $result->setNote(sprintf('"%s" is %s', $key, $value));
             } else {
-                throw new \Exception(sprintf('Key "%s" not found in script "%s" return result: %s', $key, $scriptResult['name'], json_encode($scriptResult, JSON_THROW_ON_ERROR)));
+                throw new \Exception(sprintf('Key "%s" not found in the script return result: %s', $key, json_encode($scriptResult, JSON_THROW_ON_ERROR)));
             }
 
             // if a check fails, we can stop here

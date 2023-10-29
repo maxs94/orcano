@@ -8,7 +8,7 @@ namespace App\Condition;
 
 class Criteria
 {
-    final public const VALID_OPERATORS = [
+    public const VALID_OPERATORS = [
         'equals',
         'contains',
         'between',

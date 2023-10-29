@@ -8,12 +8,12 @@ namespace App\Condition;
 
 class MinMaxCondition extends AbstractCondition
 {
-    final public const VALID_OPERATORS = [
+    public const VALID_OPERATORS = [
         'and',
         'or',
     ];
 
-    final public const DEFAULT_OPERATOR = 'and';
+    public const DEFAULT_OPERATOR = 'and';
 
     private string $operator = self::DEFAULT_OPERATOR;
 
