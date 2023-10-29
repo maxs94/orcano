@@ -16,7 +16,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * @internal
  *
- * @coversNothing
+ * @covers \App\Service\Scripts\ResultParserService
  */
 class ResultParserServiceTest extends TestCase
 {

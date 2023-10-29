@@ -45,7 +45,7 @@ class Criteria
         return $this->values;
     }
 
-    public function validateOperator(string $operator): void
+    private function validateOperator(string $operator): void
     {
         if (!in_array($operator, self::VALID_OPERATORS)) {
             throw new \InvalidArgumentException(sprintf('Invalid operator "%s"', $operator));

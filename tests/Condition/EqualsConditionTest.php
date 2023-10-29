@@ -34,4 +34,19 @@ class EqualsConditionTest extends TestCase
             'bool' => [true, true],
         ];
     }
+
+    public function testSerialization(): void
+    {
+        $condition = new EqualsCondition(1);
+        $serialized = serialize($condition);
+        $this->assertEquals($condition, unserialize($serialized));
+    }
+
+    public function testEqualsWarnCondition(): void
+    {
+        $condition = new EqualsCondition(1, 2);
+        $result = $condition->checkIfWarn(2);
+
+        $this->assertTrue($result);
+    }
 }

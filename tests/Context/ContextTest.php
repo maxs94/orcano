@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * @internal
  *
- * @coversNothing
+ * @covers \App\Context\Context
  */
 class ContextTest extends TestCase
 {

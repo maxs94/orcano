@@ -28,9 +28,12 @@ class MinMaxConditionTest extends TestCase
             $values['max']
         );
 
+        $condition->setOperator(MinMaxCondition::DEFAULT_OPERATOR);
+
         $result = $condition->checkIfOk($values['value']);
 
         $this->assertSame($expected, $result);
+        $this->assertSame($condition->getOperator(), MinMaxCondition::DEFAULT_OPERATOR);
     }
 
     /** @return array<string, array<string, mixed>> */
@@ -53,6 +56,14 @@ class MinMaxConditionTest extends TestCase
                     'value' => 15,
                 ],
             ],
+            'value below min' => [
+                'expected' => false,
+                'values' => [
+                    'min' => 10,
+                    'max' => null,
+                    'value' => 5,
+                ],
+            ],
             'min and max' => [
                 'expected' => true,
                 'values' => [
@@ -62,5 +73,34 @@ class MinMaxConditionTest extends TestCase
                 ],
             ],
         ];
+    }
+
+    public function testSerialization(): void
+    {
+        $condition = new MinMaxCondition(1, 2);
+        $serialized = serialize($condition);
+        $this->assertEquals($condition, unserialize($serialized));
+    }
+
+    public function testMinMaxWarnCondition(): void
+    {
+        $condition = new MinMaxCondition(1, 10, 2, 10);
+        $result = $condition->checkIfWarn(8);
+
+        $this->assertTrue($result);
+    }
+
+    public function testInvalidOperator(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $condition = new MinMaxCondition(1, 10, 2, 10);
+        $condition->setOperator('invalid');
+    }
+
+    public function testNonNumericValue(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $condition = new MinMaxCondition(1, 10, 2, 10);
+        $condition->checkIfOk('invalid');
     }
 }
