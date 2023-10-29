@@ -29,7 +29,7 @@ jobs:
     - uses: actions/checkout@v3
 
     - name: Copy .env.test
-      run: php -r "file_exists('.env.test') ? copy('.env.test', '.env.local') : die('no .env.test found');"
+      run: php -r "if (file_exists('.env.test')) copy('.env.test', '.env.local');"
 
     - name: Cache Composer packages
       id: composer-cache
