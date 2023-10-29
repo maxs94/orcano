@@ -12,7 +12,7 @@ use App\DataObject\ScriptResultDataObject;
 
 class ResultParserService
 {
-    final public const ODATA_STRING = 'ODATA:';
+    public const ODATA_STRING = 'ODATA:';
 
     public function parse(string $result, ConditionCollection $conditions): ScriptResultDataObject
     {

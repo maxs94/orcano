@@ -16,14 +16,9 @@ use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
-/**
- * @internal
- *
- * @covers \App\Service\Scripts\ScriptsService
- */
 class ScriptsServiceTest extends TestCase
 {
-    final public const FAKE_PATH = '/../../Fakes/FakeScripts';
+    public const FAKE_PATH = '/../../Fakes/FakeScripts';
 
     public function testGetAllScriptsFromFilesystem(): void
     {
@@ -43,8 +38,8 @@ class ScriptsServiceTest extends TestCase
         $logger = $this->createMock(LoggerInterface::class);
 
         $parameterBag->method('get')
-            ->with('kernel.project_dir')
-            ->willReturn(__DIR__)
+        ->with('kernel.project_dir')
+        ->willReturn(__DIR__)
         ;
 
         $service = new ScriptsService(

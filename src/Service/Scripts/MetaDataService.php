@@ -10,7 +10,7 @@ use App\DataObject\Scripts\MetaDataObject;
 
 class MetaDataService
 {
-    final public const MAX_LINES_TO_READ = 20;
+    public const MAX_LINES_TO_READ = 20;
     private string $commentStartsWith = '#';
 
     /**
