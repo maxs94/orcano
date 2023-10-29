@@ -3,6 +3,7 @@
 /.env.local
 /.env.local.php
 /.env.*.local
+/.env 
 /config/secrets/prod/prod.decrypt.private.php
 /public/bundles/
 /var/
@@ -11,13 +12,10 @@
 
 ###> phpunit/phpunit ###
 .phpunit.result.cache
+.phpunit.cache/
+clover.xml
 ###< phpunit/phpunit ###
 
-###> symfony/phpunit-bridge ###
-.phpunit.result.cache
-###< symfony/phpunit-bridge ###
-
-var/cameras/
 ###> friendsofphp/php-cs-fixer ###
 /.php-cs-fixer.cache
 ###< friendsofphp/php-cs-fixer ###
@@ -29,3 +27,4 @@ var/cameras/
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
+
