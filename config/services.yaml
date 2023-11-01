@@ -33,4 +33,4 @@ services:
 
     App\Listener\LoginSuccessEventListener:
       tags:
-      - { name: kernel.event_listener }
+        - { name: kernel.event_listener }
