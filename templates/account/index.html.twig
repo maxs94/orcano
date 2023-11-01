@@ -25,6 +25,7 @@
                 <input type="password" name="password-repeat" id="password-repeat" class="form-control">
             </div>
             <div class="form-group">
+                <input type="hidden" name="id" value="{{ context.currentUser.id }}">
                 <button type="submit" class="btn btn-primary">{{ 'label.save'|trans }}</button>
             </div>
         </form>
@@ -41,6 +42,10 @@ function validateUserForm(formInputs) {
 
     if (formInputs['password'].value !== formInputs['password-repeat'].value) {
         return('{{ 'alert.passwords-not-match'|trans }}');
+    }
+
+    if (formInputs['email'].value === '') {
+        return('{{ 'alert.email-required'|trans }}');
     }
 
     return true;

@@ -41,11 +41,10 @@ class LocaleSubscriber implements EventSubscriberInterface
 
     private function getBrowserLocale(): ?string
     {
-        $locale = null;
         if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-            $locale = \Locale::acceptFromHttp($_SERVER['HTTP_ACCEPT_LANGUAGE']);
+            return \Locale::acceptFromHttp($_SERVER['HTTP_ACCEPT_LANGUAGE']);
         }
 
-        return $locale;
+        return null;
     }
 }

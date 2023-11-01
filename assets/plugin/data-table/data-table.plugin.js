@@ -1,5 +1,5 @@
 import Plugin from 'src/plugin-system/plugin.class';
-import axios from 'axios';
+import Axios from 'axios';
 
 export default class DataTablePlugin extends Plugin {
     static options = {
@@ -70,14 +70,17 @@ export default class DataTablePlugin extends Plugin {
         this.tableBody.innerHTML = tableBody.innerHTML;
     }
 
-    loadData() {
+    loadData(limit) {
+
+        let page = this.getAttribute('data-page') ?? 1;
+        limit = limit ?? this.getAttribute('data-limit') ?? 25;
 
         let searchArray = this.buildSearchArray();
         window.spinner = true;
 
-        axios.post('/api/search/' + this.entityName, {
-            page: 1,
-            limit: 25,
+        Axios.post('/api/search/' + this.entityName, {
+            page: page,
+            limit: limit,
             orderBy: null,
             search: searchArray
         })

@@ -10,7 +10,7 @@ use App\DataObject\DataObjectInterface;
 
 abstract class AbstractPageDataObject implements PageDataObjectInterface, DataObjectInterface
 {
-    private ?string $title;
+    private ?string $title = null;
 
     public function getTitle(): ?string
     {
@@ -23,6 +23,4 @@ abstract class AbstractPageDataObject implements PageDataObjectInterface, DataOb
 
         return $this;
     }
-
 }
-

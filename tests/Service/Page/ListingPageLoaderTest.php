@@ -11,6 +11,7 @@ use App\DataObject\Page\ListingPageDataObject;
 use App\Service\Page\ListingPageLoader;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @internal
@@ -23,7 +24,8 @@ class ListingPageLoaderTest extends TestCase
 
     public function setUp(): void
     {
-        $this->service = new ListingPageLoader();
+        $translator = $this->createMock(TranslatorInterface::class);
+        $this->service = new ListingPageLoader($translator);
     }
 
     public function testLoad(): void

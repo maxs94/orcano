@@ -20,6 +20,12 @@ class UserTest extends TestCase
 {
     use GetterSetterTestingTrait;
 
+    public function testGetRoles(): void
+    {
+        $user = new User();
+        $this->assertSame(['ROLE_USER'], $user->getRoles());
+    }
+
     public function testEntity(): void
     {
         $user = new User();

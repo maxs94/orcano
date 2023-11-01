@@ -14,7 +14,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ListingPageLoader
 {
-    public function __construct(private readonly TranslatorInterface $translator) { }
+    public function __construct(private readonly TranslatorInterface $translator) {}
 
     public function load(Request $request, string $entityName, Context $context): PageDataObjectInterface
     {
