@@ -7,7 +7,7 @@
 
 <div class="card">
     <div class="card-body">
-        <form data-form="true" data-form-entity="user" data-form-validator="validateUserForm">
+        <form data-form="true" data-form-entity="user" data-form-validator="validateUserForm" data-refresh-after-save="true">
             <div class="form-group">
                 <label for="name" class="form-label">{{ 'label.name'|trans }}</label>
                 <input type="text" name="name" id="name" class="form-control" placeholder="{{ 'label.name.hint'|trans }}" value="{{ context.currentUser.name }}">
@@ -24,14 +24,47 @@
                 <label for="password-repeat" class="form-label">{{ 'label.password-repeat'|trans }}</label>
                 <input type="password" name="password-repeat" id="password-repeat" class="form-control">
             </div>
+
+            <hr>
+
+            <div class="form-group">
+                <label for="theme" class="form-label">{{ 'label.theme'|trans }}</label>
+                <select name="theme" id="theme" class="form-control">
+                    <option value="light" {% if context.currentUser.theme == 'light' %}selected{% endif %}>{{ 'label.theme.light'|trans }}</option>
+                    <option value="dark" {% if context.currentUser.theme == 'dark' %}selected{% endif %}>{{ 'label.theme.dark'|trans }}</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="language" class="form-label">{{ 'label.language'|trans }}</label>
+                <select name="language" id="language" class="form-control">
+                    <option value="auto" {% if context.currentUser.language == 'auto' %}selected{% endif %}>{{ 'label.language.auto'|trans }}</option>"
+                    <option value="en" {% if context.currentUser.language == 'en' %}selected{% endif %}>{{ 'label.language.en'|trans }}</option>
+                    <option value="de" {% if context.currentUser.language == 'de' %}selected{% endif %}>{{ 'label.language.de'|trans }}</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="rowLimit" class="form-label">{{ 'label.row-limit'|trans }}</label>
+                <select name="rowLimit" id="rowLimit" class="form-control">
+                    <option value="10" {% if context.currentUser.rowLimit == 10 %}selected{% endif %}>10</option>
+                    <option value="25" {% if context.currentUser.rowLimit == 25 %}selected{% endif %}>25</option>
+                    <option value="50" {% if context.currentUser.rowLimit == 50 %}selected{% endif %}>50</option>
+                    <option value="100" {% if context.currentUser.rowLimit == 100 %}selected{% endif %}>100</option>
+                    <option value="250" {% if context.currentUser.rowLimit == 250 %}selected{% endif %}>250</option>
+                    <option value="500" {% if context.currentUser.rowLimit == 500 %}selected{% endif %}>500</option>
+                    <option value="1000" {% if context.currentUser.rowLimit == 1000 %}selected{% endif %}>1000</option>
+                </select>
+            </div>
+
             <div class="form-group">
                 <input type="hidden" name="id" value="{{ context.currentUser.id }}">
                 <button type="submit" class="btn btn-primary">{{ 'label.save'|trans }}</button>
             </div>
+
         </form>
     </div>
 </div>
-
 {% endblock %}
 {% endblock %}
 

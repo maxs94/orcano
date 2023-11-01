@@ -7,6 +7,7 @@ declare(strict_types=1);
 namespace App\Controller\Api\Upsert;
 
 use App\Controller\Api\AbstractApiController;
+use App\Event\EntityUpsertEvent;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -25,7 +26,7 @@ class ApiUpsertController extends AbstractApiController
         $entity = isset($data['id']) ? $repository->find($data['id']) : new $entityClassName();
 
         if (!method_exists($entity, 'setData')) {
-            throw new \Exception(sprintf('setData method not found for entity: %s', $entityClassName));
+            return $this->json(['success' => false, 'message' => 'Method setData not found on entity']);
         }
 
         $entity->setData($data);
@@ -33,6 +34,10 @@ class ApiUpsertController extends AbstractApiController
         $this->em->persist($entity);
         $this->em->flush();
 
-        return $this->json(['success' => true]);
+        $message = $this->translator->trans('label.entity_saved');
+
+        $this->eventDispatcher->dispatch(new EntityUpsertEvent($entity));
+
+        return $this->getJson(null, $message);
     }
 }

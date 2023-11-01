@@ -8,8 +8,6 @@ namespace App\Entity;
 
 use App\DataObject\DataObjectInterface;
 use App\Repository\UserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactory;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -34,21 +32,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, DataObj
     #[ORM\Column]
     private ?string $password = null;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: UserSetting::class, orphanRemoval: true)]
-    private Collection $userSettings;
-
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $name = null;
 
+    #[ORM\Column(length: 16)]
+    private ?string $theme = 'dark';
+
+    #[ORM\Column]
+    private ?int $rowLimit = 25;
+
+    #[ORM\Column(length: 5)]
+    private ?string $language = 'auto';
+
     public function __construct()
     {
-        $this->userSettings = new ArrayCollection();
+        $this->createdAt = new \DateTime();
+        $this->updatedAt = new \DateTime();
     }
 
     /** @param array<string, mixed> $data */
     public function setData(array $data): self
     {
-        $this->setEmail($data['email']);
+        if (isset($data['email']) && !empty($data['email'])) {
+            $this->setEmail($data['email']);
+        }
 
         if (isset($data['name']) && !empty($data['name'])) {
             $this->setName($data['name']);
@@ -63,6 +70,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, DataObj
 
             $this->setPassword($hash);
         }
+
+        if (isset($data['theme']) && !empty($data['theme'])) {
+            $this->setTheme($data['theme']);
+        }
+
+        if (isset($data['rowLimit']) && !empty($data['rowLimit'])) {
+            $this->setRowLimit((int) $data['rowLimit']);
+        }
+
+        if (isset($data['language']) && !empty($data['language'])) {
+            $this->setLanguage($data['language']);
+        }
+
+        $this->updatedAt = new \DateTime();
 
         // todo: set roles
 
@@ -137,38 +158,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, DataObj
         // $this->plainPassword = null;
     }
 
-    /**
-     * @return Collection<int, UserSetting>
-     */
-    public function getUserSettings(): Collection
-    {
-        return $this->userSettings;
-    }
-
-    public function addUserSetting(UserSetting $userSetting): static
-    {
-        if (!$this->userSettings->contains($userSetting)) {
-            $this->userSettings->add($userSetting);
-            $userSetting->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUserSetting(UserSetting $userSetting): static
-    {
-        // set the owning side to null (unless already changed)
-        if (!$this->userSettings->removeElement($userSetting)) {
-            return $this;
-        }
-        if ($userSetting->getUser() !== $this) {
-            return $this;
-        }
-        $userSetting->setUser(null);
-
-        return $this;
-    }
-
     public function getName(): ?string
     {
         return $this->name;
@@ -177,6 +166,42 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, DataObj
     public function setName(?string $name): static
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getTheme(): ?string
+    {
+        return $this->theme;
+    }
+
+    public function setTheme(string $theme): static
+    {
+        $this->theme = $theme;
+
+        return $this;
+    }
+
+    public function getRowLimit(): ?int
+    {
+        return $this->rowLimit;
+    }
+
+    public function setRowLimit(int $rowLimit): static
+    {
+        $this->rowLimit = $rowLimit;
+
+        return $this;
+    }
+
+    public function getLanguage(): ?string
+    {
+        return $this->language;
+    }
+
+    public function setLanguage(string $language): static
+    {
+        $this->language = $language;
 
         return $this;
     }
