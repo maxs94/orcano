@@ -11,6 +11,7 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactory;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -44,6 +45,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, DataObj
         $this->userSettings = new ArrayCollection();
     }
 
+    /** @param array<string, mixed> $data */
+    public function setData(array $data): self
+    {
+        $this->setEmail($data['email']);
+
+        if (isset($data['name']) && !empty($data['name'])) {
+            $this->setName($data['name']);
+        }
+
+        if (isset($data['password']) && ($data['password'] !== '')) {
+            // todo: get setting from config
+            $factory = new PasswordHasherFactory(['common' => ['algorithm' => 'bcrypt']]);
+
+            $passwordHasher = $factory->getPasswordHasher('common');
+            $hash = $passwordHasher->hash($data['password']);
+
+            $this->setPassword($hash);
+        }
+
+        // todo: set roles
+
+        return $this;
+    }
+
     public function getEmail(): ?string
     {
         return $this->email;
@@ -71,7 +96,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, DataObj
      */
     public function getRoles(): array
     {
-        return array_unique($this->roles);
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
     }
 
     /**

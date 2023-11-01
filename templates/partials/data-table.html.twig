@@ -2,12 +2,14 @@
 <section class="section">
     <div class="card">
         <div class="card-header">
-            <h5 class="card-title">{{ 'title.' ~ page.entityName|trans }}</h5>
+            <h5 class="card-title">{% if page.title is defined %}{{ page.title }}{% endif %}</h5>
         </div>
         <div class="card-body">
             <div 
                 data-table="true" 
                 data-table-entity="{{ page.entityName }}" 
+                data-table-page="{{ page.page }}"
+                data-table-limit="{{ page.limit }}"
                 class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns"
             >
 

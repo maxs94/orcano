@@ -45,6 +45,11 @@ trait GetterSetterTestingTrait
         }
 
         foreach ($testableMethods as [$getterName, $setterName]) {
+            // skip auto testing if test method exists
+            if (method_exists($this, 'test' . ucfirst($getterName))) {
+                continue;
+            }
+
             $refSetter = new \ReflectionMethod($className, $setterName);
             $refParams = $refSetter->getParameters();
             if (1 === count($refParams)) {

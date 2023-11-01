@@ -8,7 +8,7 @@
     
         <link rel="shortcut icon" href="assets/images/favicon.svg" type="image/x-icon">
 
-        <title>{% block title %}Welcome!{% endblock %}</title>
+        <title>{% block title %}{%block page_title %}{% if page.title is defined %}{{ page.title }} | {% endif %}{%endblock %}Orcano{% endblock %}</title>
 
         {% block stylesheets %}
             {{ encore_entry_link_tags('app') }}
@@ -17,7 +17,7 @@
         {% block scripts_head %}
             {{ encore_entry_script_tags('app') }}
         {% endblock %}
-    
+ 
     </head>
     <body>
 

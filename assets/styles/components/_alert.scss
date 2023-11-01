@@ -1,7 +1,15 @@
 // sweet alert 
 .swal2-container {
     .swal2-modal {
-        background-color: red;
+        background-color: var(--o-alert-bg-color);
+    }
+
+    .swal2-actions {
+        .swal2-confirm {
+            background-color: $primary;
+            color: var(--o-alert-button-color);
+        }
+    
     }
 }
 

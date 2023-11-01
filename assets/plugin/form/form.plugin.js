@@ -1,5 +1,6 @@
 import Plugin from 'src/plugin-system/plugin.class';
 import Swal from 'sweetalert2';
+import Axios from 'axios';
 
 export default class FormPlugin extends Plugin {
     static options = {
@@ -28,6 +29,17 @@ export default class FormPlugin extends Plugin {
         return result;
     }
 
+    getAllFormInputValues() {
+        let elements = this.el.querySelectorAll('input, select, textarea');
+        let result = {};
+        elements.forEach((element) => {
+            let name = element.getAttribute('name');
+            let value = element.value;
+            result[name] = value;
+        });
+        return result;
+    }
+
     validateForm() {
         let formValidator = this.el.getAttribute('data-form-validator');
         let formInputs = this.getAllFormInputs();
@@ -36,7 +48,20 @@ export default class FormPlugin extends Plugin {
             let res = this.executeFormValidator(formValidator, window, formInputs);
             console.log(res);
             if (res == true) {
-                console.log("success");
+                let formEntity = this.el.getAttribute('data-form-entity');
+                let formInputValues = this.getAllFormInputValues();
+ 
+                Axios.post('/api/upsert/' + formEntity, formInputValues)
+                .then((response) => {
+                        console.log(response);
+                })
+                .then((error) => {
+                        Swal.fire({
+                            text: error,
+                            icon: 'error',
+                        });
+                });
+
             } else {
                 Swal.fire({
                     text: res,
@@ -44,7 +69,10 @@ export default class FormPlugin extends Plugin {
                 });
             }
         } else {
-            console.error("no form validator found or provided");
+            Swal.fire({
+                text: "Form validator " + formValidator + " not found",
+                icon: 'warning',
+            });
         }
     }
 

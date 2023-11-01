@@ -9,6 +9,8 @@ namespace App\Controller\Api;
 use App\DataObject\Api\ApiInfoMessageDataObject;
 use App\DataObject\Collection\DataObjectCollection;
 use App\DataObject\Collection\DataObjectCollectionInterface;
+use App\Repository\AbstractServiceEntityRepository;
+use App\Service\Converter\CaseConverter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -25,19 +27,6 @@ abstract class AbstractApiController extends AbstractController
     ) {
         $this->errors = new DataObjectCollection();
         $this->warnings = new DataObjectCollection();
-    }
-
-    public function getJson(DataObjectCollectionInterface $collection = null): JsonResponse
-    {
-        $res = [
-            'success' => $this->errors->getCount() === 0,
-            'errors' => $this->errors->getElements(),
-            'warnings' => $this->errors->getElements(),
-            'data' => $collection instanceof \App\DataObject\Collection\DataObjectCollectionInterface ? $collection->getElements() : [],
-            'count' => $collection instanceof \App\DataObject\Collection\DataObjectCollectionInterface ? $collection->getCount() : 0,
-        ];
-
-        return $this->json($res);
     }
 
     public function addError(string $message): void
@@ -62,5 +51,33 @@ abstract class AbstractApiController extends AbstractController
         }
 
         return $content;
+    }
+
+    protected function getJson(DataObjectCollectionInterface $collection = null): JsonResponse
+    {
+        $res = [
+            'success' => $this->errors->getCount() === 0,
+            'errors' => $this->errors->getElements(),
+            'warnings' => $this->errors->getElements(),
+            'data' => $collection instanceof \App\DataObject\Collection\DataObjectCollectionInterface ? $collection->getElements() : [],
+            'count' => $collection instanceof \App\DataObject\Collection\DataObjectCollectionInterface ? $collection->getCount() : 0,
+        ];
+
+        return $this->json($res);
+    }
+
+    protected function getEntityRepository(string $entity): AbstractServiceEntityRepository
+    {
+        $entityName = CaseConverter::kebabCaseToCamelCase($entity);
+        $entityClassName = sprintf('App\Entity\%s', ucfirst($entityName));
+
+        if (!class_exists($entityClassName)) {
+            throw new \Exception(sprintf('Repository class not found for entity: %s', $entity));
+        }
+
+        /** @var AbstractServiceEntityRepository $repository */
+        $repository = $this->em->getRepository($entityClassName);
+
+        return $repository;
     }
 }
