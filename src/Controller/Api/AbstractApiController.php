@@ -13,8 +13,10 @@ use App\Repository\AbstractServiceEntityRepository;
 use App\Service\Converter\CaseConverter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 abstract class AbstractApiController extends AbstractController
 {
@@ -23,7 +25,9 @@ abstract class AbstractApiController extends AbstractController
     private readonly DataObjectCollectionInterface $warnings;
 
     public function __construct(
-        protected readonly EntityManagerInterface $em
+        protected readonly EntityManagerInterface $em,
+        protected readonly TranslatorInterface $translator,
+        protected readonly EventDispatcherInterface $eventDispatcher
     ) {
         $this->errors = new DataObjectCollection();
         $this->warnings = new DataObjectCollection();
@@ -53,12 +57,13 @@ abstract class AbstractApiController extends AbstractController
         return $content;
     }
 
-    protected function getJson(DataObjectCollectionInterface $collection = null): JsonResponse
+    protected function getJson(DataObjectCollectionInterface $collection = null, string $message = null): JsonResponse
     {
         $res = [
             'success' => $this->errors->getCount() === 0,
             'errors' => $this->errors->getElements(),
             'warnings' => $this->errors->getElements(),
+            'message' => $message,
             'data' => $collection instanceof \App\DataObject\Collection\DataObjectCollectionInterface ? $collection->getElements() : [],
             'count' => $collection instanceof \App\DataObject\Collection\DataObjectCollectionInterface ? $collection->getCount() : 0,
         ];

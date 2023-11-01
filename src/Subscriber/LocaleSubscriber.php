@@ -6,12 +6,16 @@ declare(strict_types=1);
 
 namespace App\Subscriber;
 
+use App\Entity\User;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\Translation\LocaleSwitcher;
 
 class LocaleSubscriber implements EventSubscriberInterface
 {
     public const FALLBACK_LOCALE = 'en';
+
+    public function __construct(private readonly LocaleSwitcher $localeSwitcher) {}
 
     public static function getSubscribedEvents()
     {
@@ -24,19 +28,26 @@ class LocaleSubscriber implements EventSubscriberInterface
     {
         $request = $event->getRequest();
 
+        $user = $request->getSession()->get('currentUser') ?? null;
+        $userLocale = ($user instanceof User) ? $user->getLanguage() : 'auto';
+        $requestLocale = $request->attributes->get('_locale') ?? null;
         $sessionLocale = $request->getSession()->get('_locale') ?? null;
         $browserLocale = $this->getBrowserLocale();
 
-        // set locale from route parameter, then session, then browser
-        if ($locale = $request->attributes->get('_locale')) {
-            $request->getSession()->set('_locale', $locale);
+        // set locale from user, then route parameter, then session, then browser
+        if ($userLocale !== 'auto') {
+            $locale = $userLocale;
+        } elseif ($requestLocale !== null) {
+            $locale = $requestLocale;
         } elseif ($sessionLocale !== null) {
-            $request->setLocale($request->getSession()->get('_locale', 'en'));
+            $locale = $sessionLocale;
         } elseif ($browserLocale !== null) {
-            $request->setLocale($browserLocale);
+            $locale = $browserLocale;
         } else {
-            $request->setLocale(self::FALLBACK_LOCALE);
+            $locale = self::FALLBACK_LOCALE;
         }
+
+        $this->localeSwitcher->setLocale($locale);
     }
 
     private function getBrowserLocale(): ?string

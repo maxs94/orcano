@@ -46,20 +46,34 @@ export default class FormPlugin extends Plugin {
 
         if (typeof window[formValidator] === "function") {
             let res = this.executeFormValidator(formValidator, window, formInputs);
-            console.log(res);
             if (res == true) {
                 let formEntity = this.el.getAttribute('data-form-entity');
                 let formInputValues = this.getAllFormInputValues();
+                var refreshAfterSave = this.el.getAttribute('data-refresh-after-save');
  
                 Axios.post('/api/upsert/' + formEntity, formInputValues)
                 .then((response) => {
-                        console.log(response);
+                        if (response.data.success == true) {
+                            Swal.fire({
+                                text: response.data.message,
+                                icon: 'success',
+                            }).then(function() {
+                                if (refreshAfterSave == 'true' || refreshAfterSave == true) {
+                                    location.reload();
+                                } 
+                            });
+                        } else {
+                            Swal.fire({
+                                text: response.data.message,
+                                icon: 'error',
+                            });
+                        }
                 })
-                .then((error) => {
-                        Swal.fire({
-                            text: error,
-                            icon: 'error',
-                        });
+                .catch((error) => {
+                    Swal.fire({
+                        text: error,
+                        icon: 'error',
+                    });
                 });
 
             } else {

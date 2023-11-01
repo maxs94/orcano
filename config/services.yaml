@@ -30,7 +30,3 @@ services:
     App\Exception\HttpExceptionListener:
       tags:
         - { name: kernel.event_listener, event: kernel.exception }
-
-    App\Listener\LoginSuccessEventListener:
-      tags:
-        - { name: kernel.event_listener }

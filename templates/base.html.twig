@@ -1,5 +1,6 @@
+{% set theme = context.currentUser.theme %}
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
+<html lang="{{ app.locale }}" data-bs-theme="{{ theme }}">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
