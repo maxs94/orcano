@@ -33,7 +33,6 @@ export default class DataTablePlugin extends Plugin {
 
     registerPaginationEvents() {
         this.el.querySelectorAll(this.options.paginationButtonSelector).forEach((paginationButton) => {
-            console.log(paginationButton);
             paginationButton.addEventListener('click', (e) => {
                 e.preventDefault();
                 let pageNo = paginationButton.getAttribute('data-page-no');
