@@ -2,12 +2,18 @@
 .swal2-container {
     .swal2-modal {
         background-color: var(--o-alert-bg-color);
+        color: var(--o-alert-text-color);
     }
 
     .swal2-actions {
         .swal2-confirm {
             background-color: $primary;
             color: var(--o-alert-button-color);
+        }
+
+        button:focus {
+            box-shadow: none;
+            border-color: $secondary;
         }
     
     }

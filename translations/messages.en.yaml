@@ -51,3 +51,5 @@ label.language.en: 'English'
 label.language.de: 'Deutsch'
 label.row-limit: 'Row limit'
 label.entity-saved: 'Entity saved'
+
+alert.passwords-not-match: 'Passwords do not match'

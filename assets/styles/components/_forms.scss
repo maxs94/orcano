@@ -83,10 +83,18 @@
 .form-control {
     background-color: var(--o-form-control-bg-color); 
     border: 1px solid var(--o-form-control-border-color);
+    color: var(--o-form-control-text-color);
 
     &.form-control-xl {
         padding: .85rem 1rem;
         font-size: 1.2rem;
+    }
+
+    &:focus {
+        box-shadow: none;
+        border-color: $secondary;
+        background-color: var(--o-form-control-bg-focus-color);
+        color: var(--o-form-control-text-color);
     }
 }
 .form-check {
@@ -155,7 +163,7 @@
     font-size: 0.9025rem;
     font-weight: 400;
     line-height: 1.5;
-    color: #555252;
+    color: var(--o-form-control-text-color);
     background-color: white;
     background-clip: padding-box;
     border: 1px solid #DFE3E7;

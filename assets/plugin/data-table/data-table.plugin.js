@@ -1,11 +1,12 @@
 import Plugin from 'src/plugin-system/plugin.class';
 import Axios from 'axios';
+import Swal from 'sweetalert2';
 
 export default class DataTablePlugin extends Plugin {
     static options = {
         'tableSelector': '.dataTable-table',
-        'tableSearchColumnsRowSelector': '.dataTable-searchColumns'
-
+        'tableSearchColumnsRowSelector': '.dataTable-searchColumns',
+        'paginationButtonSelector': '.dataTable-pagination a'
     };
 
     init() {
@@ -27,6 +28,18 @@ export default class DataTablePlugin extends Plugin {
             if (keynum === 13) {
                 that.loadData();
             }
+        });
+    }
+
+    registerPaginationEvents() {
+        this.el.querySelectorAll(this.options.paginationButtonSelector).forEach((paginationButton) => {
+            console.log(paginationButton);
+            paginationButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                let pageNo = paginationButton.getAttribute('data-page-no');
+                this.el.setAttribute('data-table-page', pageNo);
+                this.loadData();
+            });
         });
     }
 
@@ -72,25 +85,69 @@ export default class DataTablePlugin extends Plugin {
 
     loadData(limit) {
 
-        let page = this.el.getAttribute('data-page') ?? 1;
-        limit = limit ?? this.el.getAttribute('data-table-limit') ?? 25;
-
-        let searchArray = this.buildSearchArray();
         window.spinner = true;
 
+        limit = limit ?? parseInt(this.el.getAttribute('data-table-limit') ?? 25)
+        let page = parseInt(this.el.getAttribute('data-table-page') ?? 1) 
+        let searchArray = this.buildSearchArray();
+
         Axios.post('/api/search/' + this.entityName, {
-            page: parseInt(page),
-            limit: parseInt(limit),
+            page: page,
+            limit: limit,
             orderBy: null,
             search: searchArray
         })
         .then((response) => {
+            this.drawPagination(limit, response.data.totalCount, page);
             this.drawTableBody(response.data.data);
+            this.registerPaginationEvents();
             window.spinner = false;
         })
         .catch((error) => {
-            console.log(error);
+            Swal.fire({
+                icon: 'error',
+                text: error
+            });
+            window.spinner = false;
         });
+    }
+
+    drawPagination(limit, total, currentPage) {
+        let totalPages = Math.ceil(total / limit);
+        let prevPageNo = currentPage - 1;
+        let nextPageNo = currentPage + 1;
+
+        let paginationEl = this.el.querySelector('.dataTable-pagination');
+        paginationEl.innerHTML = '';
+
+        let paginationUl = document.createElement('ul');
+        paginationUl.classList.add('pagination');
+
+        if (prevPageNo > 0) {
+            let paginationLiPrev = document.createElement('li');
+            paginationLiPrev.classList.add('page-item');
+            paginationLiPrev.innerHTML = '<a class="page-link" data-page-no="' + prevPageNo + '" href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>';
+            paginationUl.appendChild(paginationLiPrev);
+        }
+
+        for (let i = 1; i <= totalPages; i++) {
+            let paginationLi = document.createElement('li');
+            paginationLi.classList.add('page-item');
+            if (i === currentPage) {
+                paginationLi.classList.add('active');
+            }
+            paginationLi.innerHTML = '<a class="page-link" href="#" data-page-no="' + i + '">' + i + '</a>';
+            paginationUl.appendChild(paginationLi);
+        }
+
+        if (currentPage < totalPages) {
+            let paginationLiNext = document.createElement('li');
+            paginationLiNext.classList.add('page-item');
+            paginationLiNext.innerHTML = '<a class="page-link" data-page-no="' + nextPageNo + '" href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>';
+            paginationUl.appendChild(paginationLiNext);
+        }
+
+        paginationEl.appendChild(paginationUl);
     }
 
     buildSearchArray() {
