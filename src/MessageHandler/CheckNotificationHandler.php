@@ -56,25 +56,17 @@ class CheckNotificationHandler
         $process->run();
 
         if (!$process->isSuccessful()) {
-            $this->sendError(sprintf('Script %s failed.', $scriptPath), $message);
+            $this->sendError(sprintf('Script %s failed with error: %s.', $scriptPath, $process->getErrorOutput()), $message);
 
             return false;
         }
 
         $output = $process->getOutput();
 
-        $conditions = $message->getConditions();
+        $jsonResponse = $this->resultParserService->extractJson($output);
 
-        // todo: move result parsing to CheckResultNotificationHandler maybe?
-        // then we would not have to send the Conditions along...
-        // and the CheckNotificationHandler would only need to do one thing
-        try {
-            $result = $this->resultParserService->parse($output, $conditions);
-        } catch (\Exception $e) {
-            $this->sendError(sprintf('ResultParserService failed: %s', $e->getMessage()), $message);
-
-            return false;
-        }
+        $result = new ScriptResultDataObject();
+        $result->setScriptOutput($jsonResponse);
 
         $this->sendResultMessage($result, $message);
 
@@ -84,7 +76,7 @@ class CheckNotificationHandler
     private function sendError(string $message, CheckNotification $originalMessage): void
     {
         $result = new ScriptResultDataObject();
-        $result->setResult(ScriptResultDataObject::RESULT_UNKNOWN);
+        $result->setCheckResult(ScriptResultDataObject::RESULT_UNKNOWN);
         $result->setNote($message);
 
         $this->logger->error($message);

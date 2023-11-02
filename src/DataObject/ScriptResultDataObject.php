@@ -13,21 +13,24 @@ class ScriptResultDataObject implements DataObjectInterface
     public const RESULT_ERROR = 'ERROR';
     public const RESULT_UNKNOWN = 'UNKNOWN';
 
-    private string $result;
+    private string $checkResult;
 
     /** @var array<string, mixed> */
-    private array $message;
+    private array $message = [];
+
+    /** @var array<string, mixed> */
+    private array $scriptOutput = [];
 
     private ?string $note = null;
 
-    public function getResult(): string
+    public function getCheckResult(): string
     {
-        return $this->result;
+        return $this->checkResult;
     }
 
-    public function setResult(string $result): self
+    public function setCheckResult(string $result): self
     {
-        $this->result = $result;
+        $this->checkResult = $result;
 
         return $this;
     }
@@ -54,6 +57,20 @@ class ScriptResultDataObject implements DataObjectInterface
     public function setNote(?string $note): self
     {
         $this->note = $note;
+
+        return $this;
+    }
+
+    /** @return array<string, mixed> */
+    public function getScriptOutput(): array
+    {
+        return $this->scriptOutput;
+    }
+
+    /** @param array<string, mixed> $scriptOutput */
+    public function setScriptOutput(array $scriptOutput): self
+    {
+        $this->scriptOutput = $scriptOutput;
 
         return $this;
     }

@@ -30,54 +30,54 @@ class ResultParserServiceTest extends TestCase
     public function testODATAMissing(): void
     {
         $this->expectException(\Exception::class);
-        $this->service->parse('INVALID RESULT STRING', new ConditionCollection());
+        $this->service->extractJson('INVALID RESULT STRING');
     }
 
     public function testDecodeJsonError(): void
     {
         $this->expectException(\Exception::class);
-        $this->service->parse('ODATA: {"INVALID JSON"}', new ConditionCollection());
+        $this->service->extractJson('ODATA: {"INVALID JSON"}');
     }
 
     public function testParseResultJson(): void
     {
         $jsonString = json_encode(['result' => 'test']);
-        $result = $this->service->parse('ODATA: ' . $jsonString, new ConditionCollection());
-        $this->assertEquals('test', $result->getMessage()['result']);
+        $result = $this->service->extractJson('ODATA: ' . $jsonString);
+        $this->assertEquals('test', $result['result']);
     }
 
     public function testParseResultJsonWithConditions(): void
     {
-        $jsonString = json_encode(['result' => 'test', 'result2' => 'test']);
+        $array = ['result' => 'test', 'result2' => 'test'];
 
         $conditions = new ConditionCollection();
         $conditions->addCondition('result', new EqualsCondition('test'));
         $conditions->addCondition('result2', new EqualsCondition('error'));
 
-        $result = $this->service->parse('ODATA: ' . $jsonString, $conditions);
+        $result = $this->service->parseResultJson($array, $conditions);
         $this->assertEquals('test', $result->getMessage()['result']);
-        $this->assertEquals(ScriptResultDataObject::RESULT_ERROR, $result->getResult());
+        $this->assertEquals(ScriptResultDataObject::RESULT_ERROR, $result->getCheckResult());
     }
 
     public function testParseResultWithWarningCondition(): void
     {
-        $jsonString = json_encode(['result' => 42]);
+        $array = ['result' => 42];
 
         $conditions = new ConditionCollection();
         $conditions->addCondition('result', new MinMaxCondition(0, 100, 40));
 
-        $result = $this->service->parse('ODATA: ' . $jsonString, $conditions);
-        $this->assertEquals(ScriptResultDataObject::RESULT_WARNING, $result->getResult());
+        $result = $this->service->parseResultJson($array, $conditions);
+        $this->assertEquals(ScriptResultDataObject::RESULT_WARNING, $result->getCheckResult());
     }
 
     public function testParseResultKeyNotFound(): void
     {
-        $json_string = json_encode(['result' => 'test']);
+        $array = ['result' => 'test'];
 
         $conditions = new ConditionCollection();
         $conditions->addCondition('unknownKey', new EqualsCondition('test'));
 
         $this->expectException(\Exception::class);
-        $this->service->parse('ODATA: ' . $json_string, $conditions);
+        $this->service->parseResultJson($array, $conditions);
     }
 }

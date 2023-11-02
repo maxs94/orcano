@@ -6,7 +6,12 @@ declare(strict_types=1);
 
 namespace App\MessageHandler;
 
+use App\Condition\ConditionCollection;
+use App\Condition\EqualsCondition;
+use App\Condition\MinMaxCondition;
+use App\DataObject\ScriptResultDataObject;
 use App\Message\CheckResultNotification;
+use App\Service\Scripts\ResultParserService;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
@@ -14,6 +19,7 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 class CheckResultNotificationHandler
 {
     public function __construct(
+        private readonly ResultParserService $resultParserService,
         private readonly LoggerInterface $logger
     ) {}
 
@@ -22,6 +28,39 @@ class CheckResultNotificationHandler
         $result = $message->getResult();
         $originalNotification = $message->getOriginalNotification();
 
-        $this->logger->notice(sprintf('result: %s %s (%s)', $result->getResult(), $result->getNote(), $originalNotification->getHostname()));
+        // todo:
+        //
+        // have specific conditions per checkscript
+        //
+        // have an inheritance would make very much sense:
+        // ServiceCheck -> AssetGroup -> Asset
+        // $conditionTemplateString = // serialized conditions string
+        // $conditions = unserialize($conditionTemplateString);
+        $conditions = new ConditionCollection();
+        $conditions->addCondition('result', new EqualsCondition(0));
+        $conditions->addCondition('time', new MinMaxCondition(0, 1000, 20));  // ok if between 0 and 1000, warn if between 20 and 1000
+
+        $checkResult = $this->checkResult($result, $conditions);
+
+        $this->logger->notice(sprintf('check %s on %s, result: %s (%s)',
+            $originalNotification->getCheckScriptFilename(),
+            $originalNotification->getHostname(),
+            $checkResult->getCheckResult(),
+            $checkResult->getNote()
+        ));
+    }
+
+    private function checkResult(ScriptResultDataObject $result, ConditionCollection $conditions): ScriptResultDataObject
+    {
+        $output = $result->getScriptOutput();
+
+        try {
+            $result = $this->resultParserService->parseResultJson($output, $conditions);
+        } catch (\Exception $e) {
+            $this->logger->error(sprintf('ResultParserService failed: %s', $e->getMessage()), $output);
+            $result->setCheckResult(ScriptResultDataObject::RESULT_UNKNOWN);
+        }
+
+        return $result;
     }
 }
