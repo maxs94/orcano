@@ -37,5 +37,4 @@ class ListingPageDataObject extends AbstractPageDataObject
 
         return $this;
     }
-
 }

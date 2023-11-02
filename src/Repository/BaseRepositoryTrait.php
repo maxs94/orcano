@@ -78,7 +78,7 @@ trait BaseRepositoryTrait
         return $collection;
     }
 
-    private function countTotalRows(QueryBuilder $queryBuilder): int 
+    private function countTotalRows(QueryBuilder $queryBuilder): int
     {
         $qb = clone $queryBuilder;
         $qb->select('COUNT(a.id)');
