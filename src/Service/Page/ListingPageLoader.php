@@ -19,14 +19,12 @@ class ListingPageLoader
     public function load(Request $request, string $entityName, Context $context): PageDataObjectInterface
     {
         $page = $request->query->getInt('page', 1);
-        $limit = $request->query->getInt('limit', ListingPageDataObject::DEFAULT_LIMIT);
 
         $title = $this->translator->trans('title.' . $entityName . '.listing');
 
         return (new ListingPageDataObject())
             ->setEntityName($entityName)
             ->setPage($page)
-            ->setLimit($limit)
             ->setTitle($title)
         ;
     }

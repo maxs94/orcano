@@ -34,7 +34,7 @@ class ApiUpsertController extends AbstractApiController
         $this->em->persist($entity);
         $this->em->flush();
 
-        $message = $this->translator->trans('label.entity_saved');
+        $message = $this->translator->trans('label.entity-saved');
 
         $this->eventDispatcher->dispatch(new EntityUpsertEvent($entity));
 

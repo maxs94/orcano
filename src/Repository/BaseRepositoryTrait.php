@@ -9,6 +9,7 @@ namespace App\Repository;
 use App\Condition\Criteria;
 use App\DataObject\Collection\DataObjectCollection;
 use App\DataObject\Collection\DataObjectCollectionInterface;
+use App\DataObject\Collection\SearchResultDataObjectCollection;
 use App\DataObject\Page\ListingPageDataObject;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
@@ -61,6 +62,8 @@ trait BaseRepositoryTrait
             $this->buildSearch($searches, $qb);
         }
 
+        $totalCount = $this->countTotalRows($qb);
+
         $paginator = new Paginator($qb->getQuery(), true);
         $paginator = $paginator->getQuery()
             ->setFirstResult($limit * ($page - 1))
@@ -69,7 +72,18 @@ trait BaseRepositoryTrait
 
         $results = $paginator->getResult();
 
-        return new DataObjectCollection($results, $indexBy);
+        $collection = new SearchResultDataObjectCollection($results, $indexBy);
+        $collection->setTotalCount($totalCount);
+
+        return $collection;
+    }
+
+    private function countTotalRows(QueryBuilder $queryBuilder): int
+    {
+        $qb = clone $queryBuilder;
+        $qb->select('COUNT(a.id)');
+
+        return (int) $qb->getQuery()->getSingleScalarResult();
     }
 
     /** @param array<array<mixed>> $searches */

@@ -14,8 +14,6 @@ class ListingPageDataObject extends AbstractPageDataObject
 
     private int $page = 1;
 
-    private int $limit = self::DEFAULT_LIMIT;
-
     public function getEntityName(): string
     {
         return $this->entityName;
@@ -36,18 +34,6 @@ class ListingPageDataObject extends AbstractPageDataObject
     public function setPage(int $page = 1): self
     {
         $this->page = $page;
-
-        return $this;
-    }
-
-    public function getLimit(): int
-    {
-        return $this->limit;
-    }
-
-    public function setLimit(int $limit = self::DEFAULT_LIMIT): self
-    {
-        $this->limit = $limit;
 
         return $this;
     }

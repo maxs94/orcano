@@ -9,7 +9,7 @@
                 data-table="true" 
                 data-table-entity="{{ page.entityName }}" 
                 data-table-page="{{ page.page }}"
-                data-table-limit="{{ page.limit }}"
+                data-table-limit="{{ context.currentUser.rowLimit }}"
                 class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns"
             >
 

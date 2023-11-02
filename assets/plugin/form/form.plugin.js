@@ -51,6 +51,8 @@ export default class FormPlugin extends Plugin {
                 let formInputValues = this.getAllFormInputValues();
                 var refreshAfterSave = this.el.getAttribute('data-refresh-after-save');
  
+                window.spinner = true;
+
                 Axios.post('/api/upsert/' + formEntity, formInputValues)
                 .then((response) => {
                         if (response.data.success == true) {
@@ -88,6 +90,7 @@ export default class FormPlugin extends Plugin {
                 icon: 'warning',
             });
         }
+        window.spinner = false;
     }
 
     executeFormValidator(validatorName, context /*, args */) {

@@ -72,15 +72,15 @@ export default class DataTablePlugin extends Plugin {
 
     loadData(limit) {
 
-        let page = this.getAttribute('data-page') ?? 1;
-        limit = limit ?? this.getAttribute('data-limit') ?? 25;
+        let page = this.el.getAttribute('data-page') ?? 1;
+        limit = limit ?? this.el.getAttribute('data-table-limit') ?? 25;
 
         let searchArray = this.buildSearchArray();
         window.spinner = true;
 
         Axios.post('/api/search/' + this.entityName, {
-            page: page,
-            limit: limit,
+            page: parseInt(page),
+            limit: parseInt(limit),
             orderBy: null,
             search: searchArray
         })
