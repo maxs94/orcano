@@ -33,7 +33,6 @@ export default class ThemeTogglerPlugin extends Plugin {
             'theme': this._html.getAttribute('data-bs-theme')
         })
         .then((response) => {
-            console.log(response);
             window.spinner = false;
         })
         .catch((error) => {

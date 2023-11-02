@@ -1,0 +1,14 @@
+.form-select {
+    background-color: var(--o-form-control-bg-color);
+    border: 1px solid var(--o-form-control-border-color);
+    color: var(--o-form-control-text-color);
+
+    &:focus {
+        box-shadow: none;
+        border-color: $secondary;
+        background-color: var(--o-form-control-bg-focus-color);
+        color: var(--o-form-control-text-color);
+    }
+
+
+}

@@ -29,7 +29,7 @@
 
             <div class="form-group">
                 <label for="theme" class="form-label">{{ 'label.theme'|trans }}</label>
-                <select name="theme" id="theme" class="form-control">
+                <select name="theme" id="theme" class="form-select">
                     <option value="light" {% if context.currentUser.theme == 'light' %}selected{% endif %}>{{ 'label.theme.light'|trans }}</option>
                     <option value="dark" {% if context.currentUser.theme == 'dark' %}selected{% endif %}>{{ 'label.theme.dark'|trans }}</option>
                 </select>
@@ -37,7 +37,7 @@
 
             <div class="form-group">
                 <label for="language" class="form-label">{{ 'label.language'|trans }}</label>
-                <select name="language" id="language" class="form-control">
+                <select name="language" id="language" class="form-select">
                     <option value="auto" {% if context.currentUser.language == 'auto' %}selected{% endif %}>{{ 'label.language.auto'|trans }}</option>"
                     <option value="en" {% if context.currentUser.language == 'en' %}selected{% endif %}>{{ 'label.language.en'|trans }}</option>
                     <option value="de" {% if context.currentUser.language == 'de' %}selected{% endif %}>{{ 'label.language.de'|trans }}</option>
@@ -46,7 +46,7 @@
 
             <div class="form-group">
                 <label for="rowLimit" class="form-label">{{ 'label.row-limit'|trans }}</label>
-                <select name="rowLimit" id="rowLimit" class="form-control">
+                <select name="rowLimit" id="rowLimit" class="form-select">
                     <option value="10" {% if context.currentUser.rowLimit == 10 %}selected{% endif %}>10</option>
                     <option value="25" {% if context.currentUser.rowLimit == 25 %}selected{% endif %}>25</option>
                     <option value="50" {% if context.currentUser.rowLimit == 50 %}selected{% endif %}>50</option>
