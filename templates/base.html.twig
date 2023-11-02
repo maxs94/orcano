@@ -1,6 +1,6 @@
 {% set theme = context.currentUser.theme %}
 <!DOCTYPE html>
-<html lang="{{ app.locale }}" data-bs-theme="{{ theme }}">
+<html lang="{{ app.locale }}" data-bs-theme="{{ theme }}" data-user-id="{{ context.currentUser.id }}">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">

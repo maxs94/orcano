@@ -9,6 +9,7 @@ namespace App\Controller\Api;
 use App\DataObject\Api\ApiInfoMessageDataObject;
 use App\DataObject\Collection\DataObjectCollection;
 use App\DataObject\Collection\DataObjectCollectionInterface;
+use App\DataObject\Collection\SearchResultDataObjectCollection;
 use App\Repository\AbstractServiceEntityRepository;
 use App\Service\Converter\CaseConverter;
 use Doctrine\ORM\EntityManagerInterface;
@@ -66,6 +67,7 @@ abstract class AbstractApiController extends AbstractController
             'message' => $message,
             'data' => $collection instanceof \App\DataObject\Collection\DataObjectCollectionInterface ? $collection->getElements() : [],
             'count' => $collection instanceof \App\DataObject\Collection\DataObjectCollectionInterface ? $collection->getCount() : 0,
+            'totalCount' => $collection instanceof SearchResultDataObjectCollection ? $collection->getTotalCount() : 0,
         ];
 
         return $this->json($res);
