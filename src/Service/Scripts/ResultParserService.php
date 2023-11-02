@@ -14,7 +14,8 @@ class ResultParserService
 {
     public const ODATA_STRING = 'ODATA:';
 
-    public function parse(string $result, ConditionCollection $conditions): ScriptResultDataObject
+    /** @return array<string, mixed> */
+    public function extractJson(string $result): array
     {
         if (!stristr($result, self::ODATA_STRING)) {
             throw new \Exception('Result does not start with ODATA: string');
@@ -28,15 +29,13 @@ class ResultParserService
             throw new \Exception(sprintf('Could not decode json string: %s', $jsonString));
         }
 
-        $converted = $this->convertAllKeysToLowerCase($array);
-
-        return $this->parseResultJson($converted, $conditions);
+        return $this->convertAllKeysToLowerCase($array);
     }
 
     /**
      * @param array<string, mixed> $scriptResult
      */
-    private function parseResultJson(array $scriptResult, ConditionCollection $conditions): ScriptResultDataObject
+    public function parseResultJson(array $scriptResult, ConditionCollection $conditions): ScriptResultDataObject
     {
         $result = new ScriptResultDataObject();
         $result->setMessage($scriptResult);
@@ -46,13 +45,13 @@ class ResultParserService
             $value = $scriptResult[$key] ?? null;
             if ($value !== null) {
                 if ($condition->checkIfOk($value)) {
-                    $result->setResult(ScriptResultDataObject::RESULT_OK);
+                    $result->setCheckResult(ScriptResultDataObject::RESULT_OK);
                 } else {
-                    $result->setResult(ScriptResultDataObject::RESULT_ERROR);
+                    $result->setCheckResult(ScriptResultDataObject::RESULT_ERROR);
                 }
 
                 if ($condition->checkIfWarn($value)) {
-                    $result->setResult(ScriptResultDataObject::RESULT_WARNING);
+                    $result->setCheckResult(ScriptResultDataObject::RESULT_WARNING);
                 }
 
                 $result->setNote(sprintf('"%s" is %s', $key, $value));
@@ -61,7 +60,7 @@ class ResultParserService
             }
 
             // if a check fails, we can stop here
-            if ($result->getResult() !== ScriptResultDataObject::RESULT_OK) {
+            if ($result->getCheckResult() !== ScriptResultDataObject::RESULT_OK) {
                 break;
             }
         }

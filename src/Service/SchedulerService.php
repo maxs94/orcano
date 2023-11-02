@@ -6,15 +6,11 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Condition\ConditionCollection;
-use App\Condition\EqualsCondition;
-use App\Condition\MinMaxCondition;
 use App\Entity\Asset;
 use App\Entity\AssetGroup;
 use App\Entity\ServiceCheck;
 use App\Entity\ServiceCheckWorkerStats;
 use App\Message\CheckNotification;
-use App\Repository\AssetGroupRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -58,27 +54,20 @@ class SchedulerService
     {
         $checkScript = $check->getCheckScript();
 
-        // todo:
-        //
-        // have specific conditions per checkscript
-        //
-        // have an inheritance would make very much sense:
-        // ServiceCheck -> AssetGroup -> Asset
-        // $conditionTemplateString = // serialized conditions string
-        // $conditions = unserialize($conditionTemplateString);
-        $conditions = new ConditionCollection();
-        $conditions->addCondition('result', new EqualsCondition(0));
-        $conditions->addCondition('time', new MinMaxCondition(0, 1000, 20));  // ok if between 0 and 1000, warn if between 20 and 1000
-
         $message = new CheckNotification(
+            $asset->getId(),
             $asset->getHostname(),
             $asset->getIpv4Address(),
             $asset->getIpv6Address(),
-            $checkScript->getFilename(),
-            $conditions
+            $checkScript->getFilename()
         );
 
-        $this->logger->info(sprintf('%s - Scheduling check %s on %s using script %s', $message->getId(), $check->getName(), $asset->getHostname(), $checkScript->getFilename()));
+        $this->logger->info(sprintf('Scheduling check %s on %s (%d) using script %s',
+            $check->getName(),
+            $asset->getHostname(),
+            $message->getAssetId(),
+            $checkScript->getFilename())
+        );
 
         $this->bus->dispatch($message);
     }

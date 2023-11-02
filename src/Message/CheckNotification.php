@@ -6,26 +6,19 @@ declare(strict_types=1);
 
 namespace App\Message;
 
-use App\Condition\ConditionCollection;
-use Symfony\Component\Uid\Uuid;
-
 class CheckNotification
 {
-    private readonly string $id;
-
     public function __construct(
+        private readonly int $assetId,
         private readonly string $hostname,
         private readonly ?string $ipv4Address,
         private readonly ?string $ipv6Address,
-        private readonly string $checkScriptFilename,
-        private readonly ConditionCollection $conditions,
-    ) {
-        $this->id = Uuid::v4()->toRfc4122();
-    }
+        private readonly string $checkScriptFilename
+    ) {}
 
-    public function getId(): string
+    public function getAssetId(): int
     {
-        return $this->id;
+        return $this->assetId;
     }
 
     public function getHostname(): string
@@ -46,10 +39,5 @@ class CheckNotification
     public function getCheckScriptFilename(): string
     {
         return $this->checkScriptFilename;
-    }
-
-    public function getConditions(): ConditionCollection
-    {
-        return $this->conditions;
     }
 }

@@ -28,4 +28,5 @@ pingResult=$($PING $address 2>/dev/null)
 pingResultCode=$?
 pingTime=$(echo "$pingResult" | $GREP -oP 'time=\K\S+')
 
-printf 'ODATA: {"result":%d,"time":"%f"}' $pingResultCode $pingTime
+# LC_NUMERIC=C is needed to force printf to use a dot instead of a comma for the decimal separator
+LC_NUMERIC=C printf 'ODATA: {"result":%d,"time":"%f"}' $pingResultCode $pingTime
