@@ -15,6 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 class CheckScript implements DataObjectInterface, ApiEntityInterface
 {
     use Trait\IdTrait;
+    use Trait\SetDataTrait;
 
     #[ORM\Column(length: 255)]
     private ?string $name = null;

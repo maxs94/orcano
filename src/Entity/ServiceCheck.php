@@ -11,6 +11,7 @@ use App\Repository\ServiceCheckRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 #[ORM\Entity(repositoryClass: ServiceCheckRepository::class)]
 class ServiceCheck implements DataObjectInterface, ApiEntityInterface
@@ -191,7 +192,7 @@ class ServiceCheck implements DataObjectInterface, ApiEntityInterface
     /**
      * @return Collection<int, AssetGroup>
      */
-    private function getAssetGroups(): Collection
+    public function getAssetGroups(): Collection
     {
         return $this->assetGroups;
     }

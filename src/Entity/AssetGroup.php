@@ -37,7 +37,7 @@ class AssetGroup implements DataObjectInterface, ApiEntityInterface
         $this->serviceChecks = new ArrayCollection();
     }
 
-    public function setData(array $data): self
+    public function setData(array $data): self 
     {
         $this->setDataIfNotEmptyString($data, 'name', 'name');
 
@@ -45,6 +45,7 @@ class AssetGroup implements DataObjectInterface, ApiEntityInterface
 
         return $this;
     }
+
 
     public function getName(): ?string
     {

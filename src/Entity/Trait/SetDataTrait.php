@@ -6,9 +6,12 @@ declare(strict_types=1);
 
 namespace App\Entity\Trait;
 
+use Symfony\Component\Serializer\Annotation\Ignore;
+
 trait SetDataTrait
 {
     /** @param array<string, mixed> $data */
+    #[Ignore]
     private function setDataIfNotEmptyBoolean(array $data, string $key, string $property): void
     {
         if (!array_key_exists($key, $data)) {
@@ -21,6 +24,7 @@ trait SetDataTrait
     }
 
     /** @param array<string, mixed> $data */
+    #[Ignore]
     private function setDataIfNotEmptyInteger(array $data, string $key, string $property): void
     {
         if (!array_key_exists($key, $data)) {
@@ -33,6 +37,7 @@ trait SetDataTrait
     }
 
     /** @param array<string, mixed> $data */
+    #[Ignore]
     private function setDataIfNotEmptyString(array $data, string $key, string $property): void
     {
         if (!array_key_exists($key, $data)) {
@@ -45,6 +50,7 @@ trait SetDataTrait
     }
 
     /** @param array<string, mixed> $data */
+    #[Ignore]
     private function setDataIfNotEmptyFloat(array $data, string $key, string $property): void
     {
         if (!array_key_exists($key, $data)) {
