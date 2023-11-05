@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block page_heading_wrapper %}{% endblock %}
+
+{% block page_content %}
+
+{% set tableColumns = [
+{ name: 'name', label: 'label.hostname'|trans },
+{ name: 'createdAt', label: 'label.createdAt'|trans, type: 'datetime', format: 'd-m-Y H:i:s' },
+]
+%}
+
+{% include 'partials/data-table.html.twig' with { 'page': page, 'tableColumns': tableColumns } %}
+
+{% endblock %}

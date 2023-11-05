@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% set serviceCheck = page.parameters.get('serviceCheck') %}
+{% set checkScripts = page.parameters.get('checkScripts') %}
+
+{% block page_title %}{{ 'title.service-check.edit'|trans }}{% endblock %}
+
+{% block page_heading %}{{ 'title.service-check.edit'|trans }}{% endblock %}
+
+{% block page_content %}
+{% block edit_service_check %}
+
+<div class="card">
+    <div class="card-body">
+    
+        <form data-form="true" data-form-entity="service-check" data-form-validator="validateServiceCheckForm" data-refresh-after-save="false">
+
+            <div class="form-group">
+                <label for="name" class="form-label">{{ 'label.name'|trans }}</label>
+                <input type="text" name="name" id="name" class="form-control" placeholder="{{ 'label.service-check.name.hint'|trans }}" value="{{ serviceCheck.name }}">
+            </div>
+
+            <div class="form-group">
+                <label for="check-script" class="form-label">{{ 'label.check-script'|trans }}</label>
+                <select name="check-script" id="check-script" class="form-control">
+                {% for checkScript in checkScripts %}
+                    <option value="{{ checkScript.id }}" {% if serviceCheck.checkScript.id == checkScript.id %}selected{% endif %}>{{ checkScript.name }}</option>
+                {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="check-interval-seconds" class="form-label">{{ 'label.check-interval-seconds'|trans }}</label>
+                <input type="number" name="check-interval-seconds" id="check-interval-seconds" class="form-control" placeholder="{{ 'label.service-check.check-interval.hint'|trans }}" value="{{ serviceCheck.checkIntervalSeconds }}">
+            </div>
+
+            <div class="form-group">
+                <label for="retry-interval-seconds" class="form-label">{{ 'label.retry-interval-seconds'|trans }}</label>
+                <input type="number" name="retry-interval-seconds" id="retry-interval-seconds" class="form-control" placeholder="{{ 'label.service-check.retry-interval.hint'|trans }}" value="{{ serviceCheck.retryIntervalSeconds }}">
+            </div>
+            
+            <div class="form-group">
+                <label for="max-retries" class="form-label">{{ 'label.max-retries'|trans }}</label>
+                <input type="number" name="max-retries" id="max-retries" class="form-control" placeholder="{{ 'label.service-check.max-retries.hint'|trans }}" value="{{ serviceCheck.maxRetries }}">
+            </div>
+
+            <div class="form-check">
+                <input type="checkbox" name="notifications-enabled" id="notifications-enabled" class="form-check-input" {% if serviceCheck.notificationsEnabled %}checked{% endif %}>
+                <label for="notifications-enabled" class="form-check-label">{{ 'label.notifications-enabled'|trans }}</label>
+            </div>
+                
+            <div class="form-check">
+                <input type="checkbox" name="enabled" id="enabled" class="form-check-input" {% if serviceCheck.enabled %}checked{% endif %}>
+                <label for="enabled" class="form-check-label">{{ 'label.enabled'|trans }}</label>
+            </div>
+
+            <hr>
+
+            <div class="form-group">
+                <input type="hidden" name="id" value="{{ serviceCheck.id }}">
+                <button type="submit" class="btn btn-primary">{{ 'label.save'|trans }}</button>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+{% endblock %}
+{% endblock %}
+
+{% block scripts %}
+{{ parent() }}
+
+<script>
+function validateServiceCheckForm(formInputs) {
+
+    if (formInputs['name'].value == '') {
+        return('{{ 'alert.service-check.name.empty'|trans }}'); 
+    }
+
+    return true;
+}
+</script>
+
+{% endblock %}

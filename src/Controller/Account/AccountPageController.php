@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class AccountController extends AbstractPageController
+class AccountPageController extends AbstractPageController
 {
     #[Route('/account', name: 'account')]
     public function indexAction(Request $request): Response

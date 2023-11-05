@@ -1,4 +1,5 @@
 {% block data_table %}
+{% set editController = editController ?? null %}
 <section class="section">
     <div class="card">
         <div class="card-header">
@@ -10,11 +11,12 @@
                 data-table-entity="{{ page.entityName }}" 
                 data-table-page="{{ page.page }}"
                 data-table-limit="{{ context.currentUser.rowLimit }}"
+                data-table-edit-controller="{{ editController }}"
                 class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns"
             >
 
                 <div class="dataTable-container">
-                    <table class="table table-striped dataTable-table">
+                    <table class="table table-striped dataTable-table w-auto">
                         {% include 'partials/data-table-header.html.twig' with { 'columns': tableColumns } %}
                         <tbody></tbody>
                     </table>

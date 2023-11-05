@@ -6,16 +6,16 @@ declare(strict_types=1);
 
 namespace App\Event;
 
-use App\DataObject\DataObjectInterface;
+use App\Entity\ApiEntityInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class EntityUpsertEvent extends Event
 {
     public const NAME = 'entity.upsert';
 
-    public function __construct(protected readonly DataObjectInterface $entity) {}
+    public function __construct(protected readonly ApiEntityInterface $entity) {}
 
-    public function getEntity(): DataObjectInterface
+    public function getEntity(): ApiEntityInterface
     {
         return $this->entity;
     }

@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ListingController extends AbstractPageController
+class ListingPageController extends AbstractPageController
 {
     public function __construct(
         private readonly ListingPageLoader $listingPageLoader
