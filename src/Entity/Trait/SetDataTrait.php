@@ -1,0 +1,58 @@
+<?php
+declare(strict_types=1);
+/**
+ * © 2023-2023 by the orcano team (https://github.com/maxs94/orcano)
+ */
+
+namespace App\Entity\Trait;
+
+trait SetDataTrait
+{
+    /** @param array<string, mixed> $data */
+    private function setDataIfNotEmptyBoolean(array $data, string $key, string $property): void
+    {
+        if (!array_key_exists($key, $data)) {
+            return;
+        }
+        if ($data[$key] === null) {
+            return;
+        }
+        $this->{$property} = (bool) $data[$key];
+    }
+
+    /** @param array<string, mixed> $data */
+    private function setDataIfNotEmptyInteger(array $data, string $key, string $property): void
+    {
+        if (!array_key_exists($key, $data)) {
+            return;
+        }
+        if ($data[$key] === null) {
+            return;
+        }
+        $this->{$property} = (int) $data[$key];
+    }
+
+    /** @param array<string, mixed> $data */
+    private function setDataIfNotEmptyString(array $data, string $key, string $property): void
+    {
+        if (!array_key_exists($key, $data)) {
+            return;
+        }
+        if ($data[$key] === null) {
+            return;
+        }
+        $this->{$property} = (string) $data[$key];
+    }
+
+    /** @param array<string, mixed> $data */
+    private function setDataIfNotEmptyFloat(array $data, string $key, string $property): void
+    {
+        if (!array_key_exists($key, $data)) {
+            return;
+        }
+        if ($data[$key] === null) {
+            return;
+        }
+        $this->{$property} = (float) $data[$key];
+    }
+}

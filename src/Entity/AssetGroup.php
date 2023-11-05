@@ -14,9 +14,10 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Ignore;
 
 #[ORM\Entity(repositoryClass: AssetGroupRepository::class)]
-class AssetGroup implements DataObjectInterface
+class AssetGroup implements DataObjectInterface, ApiEntityInterface
 {
     use Trait\IdTrait;
+    use Trait\SetDataTrait;
 
     #[ORM\Column(length: 64)]
     private ?string $name = null;
@@ -34,6 +35,15 @@ class AssetGroup implements DataObjectInterface
         $this->createdAt = new \DateTime();
         $this->updatedAt = new \DateTime();
         $this->serviceChecks = new ArrayCollection();
+    }
+
+    public function setData(array $data): self
+    {
+        $this->setDataIfNotEmptyString($data, 'name', 'name');
+
+        // todo: assigend service checks
+
+        return $this;
     }
 
     public function getName(): ?string

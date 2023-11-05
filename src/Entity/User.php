@@ -15,9 +15,10 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-class User implements UserInterface, PasswordAuthenticatedUserInterface, DataObjectInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, DataObjectInterface, ApiEntityInterface
 {
     use Trait\IdTrait;
+    use Trait\SetDataTrait;
 
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
@@ -53,16 +54,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, DataObj
     /** @param array<string, mixed> $data */
     public function setData(array $data): self
     {
-        if (isset($data['email']) && !empty($data['email'])) {
-            $this->setEmail($data['email']);
-        }
-
-        if (isset($data['name']) && !empty($data['name'])) {
-            $this->setName($data['name']);
-        }
+        $this->setDataIfNotEmptyString($data, 'name', 'name');
+        $this->setDataIfNotEmptyString($data, 'email', 'email');
 
         if (isset($data['password']) && ($data['password'] !== '')) {
-            // todo: get setting from config
+            // todo: get algorithm setting from config
             $factory = new PasswordHasherFactory(['common' => ['algorithm' => 'bcrypt']]);
 
             $passwordHasher = $factory->getPasswordHasher('common');
@@ -71,17 +67,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, DataObj
             $this->setPassword($hash);
         }
 
-        if (isset($data['theme']) && !empty($data['theme'])) {
-            $this->setTheme($data['theme']);
-        }
-
-        if (isset($data['rowLimit']) && !empty($data['rowLimit'])) {
-            $this->setRowLimit((int) $data['rowLimit']);
-        }
-
-        if (isset($data['language']) && !empty($data['language'])) {
-            $this->setLanguage($data['language']);
-        }
+        $this->setDataIfNotEmptyString($data, 'theme', 'theme');
+        $this->setDataIfNotEmptyInteger($data, 'rowLimit', 'rowLimit');
+        $this->setDataIfNotEmptyString($data, 'language', 'language');
 
         $this->updatedAt = new \DateTime();
 

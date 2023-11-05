@@ -12,7 +12,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CheckScriptRepository::class)]
-class CheckScript implements DataObjectInterface
+class CheckScript implements DataObjectInterface, ApiEntityInterface
 {
     use Trait\IdTrait;
 
@@ -34,6 +34,16 @@ class CheckScript implements DataObjectInterface
     {
         $this->createdAt = new \DateTime();
         $this->updatedAt = new \DateTime();
+    }
+
+    /** @param array<string, string> $data */
+    public function setData(array $data): self
+    {
+        $this->setName($data['name']);
+        $this->setFilename($data['filename']);
+        $this->setDescription($data['description']);
+
+        return $this;
     }
 
     public function getName(): ?string
