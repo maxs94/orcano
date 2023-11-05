@@ -11,6 +11,7 @@ use App\Repository\AssetRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 #[ORM\Entity(repositoryClass: AssetRepository::class)]
 class Asset implements DataObjectInterface, ApiEntityInterface
@@ -40,7 +41,7 @@ class Asset implements DataObjectInterface, ApiEntityInterface
         $this->assetGroups = new ArrayCollection();
     }
 
-    /** @param array<string, mixed> $data */
+    #[Ignore]
     public function setData(array $data): self
     {
         $this->setDataIfNotEmptyString($data, 'hostname', 'hostname');

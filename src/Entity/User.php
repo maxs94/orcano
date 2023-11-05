@@ -83,7 +83,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, DataObj
         return $this->email;
     }
 
-    public function setEmail(string $email): static
+    public function setEmail(string $email): self
     {
         $this->email = $email;
 
@@ -115,7 +115,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, DataObj
     /**
      * @param array<string> $roles
      */
-    public function setRoles(array $roles): static
+    public function setRoles(array $roles): self
     {
         $this->roles = $roles;
 
@@ -130,7 +130,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, DataObj
         return $this->password;
     }
 
-    public function setPassword(string $password): static
+    public function setPassword(string $password): self
     {
         $this->password = $password;
 
@@ -151,7 +151,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, DataObj
         return $this->name;
     }
 
-    public function setName(?string $name): static
+    public function setName(?string $name): self
     {
         $this->name = $name;
 
@@ -163,7 +163,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, DataObj
         return $this->theme;
     }
 
-    public function setTheme(string $theme): static
+    public function setTheme(string $theme): self
     {
         $this->theme = $theme;
 
@@ -175,7 +175,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, DataObj
         return $this->rowLimit;
     }
 
-    public function setRowLimit(int $rowLimit): static
+    public function setRowLimit(int $rowLimit): self
     {
         $this->rowLimit = $rowLimit;
 
@@ -187,7 +187,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, DataObj
         return $this->language;
     }
 
-    public function setLanguage(string $language): static
+    public function setLanguage(string $language): self
     {
         $this->language = $language;
 

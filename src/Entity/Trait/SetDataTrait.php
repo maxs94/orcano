@@ -20,7 +20,16 @@ trait SetDataTrait
         if ($data[$key] === null) {
             return;
         }
-        $this->{$property} = (bool) $data[$key];
+
+        $value = $data[$key];
+
+        if ($value === 'on' || $value === 'true' || $value === '1' || $value === 1 || $value === true) {
+            $this->{$property} = true;
+
+            return;
+        }
+
+        $this->{$property} = false;
     }
 
     /** @param array<string, mixed> $data */

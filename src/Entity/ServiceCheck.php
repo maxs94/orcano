@@ -28,6 +28,7 @@ class ServiceCheck implements DataObjectInterface, ApiEntityInterface
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
+    #[Ignore]
     private CheckScript $checkScript;
 
     #[ORM\Column]
@@ -46,6 +47,7 @@ class ServiceCheck implements DataObjectInterface, ApiEntityInterface
     private bool $enabled = true;
 
     #[ORM\ManyToMany(targetEntity: AssetGroup::class, inversedBy: 'serviceChecks')]
+    #[Ignore]
     private Collection $assetGroups;
 
     public function __construct()
@@ -55,7 +57,7 @@ class ServiceCheck implements DataObjectInterface, ApiEntityInterface
         $this->assetGroups = new ArrayCollection();
     }
 
-    /** @param array<string, mixed> $data */
+    #[Ignore]
     public function setData(array $data): self
     {
         $this->setDataIfNotEmptyString($data, 'name', 'name');
@@ -192,7 +194,7 @@ class ServiceCheck implements DataObjectInterface, ApiEntityInterface
     /**
      * @return Collection<int, AssetGroup>
      */
-    public function getAssetGroups(): Collection
+    private function getAssetGroups(): Collection
     {
         return $this->assetGroups;
     }

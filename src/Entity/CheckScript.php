@@ -10,6 +10,7 @@ use App\DataObject\DataObjectInterface;
 use App\Repository\CheckScriptRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 #[ORM\Entity(repositoryClass: CheckScriptRepository::class)]
 class CheckScript implements DataObjectInterface, ApiEntityInterface
@@ -37,12 +38,12 @@ class CheckScript implements DataObjectInterface, ApiEntityInterface
         $this->updatedAt = new \DateTime();
     }
 
-    /** @param array<string, string> $data */
+    #[Ignore]
     public function setData(array $data): self
     {
-        $this->setName($data['name']);
-        $this->setFilename($data['filename']);
-        $this->setDescription($data['description']);
+        $this->setDataIfNotEmptyString($data, 'name', 'name');
+        $this->setDataIfNotEmptyString($data, 'filename', 'filename');
+        $this->setDataIfNotEmptyString($data, 'description', 'description');
 
         return $this;
     }
