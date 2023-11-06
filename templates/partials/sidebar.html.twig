@@ -28,6 +28,12 @@
                     </a>
                 </li>
 
+                <li class="sidebar-item {% if context.pathInfo == '/listing/asset-group' %}active{% endif %}"> <a href="{{ path('listing', {'entity': 'asset-group'}) }}" class="sidebar-link">
+                        <i class="bi bi-grid-fill"></i>
+                    <span>{{ 'sidebar.asset-groups'|trans }}</span>
+                    </a>
+                </li>
+
                 <li class="sidebar-item {% if context.pathInfo == '/listing/service-check' %}active{% endif %}"> <a href="{{ path('listing', {'entity': 'service-check'} ) }}" class="sidebar-link">
                         <i class="bi bi-grid-fill"></i>
                     <span>{{ 'sidebar.services'|trans }}</span>

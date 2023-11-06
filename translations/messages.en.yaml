@@ -2,15 +2,19 @@ login.welcome: 'Orcano Monitoring Framework'
 login.title: Welcome
 login.subtitle: 'Please login'
 login.username: 'Email address'
-login.password: Password
-login.button: Login
-sidebar.menu: Menu
-sidebar.dashboard: Dashboard
-sidebar.assets: Assets
-sidebar.services: Services
-sidebar.scripts: Scripts
-title.welcome: Welcome
-title.asset: Assets
+login.password: 'Password'
+login.button: 'Login'
+
+sidebar.menu: 'Menu'
+sidebar.dashboard: 'Dashboard'
+sidebar.assets: 'Assets'
+sidebar.asset-groups: 'Asset groups'
+sidebar.services: 'Services'
+sidebar.scripts: 'Scripts'
+
+title.welcome: 'Welcome'
+title.asset: 'Assets'
+title.asset-group.listing: 'Asset groups'
 title.service-check: 'Service checks'
 title.scripts: Scripts
 title.account.profile: 'Your profile'

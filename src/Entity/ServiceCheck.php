@@ -11,11 +11,14 @@ use App\Repository\ServiceCheckRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 #[ORM\Entity(repositoryClass: ServiceCheckRepository::class)]
-class ServiceCheck implements DataObjectInterface
+class ServiceCheck implements DataObjectInterface, ApiEntityInterface
 {
     use Trait\IdTrait;
+    use Trait\SetDataTrait;
+
     public const DEFAULT_CHECK_INTERVAL = 60;
 
     public const DEFAULT_MAX_RETRIES = 3;
@@ -25,6 +28,7 @@ class ServiceCheck implements DataObjectInterface
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
+    #[Ignore]
     private CheckScript $checkScript;
 
     #[ORM\Column]
@@ -43,6 +47,7 @@ class ServiceCheck implements DataObjectInterface
     private bool $enabled = true;
 
     #[ORM\ManyToMany(targetEntity: AssetGroup::class, inversedBy: 'serviceChecks')]
+    #[Ignore]
     private Collection $assetGroups;
 
     public function __construct()
@@ -50,6 +55,23 @@ class ServiceCheck implements DataObjectInterface
         $this->createdAt = new \DateTime();
         $this->updatedAt = new \DateTime();
         $this->assetGroups = new ArrayCollection();
+    }
+
+    #[Ignore]
+    public function setData(array $data): self
+    {
+        $this->setDataIfNotEmptyString($data, 'name', 'name');
+        $this->setDataIfNotEmptyInteger($data, 'checkIntervalSeconds', 'checkIntervalSeconds');
+        $this->setDataIfNotEmptyInteger($data, 'retryIntervalSeconds', 'retryIntervalSeconds');
+        $this->setDataIfNotEmptyInteger($data, 'maxRetries', 'maxRetries');
+        $this->setDataIfNotEmptyBoolean($data, 'notificationsEnabled', 'notificationsEnabled');
+        $this->setDataIfNotEmptyBoolean($data, 'enabled', 'enabled');
+
+        if (isset($data['checkScript']) && $data['checkScript'] instanceof CheckScript) {
+            $this->setCheckScript($data['checkScript']);
+        }
+
+        return $this;
     }
 
     public function getId(): ?int

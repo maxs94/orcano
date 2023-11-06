@@ -35,6 +35,11 @@ export default class FormPlugin extends Plugin {
         elements.forEach((element) => {
             let name = element.getAttribute('name');
             let value = element.value;
+
+            if (element.type == 'checkbox') {
+                value = element.checked;
+            } 
+
             result[name] = value;
         });
         return result;

@@ -2,12 +2,18 @@
 <thead>
     <tr class="dataTable-searchColumns">
     {% for column in columns %}
-        <td><input 
+        <td>
+            {% set searchable = column.searchable is defined ? column.searchable : true %}
+            {% if searchable == true %}
+            <input 
             type="text" 
             name="search-column-{{ column.name }}" 
             placeholder="{{ 'label.colSearch'|trans }}"
             data-col-name="{{ column.name }}"
-        ></td>
+            {% if column.width is defined %}style="width: {{ column.width }};"{% endif %}
+            >
+            {% endif %}
+        </td>
 
     {% endfor %}
     </tr>
@@ -17,6 +23,7 @@
             data-col-name="{{ column.name }}"
             data-col-type="{{ column.type ?? '' }}"
             data-col-format="{{ column.format ?? '' }}"
+            {% if column.width is defined %}style="width: {{ column.width }};"{% endif %}
         >{{ column.label }}</th>
     {% endfor %}
     </tr>

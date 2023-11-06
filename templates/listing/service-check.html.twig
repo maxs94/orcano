@@ -6,15 +6,18 @@
 
 {% set tableColumns = [
 { name: 'name', label: 'label.name'|trans },
-{ name: 'checkIntervalSeconds', label: 'label.checkIntervalSeconds'|trans },
-{ name: 'retryIntervalSeconds', label: 'label.retryIntervalSeconds'|trans },
-{ name: 'max_retries', label: 'label.maxRetries'|trans },
-{ name: 'notificationsEnabled', label: 'label.notificationsEnabled'|trans },
-{ name: 'enabled', label: 'label.enabled'|trans },
-{ name: 'createdAt', label: 'label.createdAt'|trans, type: 'datetime', format: 'd-m-Y H:i:s' },
+{ name: 'checkIntervalSeconds', label: 'label.checkIntervalSeconds'|trans, width: '100px' },
+{ name: 'retryIntervalSeconds', label: 'label.retryIntervalSeconds'|trans, width: '100px' },
+{ name: 'maxRetries', label: 'label.maxRetries'|trans, width: '100px' },
+{ name: 'notificationsEnabled', label: 'label.notificationsEnabled'|trans, width: '100px' },
+{ name: 'enabled', label: 'label.enabled'|trans, width: '100px' },
+{ name: 'createdAt', label: 'label.createdAt'|trans, type: 'datetime', format: 'd-m-Y H:i:s', width: '100px' },
+{ name: 'actions', label: 'label.actions'|trans, width: '100px', searchable: false, sortable: false }
 ]
 %}
 
-{% include 'partials/data-table.html.twig' with { 'page': page, 'tableColumns': tableColumns } %}
+{% set editController = path('edit_service_check') %}
+
+{% include 'partials/data-table.html.twig' with { 'page': page, 'tableColumns': tableColumns, 'editController': editController } %}
 
 {% endblock %}

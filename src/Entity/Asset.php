@@ -11,11 +11,13 @@ use App\Repository\AssetRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 #[ORM\Entity(repositoryClass: AssetRepository::class)]
-class Asset implements DataObjectInterface
+class Asset implements DataObjectInterface, ApiEntityInterface
 {
     use Trait\IdTrait;
+    use Trait\SetDataTrait;
 
     #[ORM\Column(length: 255)]
     private ?string $hostname = null;
@@ -37,6 +39,17 @@ class Asset implements DataObjectInterface
         $this->createdAt = new \DateTime();
         $this->updatedAt = new \DateTime();
         $this->assetGroups = new ArrayCollection();
+    }
+
+    #[Ignore]
+    public function setData(array $data): self
+    {
+        $this->setDataIfNotEmptyString($data, 'hostname', 'hostname');
+        $this->setDataIfNotEmptyString($data, 'ipv4Address', 'ipv4Address');
+        $this->setDataIfNotEmptyString($data, 'ipv6Address', 'ipv6Address');
+        $this->setDataIfNotEmptyString($data, 'name', 'name');
+
+        return $this;
     }
 
     public function getHostname(): ?string

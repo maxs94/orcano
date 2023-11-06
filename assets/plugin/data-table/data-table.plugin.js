@@ -15,6 +15,7 @@ export default class DataTablePlugin extends Plugin {
         this.tableHeader = this.table.querySelector('thead');
         this.tableBody = this.table.querySelector('tbody');
         this.tableSearchColumnsRow = this.el.querySelector(this.options.tableSearchColumnsRowSelector);
+        this.editController = this.el.getAttribute('data-table-edit-controller');
 
         this.registerEvents();
 
@@ -67,6 +68,10 @@ export default class DataTablePlugin extends Plugin {
                 let tableBodyColumn = document.createElement('td');
 
                 let value = row[columnConfig.name] ?? '';
+
+                if (columnConfig.name == 'actions') {
+                    value = '<a href="' + this.editController + '/' + row.id + '" class="btn btn-sm btn-primary">Edit</a>';
+                } 
 
                 tableBodyColumn.innerHTML = value;
                 tableBodyRow.appendChild(tableBodyColumn);
