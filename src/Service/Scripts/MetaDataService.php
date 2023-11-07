@@ -7,6 +7,8 @@ declare(strict_types=1);
 namespace App\Service\Scripts;
 
 use App\DataObject\Scripts\MetaDataObject;
+use MetaDataNotFoundException;
+use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 
 class MetaDataService
 {
@@ -22,7 +24,7 @@ class MetaDataService
         $metaData = [];
 
         if (!file_exists($filename)) {
-            throw new \Exception('File not found: ' . $filename);
+            throw new FileNotFoundException(null, 0, null, $filename);
         }
 
         $file = fopen($filename, 'r');
@@ -44,7 +46,7 @@ class MetaDataService
         }
 
         if ($metaData === []) {
-            throw new \Exception('No metadata found in file: ' . $filename);
+            throw new MetaDataNotFoundException(null, 0, null, $filename);
         }
 
         return (new MetaDataObject())
