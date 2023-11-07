@@ -2,18 +2,16 @@ login.welcome: 'Orcano Monitoring Framework'
 login.title: Welcome
 login.subtitle: 'Please login'
 login.username: 'Email address'
-login.password: 'Password'
-login.button: 'Login'
-
-sidebar.menu: 'Menu'
-sidebar.dashboard: 'Dashboard'
-sidebar.assets: 'Assets'
+login.password: Password
+login.button: Login
+sidebar.menu: Menu
+sidebar.dashboard: Dashboard
+sidebar.assets: Assets
 sidebar.asset-groups: 'Asset groups'
-sidebar.services: 'Services'
-sidebar.scripts: 'Scripts'
-
-title.welcome: 'Welcome'
-title.asset: 'Assets'
+sidebar.services: Services
+sidebar.scripts: Scripts
+title.welcome: Welcome
+title.asset: Assets
 title.asset-group.listing: 'Asset groups'
 title.service-check: 'Service checks'
 title.scripts: Scripts
@@ -55,3 +53,15 @@ label.entity-saved: 'Entity saved'
 alert.passwords-not-match: 'Passwords do not match'
 label.loading: Loading
 alert.email-required: 'Email is required'
+title.service-check.edit: 'Edit Services'
+label.actions: Actions
+label.service-check.name.hint: 'Name of the Service'
+label.check-script: 'Script'
+label.check-interval-seconds: 'Interval in Seconds'
+label.service-check.check-interval.hint: 'The Count of Seconds for the Interval'
+label.retry-interval-seconds: 'Retry Interval'
+label.service-check.retry-interval.hint: 'The Count of Seconds for Retry Interval'
+label.max-retries: Maximum Retries
+label.service-check.max-retries.hint: 'The max count of retries'
+label.notifications-enabled: 'Notifications enabled'
+alert.service-check.name.empty: 'The name of the service is empty'
