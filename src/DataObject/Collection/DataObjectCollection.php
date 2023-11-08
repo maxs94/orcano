@@ -7,6 +7,7 @@ declare(strict_types=1);
 namespace App\DataObject\Collection;
 
 use App\DataObject\DataObjectInterface;
+use Symfony\Polyfill\Intl\Icu\Exception\MethodNotImplementedException;
 
 class DataObjectCollection implements DataObjectCollectionInterface
 {
@@ -108,7 +109,9 @@ class DataObjectCollection implements DataObjectCollectionInterface
         $objectClass = $firstObject::class;
 
         if (!method_exists($objectClass, $getter)) {
-            throw new \Exception('Object ' . $objectClass . ' does not have method ' . $getter);
+            // FEEDBACK
+            // throw new Exception('Object ' . $objectClass . ' does not have method ' . $getter);
+            throw new MethodNotImplementedException($getter);
         }
 
         $results = [];
@@ -192,7 +195,8 @@ class DataObjectCollection implements DataObjectCollectionInterface
         foreach ($dataObjects as $dataObject) {
             $getter = 'get' . ucfirst($indexBy);
             if (!method_exists($dataObject, $getter)) {
-                throw new \Exception('Object ' . $dataObject::class . ' does not have method ' . $getter);
+                // throw new Exception('Object ' . $dataObject::class . ' does not have method ' . $getter);
+                throw new MethodNotImplementedException($getter);
             }
 
             $indexed[$dataObject->{$getter}()] = $dataObject;

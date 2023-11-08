@@ -9,6 +9,8 @@ namespace App\Controller\Api\Upsert;
 use App\Controller\Api\AbstractApiController;
 use App\Entity\ApiEntityInterface;
 use App\Event\EntityUpsertEvent;
+use App\Exception\EntityNotFoundException;
+use App\Exception\RepositoryNotFoundException;
 use App\Service\Converter\CaseConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -74,12 +76,12 @@ class ApiUpsertController extends AbstractApiController
                 /** @phpstan-ignore-next-line */
                 $repo = $this->em->getRepository($type);
                 if ($repo == null) {
-                    throw new \Exception("Repository {$type} not found");
+                    throw new RepositoryNotFoundException("Repository {$type} not found");
                 }
 
                 $relatedEntity = $repo->find((int) $value);
                 if ($relatedEntity === null) {
-                    throw new \Exception("Entity {$type} with id {$value} not found");
+                    throw new EntityNotFoundException("Entity {$type} with id {$value} not found");
                 }
                 $ret[$key] = $relatedEntity;
             } else {

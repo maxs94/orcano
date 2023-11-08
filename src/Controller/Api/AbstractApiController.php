@@ -17,6 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\VarExporter\Exception\ClassNotFoundException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 abstract class AbstractApiController extends AbstractController
@@ -52,7 +53,7 @@ abstract class AbstractApiController extends AbstractController
         $content = json_decode($request->getContent(), true);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new \Exception('Invalid JSON');
+            throw new \JsonException('Invalid JSON', json_last_error());
         }
 
         return $content;
@@ -79,7 +80,7 @@ abstract class AbstractApiController extends AbstractController
         $entityClassName = sprintf('App\Entity\%s', ucfirst($entityName));
 
         if (!class_exists($entityClassName)) {
-            throw new \Exception(sprintf('Repository class not found for entity: %s', $entity));
+            throw new ClassNotFoundException($entityClassName);
         }
 
         /** @var AbstractServiceEntityRepository $repository */
