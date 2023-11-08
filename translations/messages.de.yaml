@@ -1,1 +1,59 @@
-sidebar.menu: 'Menü'
+sidebar.menu: Menü
+label.entity-saved: 'Tabelle gespeichert'
+label.user.profile: 'Ihr Profil'
+label.logout: Logout
+label.loading: Laden
+sidebar.dashboard: Dashboard
+sidebar.assets: Assets
+sidebar.services: Dienste
+sidebar.scripts: Skripte
+label.colSearch: Spaltesuche
+label.name: Bezeichnung
+label.description: Beschreibung
+label.isRegistered: registriert
+label.createdAt: 'erstellt am'
+label.hostname: Hostname
+label.ipv4Address: IPv4
+label.ipv6Address: IPv6
+label.checkIntervalSeconds: Überprüfungsintervall
+label.retryIntervalSeconds: Wiederholungsintervall
+label.maxRetries: 'maximale Wiederholungen'
+label.notificationsEnabled: "Benachrichtigungen aktiviert'"
+label.enabled: aktiviert
+login.title: Willkommen
+login.subtitle: 'Bitte anmelden'
+login.username: 'E-Mail Adresse'
+login.password: Passwort
+login.button: Einloggen
+login.welcome: Willkommen
+title.account.profile: 'Ihr Profil'
+label.name.hint: 'Ihr Name'
+label.email: Email
+label.email.hint: 'Ihre Email'
+label.password: Passwort
+label.password-repeat: 'Passwort wiederholen'
+label.theme: Theme
+label.theme.light: Light
+label.theme.dark: Dark
+label.language: Sprache
+label.language.auto: Automatisch
+label.language.en: English
+label.language.de: Deutsch
+label.row-limit: Zeilenlimit
+label.save: Speichern
+alert.passwords-not-match: 'Passwörter stimmen nicht überein'
+alert.email-required: 'Email erforderlich'
+title.welcome: Willkommen
+title.service-check.edit: 'Dienste bearbeiten'
+sidebar.asset-groups: 'Asset Gruppe'
+label.actions: Aktionen
+label.service-check.name.hint: 'Bezeichnung der Skripte'
+label.check-script: Skripte
+label.check-interval-seconds: 'Intervall zur Überprüfung'
+label.service-check.check-interval.hint: 'Anzahl der Sekunden für das Interval'
+label.retry-interval-seconds: 'Intervall der Wiederholungen'
+label.service-check.retry-interval.hint: 'Intervall der Wiederholungen'
+label.max-retries: 'Maximale Wiederholungen'
+label.service-check.max-retries.hint: 'Die Anzahl der maximalen Wiederholungen'
+label.notifications-enabled: 'Benachrichtigungen aktiviert'
+alert.service-check.name.empty: 'Die Bezeichnung des Dienstes wurde nicht gesetzt'
