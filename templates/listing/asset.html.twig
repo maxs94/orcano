@@ -9,9 +9,13 @@
 { name: 'ipv4Address', label: 'label.ipv4Address'|trans },
 { name: 'ipv6Address', label: 'label.ipv6Address'|trans },
 { name: 'createdAt', label: 'label.createdAt'|trans, type: 'datetime', format: 'd-m-Y H:i:s' },
+{ name: 'assetGroups.name', label: 'label.assetGroups'|trans, searchable: false, sortable: false, dataclass: 'badge bg-info me-1' },
+{ name: 'actions', label: 'label.actions'|trans, width: '100px', searchable: false, sortable: false }
 ]
 %}
 
-{% include 'partials/data-table.html.twig' with { 'page': page, 'tableColumns': tableColumns } %}
+{% set editController = path('edit_asset') %}
+
+{% include 'partials/data-table.html.twig' with { 'page': page, 'tableColumns': tableColumns, 'editController': editController } %}
 
 {% endblock %}

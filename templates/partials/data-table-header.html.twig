@@ -10,7 +10,6 @@
             name="search-column-{{ column.name }}" 
             placeholder="{{ 'label.colSearch'|trans }}"
             data-col-name="{{ column.name }}"
-            {% if column.width is defined %}style="width: {{ column.width }};"{% endif %}
             >
             {% endif %}
         </td>
@@ -24,6 +23,9 @@
             data-col-type="{{ column.type ?? '' }}"
             data-col-format="{{ column.format ?? '' }}"
             {% if column.width is defined %}style="width: {{ column.width }};"{% endif %}
+            {% if column.type is defined %}data-col-type="{{ column.type }}"{% endif %}
+            {% if column.format is defined %}data-col-format="{{ column.format }}"{% endif %}
+            {% if column.dataclass is defined %}data-col-dataclass="{{ column.dataclass }}"{% endif %}
         >{{ column.label }}</th>
     {% endfor %}
     </tr>

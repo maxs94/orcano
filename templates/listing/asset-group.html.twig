@@ -7,9 +7,12 @@
 {% set tableColumns = [
 { name: 'name', label: 'label.hostname'|trans },
 { name: 'createdAt', label: 'label.createdAt'|trans, type: 'datetime', format: 'd-m-Y H:i:s' },
+{ name: 'actions', label: 'label.actions'|trans, width: '100px', searchable: false, sortable: false }
 ]
 %}
 
-{% include 'partials/data-table.html.twig' with { 'page': page, 'tableColumns': tableColumns } %}
+{% set editController = path('edit_asset_group') %}
+
+{% include 'partials/data-table.html.twig' with { 'page': page, 'tableColumns': tableColumns, 'editController': editController } %}
 
 {% endblock %}
