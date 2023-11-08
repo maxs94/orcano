@@ -50,8 +50,11 @@ export default class DataTablePlugin extends Plugin {
             let name = tableHeaderColumn.getAttribute('data-col-name');
             let type = tableHeaderColumn.getAttribute('data-col-type');
             let format = tableHeaderColumn.getAttribute('data-col-format');
+            let sortable = tableHeaderColumn.getAttribute('data-col-sortable');
+            let searchable = tableHeaderColumn.getAttribute('data-col-searchable');
+            let dataclass = tableHeaderColumn.getAttribute('data-col-dataclass');
 
-            columns.push({'name': name, 'type': type, 'format': format});
+            columns.push({'name': name, 'type': type, 'format': format, 'sortable': sortable, 'searchable': searchable, 'dataclass': dataclass});
         });
         return columns;
     }
@@ -67,7 +70,7 @@ export default class DataTablePlugin extends Plugin {
             columns.forEach((columnConfig) => {
                 let tableBodyColumn = document.createElement('td');
 
-                let value = row[columnConfig.name] ?? '';
+                let value = this.getValue(columnConfig.name, row, columnConfig);
 
                 if (columnConfig.name == 'actions') {
                     value = '<a href="' + this.editController + '/' + row.id + '" class="btn btn-sm btn-primary">Edit</a>';
@@ -85,6 +88,45 @@ export default class DataTablePlugin extends Plugin {
 
         });
         this.tableBody.innerHTML = tableBody.innerHTML;
+    }
+
+    getValue(fieldName, row, config) {
+        let fieldNames = fieldName.split('.');
+
+        if (fieldNames.length == 1) {
+            return this.getRowValue(fieldName, row, config);
+        }
+
+        for(let i = 0; i < fieldNames.length; i++) {
+            let values = row[fieldNames[i]];
+            if (typeof values === 'object') {
+                let newFieldName = fieldNames.slice(1).join('.');
+                return this.getValue(newFieldName, values, config);
+            }
+        }
+    }
+
+    getRowValue(fieldName, row, config) {
+        if (row.length > 0) {
+            let values = [];
+            for (let i = 0; i < row.length; i++) {
+                if (row[i].hasOwnProperty(fieldName)) {
+                    values.push(row[i][fieldName]);
+                }
+            }
+                
+            if (config.dataclass === null) {
+                return values.join(', ');
+            } else {
+                let html = '';
+                values.forEach((value) => {
+                    html += '<span class="' + config.dataclass + '">' + value + '</span>';
+                });
+                return html;
+            }
+        } 
+
+        return row[fieldName] ?? '';
     }
 
     loadData(limit) {

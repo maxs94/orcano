@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% set assetGroup = page.parameters.get('assetGroup') %}
+
+{% block page_title %}{{ 'title.asset-group.edit'|trans }}{% endblock %}
+
+{% block page_heading %}{{ 'title.asset-group.edit'|trans }}{% endblock %}
+
+{% block page_content %}
+{% block edit_service_check %}
+
+<div class="card">
+    <div class="card-body">
+    
+        <form data-form="true" data-form-entity="asset-group" data-form-validator="validateAssetGroupFrom" data-refresh-after-save="false">
+
+            <div class="form-group">
+                <label for="name" class="form-label">{{ 'label.name'|trans }}</label>
+                <input type="text" name="name" id="name" class="form-control" placeholder="{{ 'label.asset-group.name.hint'|trans }}" value="{{ assetGroup.name }}">
+            </div>
+
+            <div class="form-group">
+                <label for="assets" class="form-label">{{ 'label.assets'|trans }}</label>
+                <div>TODO: ASSET PICKER</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="assets" class="form-label">{{ 'label.service-checks'|trans }}</label>
+                <div>TODO: SERVICE CHECKS PICKER?<br>
+                    maybe we just enable addding service checks to asset groups in /service-checks/edit,<br>
+                    because they would need to be configurable
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="form-group">
+                <input type="hidden" name="id" value="{{ assetGroup.id }}">
+                <button type="submit" class="btn btn-primary">{{ 'label.save'|trans }}</button>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+{% endblock %}
+{% endblock %}
+
+{% block scripts %}
+{{ parent() }}
+
+<script>
+function validateAssetGroupFrom(formInputs) {
+
+    if (formInputs['name'].value == '') {
+        return('{{ 'alert.asset-group.name.empty'|trans }}'); 
+    }
+
+    return true;
+}
+</script>
+
+{% endblock %}
