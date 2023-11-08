@@ -10,6 +10,7 @@
             name="search-column-{{ column.name }}" 
             placeholder="{{ 'label.colSearch'|trans }}"
             data-col-name="{{ column.name }}"
+            {% if column.width is defined %}style="width: {{ column.width }};"{% endif %}
             >
             {% endif %}
         </td>
