@@ -6,12 +6,12 @@ declare(strict_types=1);
 
 namespace App\Service\Scripts;
 
-use App\Exception\ArrayIsNullException;
-use App\Exception\ODataStringNotFoundException;
 use App\Condition\AbstractCondition;
 use App\Condition\ConditionCollection;
 use App\DataObject\ScriptResultDataObject;
+use App\Exception\ArrayIsNullException;
 use App\Exception\MissingKeyException;
+use App\Exception\ODataStringNotFoundException;
 
 class ResultParserService
 {
@@ -30,7 +30,6 @@ class ResultParserService
 
         if ($array === null) {
             throw new ArrayIsNullException(sprintf('Could not decode json string: %s', $jsonString));
-            
         }
 
         return $this->convertAllKeysToLowerCase($array);

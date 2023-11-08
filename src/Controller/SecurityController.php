@@ -27,6 +27,5 @@ class SecurityController extends AbstractPageController
     }
 
     #[Route('/logout', name: 'app_logout')]
-    public function logout(): never
-    {}
+    public function logout(): void {}
 }

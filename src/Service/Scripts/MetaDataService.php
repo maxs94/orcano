@@ -7,7 +7,7 @@ declare(strict_types=1);
 namespace App\Service\Scripts;
 
 use App\DataObject\Scripts\MetaDataObject;
-use MetaDataNotFoundException;
+use App\Exception\MetaDataNotFoundException;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 
 class MetaDataService

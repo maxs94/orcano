@@ -53,7 +53,7 @@ abstract class AbstractApiController extends AbstractController
         $content = json_decode($request->getContent(), true);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new \Exception('Invalid JSON');
+            throw new \JsonException('Invalid JSON', json_last_error());
         }
 
         return $content;
