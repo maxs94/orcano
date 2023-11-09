@@ -31,11 +31,11 @@
             
             <div class="form-group">
                 <label for="ipv6-address" class="form-label">{{ 'label.ipv6-address'|trans }}</label>
-                <input type="text" name="ipv6-address" id="ipv6-address" class="form-control" placeholder="{{ 'label.asset.ipv4-address.hint'|trans }}" value="{{ asset.ipv6Address }}">
+                <input type="text" name="ipv6-address" id="ipv6-address" class="form-control" placeholder="{{ 'label.asset.ipv6-address.hint'|trans }}" value="{{ asset.ipv6Address }}">
             </div>
 
             <div class="form-group">
-                <label for="asset-groups" class="form-label">{{ 'label.asset-groups'|trans }}</label>
+                <label for="asset-groups" class="form-label">{{ 'label.assetGroups'|trans }}</label>
                 <div>
                 {% for assetGroup in asset.assetGroups %}
                     <span class="badge bg-secondary">{{ assetGroup.name }}</span>

@@ -50,6 +50,13 @@ label.language.en: English
 label.language.de: Deutsch
 label.row-limit: 'Row limit'
 label.entity-saved: 'Entity saved'
+label.assetGroups: 'Asset groups'
+label.asset.name.hint: 'Asset name'
+label.asset.hostname.hint: 'www.orcano.net'
+label.asset.ipv4-address.hint: '127.0.0.1'
+label.asset.ipv6-address.hint: '::1'
+label.assets: 'Assets'
+label.service-checks: 'Service checks'
 alert.passwords-not-match: 'Passwords do not match'
 label.loading: Loading
 alert.email-required: 'Email is required'

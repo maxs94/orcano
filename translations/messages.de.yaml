@@ -1,5 +1,11 @@
 sidebar.menu: Menü
 label.entity-saved: 'Tabelle gespeichert'
+label.assetGroups: 'Asset Gruppen'
+label.asset.name.hint: 'Asset Name'
+label.asset.hostname.hint: 'www.orcano.net'
+label.asset.ipv4-address.hint: '127.0.0.1'
+label.asset.ipv6-address.hint: '::1'
+label.assets: 'Assets'
 label.user.profile: 'Ihr Profil'
 label.logout: Logout
 label.loading: Laden
