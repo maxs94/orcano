@@ -7,6 +7,7 @@
 {% set tableColumns = [
 { name: 'name', label: 'label.hostname'|trans },
 { name: 'createdAt', label: 'label.createdAt'|trans, type: 'datetime', format: 'd-m-Y H:i:s' },
+{ name: 'serviceChecks.name', label: 'label.service-checks'|trans, searchable: false, sortable: false, dataclass: 'badge bg-info me-1' },
 { name: 'actions', label: 'label.actions'|trans, width: '100px', searchable: false, sortable: false }
 ]
 %}
