@@ -65,6 +65,12 @@ class ApiUpsertController extends AbstractApiController
             $key = CaseConverter::kebabCaseToCamelCase($key);
 
             $reflectionClass = new \ReflectionClass($entity);
+
+            if ($reflectionClass->hasProperty($key) === false) {
+                $this->logger->warning("Property {$key} not found on entity {$reflectionClass->getName()}");
+                continue;
+            }
+
             $reflectionProperty = $reflectionClass->getProperty($key);
 
             /** @var \ReflectionNamedType $reflectionType */

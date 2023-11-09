@@ -13,6 +13,7 @@ use App\DataObject\Collection\SearchResultDataObjectCollection;
 use App\Repository\AbstractServiceEntityRepository;
 use App\Service\Converter\CaseConverter;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -29,7 +30,8 @@ abstract class AbstractApiController extends AbstractController
     public function __construct(
         protected readonly EntityManagerInterface $em,
         protected readonly TranslatorInterface $translator,
-        protected readonly EventDispatcherInterface $eventDispatcher
+        protected readonly EventDispatcherInterface $eventDispatcher,
+        protected readonly LoggerInterface $logger
     ) {
         $this->errors = new DataObjectCollection();
         $this->warnings = new DataObjectCollection();
