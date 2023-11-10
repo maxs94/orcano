@@ -6,6 +6,8 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use SebastianBergmann\CodeCoverage\Driver\PathExistsButIsNotDirectoryException;
+
 /**
  * @copyright 2023 MSIT (https://markus-steindl.de)
  */
@@ -14,7 +16,7 @@ class FileIteratorService
     public function findFilesWithExtension(string $path, string $extension = '.jpg'): \Generator
     {
         if (!is_dir($path)) {
-            throw new \Exception('${path} is not a directory');
+            throw new PathExistsButIsNotDirectoryException($path);
         }
 
         $directoryIterator = new \RecursiveDirectoryIterator($path);

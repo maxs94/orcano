@@ -6,12 +6,14 @@ declare(strict_types=1);
 
 namespace App\Service\Scripts;
 
+use Symfony\Component\Filesystem\Exception\FileNotFoundException;
+
 class HashService
 {
     public function createHashFromFile(string $filename): string
     {
         if (!file_exists($filename)) {
-            throw new \Exception('File not found: ' . $filename);
+            throw new FileNotFoundException(null, 0, null, $filename);
         }
 
         return md5_file($filename);

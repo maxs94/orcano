@@ -8,3 +8,6 @@
 ![logo](https://github.com/maxs94/orcano/blob/master/public/images/logo/logo.png)
 
 Work in progress. Stay tuned. 
+
+[Current progress and features](https://github.com/maxs94/orcano/issues/22)
+
