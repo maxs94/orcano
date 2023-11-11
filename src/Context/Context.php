@@ -8,7 +8,7 @@ namespace App\Context;
 
 use App\DataObject\DataObjectInterface;
 use App\Entity\User;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class Context implements DataObjectInterface
 {
@@ -18,16 +18,18 @@ class Context implements DataObjectInterface
 
     private ?User $currentUser = null;
 
-    public static function createContextFromRequest(Request $request): Context
+    public function __construct(?RequestStack $requestStack=null)
     {
-        $context = new self();
-        $context->activeRoute = $request->attributes->get('_route');
-        $context->pathInfo = $request->getPathInfo();
+        if ($requestStack !== null) {
+            $request = $requestStack->getCurrentRequest();
+            if ($request !== null) {
+                $this->activeRoute = $request->attributes->get('_route');
+                $this->pathInfo = $request->getPathInfo();
 
-        $session = $request->getSession();
-        $context->currentUser = $session->get('currentUser');
-
-        return $context;
+                $session = $request->getSession();
+                $this->currentUser = $session->get('currentUser');
+            }
+        }
     }
 
     public function getCurrentUser(): ?User

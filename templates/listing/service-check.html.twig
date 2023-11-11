@@ -1,23 +1,37 @@
-{% extends 'base.html.twig' %}
+{% set hx = app.request.get('hx') %}
+{% extends hx is null ? 'base.html.twig' : 'htmx.html.twig' %}
 
 {% block page_heading_wrapper %}{% endblock %}
 
 {% block page_content %}
+<section class="section">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title">{% if page.title is defined %}{{ page.title }}{% endif %}</h5>
+        </div>
+        <div class="card-body">
+            <div class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns">
 
-{% set tableColumns = [
-{ name: 'name', label: 'label.name'|trans },
-{ name: 'checkIntervalSeconds', label: 'label.checkIntervalSeconds'|trans, width: '100px' },
-{ name: 'retryIntervalSeconds', label: 'label.retryIntervalSeconds'|trans, width: '100px' },
-{ name: 'maxRetries', label: 'label.maxRetries'|trans, width: '100px' },
-{ name: 'notificationsEnabled', label: 'label.notificationsEnabled'|trans, width: '100px' },
-{ name: 'enabled', label: 'label.enabled'|trans, width: '100px' },
-{ name: 'createdAt', label: 'label.createdAt'|trans, type: 'datetime', format: 'd-m-Y H:i:s', width: '100px' },
-{ name: 'actions', label: 'label.actions'|trans, width: '100px', searchable: false, sortable: false }
-]
-%}
+                <div class="dataTable-container">
+                    <table class="table table-striped dataTable-table w-auto">
+                        <thead>
+                            <th>{{ 'label.name'|trans }}</th>
+                            <th>{{ 'label.checkIntervalSeconds'|trans }}</th>
+                            <th>{{ 'label.retryIntervalSeconds'|trans }}</th>
+                            <th>{{ 'label.maxRetries'|trans }}</th>
+                            <th>{{ 'label.notificationsEnabled'|trans }}</th>
+                            <th>{{ 'label.enabled'|trans }}</th>
+                            <th>{{ 'label.createdAt'|trans }}</th>
+                            <th>{{ 'label.actions'|trans }}</th>
+                        </thead>
+                        <tbody id="asset-listing-body">
+                            {% include 'listing/service-check-items.html.twig' %}
+                        </tbody>
+                    </table>
+                </div>
 
-{% set editController = path('edit_service_check') %}
-
-{% include 'partials/data-table.html.twig' with { 'page': page, 'tableColumns': tableColumns, 'editController': editController } %}
-
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock %}

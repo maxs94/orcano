@@ -64,7 +64,11 @@ class ServiceCheck implements DataObjectInterface, ApiEntityInterface
         $this->setDataIfNotEmptyInteger($data, 'checkIntervalSeconds', 'checkIntervalSeconds');
         $this->setDataIfNotEmptyInteger($data, 'retryIntervalSeconds', 'retryIntervalSeconds');
         $this->setDataIfNotEmptyInteger($data, 'maxRetries', 'maxRetries');
+
+        $this->notificationsEnabled = false;
         $this->setDataIfNotEmptyBoolean($data, 'notificationsEnabled', 'notificationsEnabled');
+
+        $this->enabled = false;
         $this->setDataIfNotEmptyBoolean($data, 'enabled', 'enabled');
 
         if (isset($data['checkScript']) && $data['checkScript'] instanceof CheckScript) {

@@ -16,14 +16,17 @@ use Symfony\Component\Routing\Annotation\Route;
 class AssetGroupPageController extends AbstractPageController
 {
     public function __construct(
+        Context $context,
         private readonly AssetGroupPageLoader $assetGroupPageLoader
-    ) {}
+    ) {
+        parent::__construct($context);
+    }
 
     #[Route('/edit/asset-group/{id}', name: 'edit_asset_group')]
     public function indexAction(Request $request, Context $context, int $id = null): Response
     {
         $page = $this->assetGroupPageLoader->load($request, $context, $id);
 
-        return $this->renderPage($request, 'edit/asset-group.html.twig', ['page' => $page]);
+        return $this->renderPage('edit/asset-group.html.twig', ['page' => $page]);
     }
 }

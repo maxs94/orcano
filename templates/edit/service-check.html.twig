@@ -1,4 +1,5 @@
-{% extends 'base.html.twig' %}
+{% set hx = app.request.get('hx') %}
+{% extends hx == null ? 'base.html.twig' : 'htmx.html.twig' %}
 
 {% set serviceCheck = page.parameters.get('serviceCheck') %}
 {% set checkScripts = page.parameters.get('checkScripts') %}
@@ -9,15 +10,17 @@
 
 {% block page_content %}
 {% block edit_service_check %}
-
 <div class="card">
     <div class="card-body">
     
-        <form data-form="true" data-form-entity="service-check" data-form-validator="validateServiceCheckForm" data-refresh-after-save="false">
+        <form hx-post="{{ path('edit_service_check', {'id': serviceCheck.id }) }}?hx=1" hx-target="#page-content">
 
             <div class="form-group">
                 <label for="name" class="form-label">{{ 'label.name'|trans }}</label>
                 <input type="text" name="name" id="name" class="form-control" placeholder="{{ 'label.service-check.name.hint'|trans }}" value="{{ serviceCheck.name }}">
+                {% if errors.name is defined %}
+                <div class="alert alert-danger color-danger mt-1">{{ errors.name|trans }}</div>
+                {% endif %}
             </div>
 
             <div class="form-group">
@@ -57,8 +60,8 @@
             <hr>
 
             <div class="form-group">
-                <input type="hidden" name="id" value="{{ serviceCheck.id }}">
                 <button type="submit" class="btn btn-primary">{{ 'label.save'|trans }}</button>
+                <button hx-get="{{ path('listing', {'entity': 'service-check'}) }}?hx=1" hx-target="#page-content" type="button" class="btn btn-secondary">{{ 'label.back'|trans }}</button>
             </div>
 
         </form>
@@ -66,20 +69,4 @@
     </div>
 </div>
 {% endblock %}
-{% endblock %}
-
-{% block scripts %}
-{{ parent() }}
-
-<script>
-function validateServiceCheckForm(formInputs) {
-
-    if (formInputs['name'].value == '') {
-        return('{{ 'alert.service-check.name.empty'|trans }}'); 
-    }
-
-    return true;
-}
-</script>
-
 {% endblock %}

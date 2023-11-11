@@ -7,15 +7,14 @@ declare(strict_types=1);
 namespace App\Controller\Account;
 
 use App\Controller\Page\AbstractPageController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class AccountPageController extends AbstractPageController
 {
     #[Route('/account', name: 'account')]
-    public function indexAction(Request $request): Response
+    public function indexAction(): Response
     {
-        return $this->renderPage($request, 'account/index.html.twig');
+        return $this->renderPage('account/index.html.twig');
     }
 }

@@ -1,4 +1,5 @@
-{% extends 'base.html.twig' %}
+{% set hx = app.request.get('hx') %}
+{% extends hx == null ? 'base.html.twig' : 'htmx.html.twig' %}
 
 {% set asset = page.parameters.get('asset') %}
 
@@ -8,30 +9,40 @@
 
 {% block page_content %}
 {% block edit_service_check %}
-
 <div class="card">
     <div class="card-body">
     
-        <form data-form="true" data-form-entity="asset" data-form-validator="validateAssetFrom" data-refresh-after-save="false">
+        <form hx-post="{{ path('edit_asset', {'id': asset.id }) }}?hx=1" hx-target="#page-content">
 
             <div class="form-group">
-                <label for="name" class="form-label">{{ 'label.name'|trans }}</label>
-                <input type="text" name="name" id="name" class="form-control" placeholder="{{ 'label.asset.name.hint'|trans }}" value="{{ asset.name }}">
+                <div hx-target="this" hx-swap="outerHTML">
+                    <label for="name" class="form-label">{{ 'label.name'|trans }}</label>
+                    <input type="text" name="name" id="name" class="form-control" placeholder="{{ 'label.asset.name.hint'|trans }}" value="{{ asset.name }}">
+                </div>
             </div>
 
             <div class="form-group">
                 <label for="hostname" class="form-label">{{ 'label.hostname'|trans }}</label>
                 <input type="text" name="hostname" id="hostname" class="form-control" placeholder="{{ 'label.asset.hostname.hint'|trans }}" value="{{ asset.hostname }}">
+                {% if errors.hostname is defined %}
+                <div class="alert alert-danger color-danger mt-1">{{ errors.hostname|trans }}</div>
+                {% endif %}
             </div>
 
             <div class="form-group">
                 <label for="ipv4-address" class="form-label">{{ 'label.ipv4-address'|trans }}</label>
                 <input type="text" name="ipv4-address" id="ipv4-address" class="form-control" placeholder="{{ 'label.asset.ipv4-address.hint'|trans }}" value="{{ asset.ipv4Address }}">
+                {% if errors.ipv4_address is defined %}
+                <div class="alert alert-danger color-danger mt-1">{{ errors.ipv4_address|trans }}</div>
+                {% endif %}
             </div>
             
             <div class="form-group">
                 <label for="ipv6-address" class="form-label">{{ 'label.ipv6-address'|trans }}</label>
                 <input type="text" name="ipv6-address" id="ipv6-address" class="form-control" placeholder="{{ 'label.asset.ipv6-address.hint'|trans }}" value="{{ asset.ipv6Address }}">
+                {% if errors.ipv6_address is defined %}
+                <div class="alert alert-danger color-danger mt-1">{{ errors.ipv6_address|trans }}</div>
+                {% endif %}
             </div>
 
             <div class="form-group">
@@ -47,8 +58,8 @@
             <hr>
 
             <div class="form-group">
-                <input type="hidden" name="id" value="{{ asset.id }}">
                 <button type="submit" class="btn btn-primary">{{ 'label.save'|trans }}</button>
+                <button hx-get="{{ path('listing', {'entity': 'asset'}) }}?hx=1" hx-target="#page-content" type="button" class="btn btn-secondary">{{ 'label.back'|trans }}</button>
             </div>
 
         </form>
@@ -56,20 +67,4 @@
     </div>
 </div>
 {% endblock %}
-{% endblock %}
-
-{% block scripts %}
-{{ parent() }}
-
-<script>
-function validateAssetFrom(formInputs) {
-
-    if (formInputs['hostname'].value == '') {
-        return('{{ 'alert.asset.hostname.empty'|trans }}'); 
-    }
-
-    return true;
-}
-</script>
-
 {% endblock %}

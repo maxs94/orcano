@@ -1,36 +1,83 @@
-<?php
+<?PHP 
 declare(strict_types=1);
-/**
- * © 2023-2023 by the orcano team (https://github.com/maxs94/orcano)
- */
 
 namespace App\Controller\Page;
 
 use App\Context\Context;
+use App\DataObject\PageMessageDataObject;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-abstract class AbstractPageController extends AbstractController
+class AbstractPageController extends AbstractController
 {
-    private ?Context $context = null;
+    public function __construct(protected Context $context) {}
 
-    /**
-     * @param array<string, mixed> $parameters
-     */
-    protected function renderPage(Request $request, string $view, array $parameters = [], Response $response = null): Response
+    /** @var array<string|int, PageMessageDataObject> */
+    private array $errors = [];
+
+    /** @var array<string|int, PageMessageDataObject> */
+    private array $messages = [];
+
+    /** @param array<string, mixed> $parameters */
+    protected function renderPage(string $view, array $parameters = [], Response $response = null): Response
     {
-        $parameters['context'] = $this->getContext($request);
+        $parameters['context'] = $this->context;
+        $parameters['errors'] = $this->errors;
+        $parameters['messages'] = $this->messages;
 
-        return $this->render($view, $parameters, $response);
+        $response = $this->render($view, $parameters, $response);
+
+        $this->errors = [];
+        $this->messages = [];
+
+        return $response;
     }
 
-    private function getContext(Request $request): Context
+    /** @return array<string|int, PageMessageDataObject> */
+    public function getErrors(): array
     {
-        if (!$this->context instanceof \App\Context\Context) {
-            $this->context = Context::createContextFromRequest($request);
+        return $this->errors;
+    }
+
+    public function addError(string $text, ?string $key = null): void
+    {
+        $message = new PageMessageDataObject($text, PageMessageDataObject::TYPE_DANGER);
+
+        if ($key !== null) {
+            $this->errors[$key] = $message;
+            return;
         }
 
-        return $this->context;
+        $this->errors[] = $message;
+    }
+
+    /** @param array<string|int, PageMessageDataObject> $errors */
+    public function setErrors(array $errors): void
+    {
+        $this->errors = $errors;
+    }
+    
+    /** @return array<string, PageMessageDataObject> */
+    public function getMessages(): array
+    {
+        return $this->messages;
+    }
+
+    public function addMessage(string $text, ?string $type = 'info', ?string $key = null): void
+    {
+        $message = new PageMessageDataObject($text, $type);
+
+        if ($key !== null) {
+            $this->messages[$key] = $message;
+            return;
+        }
+
+        $this->messages[] = $message;
+    }
+
+    /** @param array<string|int, PageMessageDataObject> $messages */
+    public function setMessages(array $messages): void
+    {
+        $this->messages = $messages;
     }
 }

@@ -1,5 +1,6 @@
 // import base requirements
 import * as bootstrap from 'bootstrap';
+import 'htmx.org';
 
 // plugin manager
 import PluginManager from 'src/plugin-system/plugin.manager';
@@ -22,6 +23,7 @@ import SweetAlertPlugin from './plugin/sweetalert/sweetalert.plugin';
 // init
 window.eventEmitter = new NativeEventEmitter();
 window.bootstrap = bootstrap;
+window.htmx = require('htmx.org');
 new ViewportDetection();
 
 // register plugins

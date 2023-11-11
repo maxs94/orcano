@@ -1,17 +1,33 @@
-{% extends 'base.html.twig' %}
+{% set hx = app.request.get('hx') %}
+{% extends hx is null ? 'base.html.twig' : 'htmx.html.twig' %}
 
 {% block page_heading_wrapper %}{% endblock %}
 
 {% block page_content %}
+<section class="section">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title">{% if page.title is defined %}{{ page.title }}{% endif %}</h5>
+        </div>
+        <div class="card-body">
+            <div class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns">
 
-{% set tableColumns = [
-{ name: 'name', label: 'label.name'|trans },
-{ name: 'description', label: 'label.description'|trans },
-{ name: 'isRegistered', label: 'label.isRegistered'|trans },
-{ name: 'createdAt', label: 'label.createdAt'|trans, type: 'datetime', format: 'd-m-Y H:i:s' },
-]
-%}
+                <div class="dataTable-container">
+                    <table class="table table-striped dataTable-table w-auto">
+                        <thead>
+                            <th>{{ 'label.name'|trans }}</th>
+                            <th>{{ 'label.description'|trans }}</th>
+                            <th>{{ 'label.createdAt'|trans }}</th>
+                            <th>{{ 'label.actions'|trans }}</th>
+                        </thead>
+                        <tbody id="asset-listing-body">
+                            {% include 'listing/check-script-items.html.twig' %}
+                        </tbody>
+                    </table>
+                </div>
 
-{% include 'partials/data-table.html.twig' with { 'page': page, 'tableColumns': tableColumns } %}
-
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock %}

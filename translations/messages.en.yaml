@@ -60,7 +60,9 @@ label.service-checks: 'Service checks'
 alert.passwords-not-match: 'Passwords do not match'
 label.loading: Loading
 alert.email-required: 'Email is required'
+alert.hostname-required: 'Hostname is required'
 title.service-check.edit: 'Edit Services'
+label.edit: Edit
 label.actions: Actions
 label.service-check.name.hint: 'Name of the Service'
 label.check-script: 'Script'
@@ -72,3 +74,4 @@ label.max-retries: Maximum Retries
 label.service-check.max-retries.hint: 'The max count of retries'
 label.notifications-enabled: 'Notifications enabled'
 alert.service-check.name.empty: 'The name of the service is empty'
+label.back: Back

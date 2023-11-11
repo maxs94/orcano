@@ -12,6 +12,7 @@ use App\DataObject\Collection\DataObjectCollectionInterface;
 use App\DataObject\Collection\SearchResultDataObjectCollection;
 use App\Repository\AbstractServiceEntityRepository;
 use App\Service\Converter\CaseConverter;
+use App\Service\Api\EntityUpsertService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -29,6 +30,7 @@ abstract class AbstractApiController extends AbstractController
 
     public function __construct(
         protected readonly EntityManagerInterface $em,
+        protected readonly EntityUpsertService $entityUpsertService,
         protected readonly TranslatorInterface $translator,
         protected readonly EventDispatcherInterface $eventDispatcher,
         protected readonly LoggerInterface $logger
