@@ -1,13 +1,15 @@
-{% extends 'base.html.twig' %}
+{% set hx = app.request.get('hx') %}
+{% extends hx == null ? 'base.html.twig' : 'htmx.html.twig' %}
 
 {% block page_heading %}{{ 'title.account.profile'|trans }}{% endblock %}
 
 {% block page_content %}
 {% block account_profile %}
 
+<form hx-post="{{ path('account') }}?hx=1" hx-target="#page-content">
 <div class="card">
+    <div class="card-header"><h4>{{ 'label.account'|trans }}</h4></div>
     <div class="card-body">
-        <form data-form="true" data-form-entity="user" data-form-validator="validateUserForm" data-refresh-after-save="true">
             <div class="form-group">
                 <label for="name" class="form-label">{{ 'label.name'|trans }}</label>
                 <input type="text" name="name" id="name" class="form-control" placeholder="{{ 'label.name.hint'|trans }}" value="{{ context.currentUser.name }}">
@@ -15,17 +17,21 @@
             <div class="form-group">
                 <label for="email" class="form-label">{{ 'label.email'|trans }}</label>
                 <input type="text" name="email" id="email" class="form-control" placeholder="{{ 'label.email.hint'|trans }}" value="{{ context.currentUser.email }}">
+                {% if errors.email is defined %}
+                <div class="alert alert-danger color-danger mt-1">{{ errors.email.text|trans }}</div>
+                {% endif %}
             </div>
             <div class="form-group">
                 <label for="password" class="form-label">{{ 'label.password'|trans }}</label>
                 <input type="password" name="password" id="password" class="form-control">
+                {% if errors.password is defined %}
+                <div class="alert alert-danger color-danger mt-1">{{ errors.password.text|trans }}</div>
+                {% endif %}
             </div>
             <div class="form-group">
                 <label for="password-repeat" class="form-label">{{ 'label.password-repeat'|trans }}</label>
                 <input type="password" name="password-repeat" id="password-repeat" class="form-control">
             </div>
-
-            <hr>
 
             <div class="form-group">
                 <label for="theme" class="form-label">{{ 'label.theme'|trans }}</label>
@@ -34,6 +40,27 @@
                     <option value="dark" {% if context.currentUser.theme == 'dark' %}selected{% endif %}>{{ 'label.theme.dark'|trans }}</option>
                 </select>
             </div>
+
+            </div>
+
+        <div class="card-header"><h4>{{ 'label.code-editor-config'|trans }}</h4></div>
+            <div class="card-body">
+            <div class="form-group">
+                <label for="keybinding" class="form-label">{{ 'label.keybinding'|trans }}</label>
+                {% set keybinding = context.currentUser.codeEditorConfig.keybinding %}
+                <select name="keybinding" id="keybinding" class="form-select">
+                    <option value="vim" {% if keybinding == 'vim' %}selected{% endif %}>vim</option>
+                    <option value="vscode" {% if keybinding == 'vscode' %}selected{% endif %}>VS Code</option>
+                </select>
+            </div>
+            <div class="form-group">
+                todo more custom settings
+            </div>
+
+            </div>
+
+            <div class="card-header"><h4>{{ 'label.listing-settings'|trans }}</h4></div>
+            <div class="card-body">
 
             <div class="form-group">
                 <label for="language" class="form-label">{{ 'label.language'|trans }}</label>
@@ -57,33 +84,13 @@
                 </select>
             </div>
 
-            <hr>
-
             <div class="form-group">
                 <input type="hidden" name="id" value="{{ context.currentUser.id }}">
                 <button type="submit" class="btn btn-primary">{{ 'label.save'|trans }}</button>
             </div>
 
-        </form>
     </div>
 </div>
+</form>
 {% endblock %}
-{% endblock %}
-
-{% block scripts %}
-{{ parent() }}
-<script>
-function validateUserForm(formInputs) {
-
-    if (formInputs['password'].value !== formInputs['password-repeat'].value) {
-        return('{{ 'alert.passwords-not-match'|trans }}');
-    }
-
-    if (formInputs['email'].value === '') {
-        return('{{ 'alert.email-required'|trans }}');
-    }
-
-    return true;
-}
-</script>
 {% endblock %}

@@ -1,0 +1,29 @@
+{% block listing_table_asset %}
+{% set result = page.result %}
+{% for row in result %}
+{% set url = path('edit_service_check', {'id': row.id}) %}
+{% set hxUrl = url ~ '?hx=1' %}
+<tr>
+    <td>{{ row.name }}</td>
+    <td>{{ row.checkIntervalSeconds }}</td>
+    <td>{{ row.retryIntervalSeconds }}</td>
+    <td>{{ row.maxRetries }}</td>
+    <td>{{ row.notificationsEnabled }}</td>
+    <td>{{ row.enabled }}</td>
+    <td>{{ row.createdAt|date('d.m.Y H:i:s') }}</td>
+    <td><a 
+        class="btn btn-sm btn-primary"
+        hx-get="{{ hxUrl }}"
+        hx-target="#page-content"
+        hx-push-url="{{ url }}"
+        href="{{ url }}">{{ 'label.edit'|trans }}</a></td>
+</tr>
+{% endfor %}
+
+<tr>
+    <td colspan="8">
+    <span class="dataTable-pagination">{% include 'listing/pagination.html.twig' with { 'pagination': page.pagination } %}</span> 
+    </td>
+</tr>
+
+{% endblock %}

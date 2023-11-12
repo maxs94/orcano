@@ -35,6 +35,32 @@ class ScriptsService
         private readonly LoggerInterface $logger
     ) {}
 
+    public function getScriptContent(string $filename): string
+    {
+        $dir = $this->parameterBag->get('kernel.project_dir');
+
+        $script = $dir . '/' . $filename;
+
+        if (file_exists($script) === false) {
+            throw new \Exception('Script not found: ' . $script);
+        }
+
+        return file_get_contents($script);
+    }
+
+    public function setScriptContent(string $filename, string $content): bool
+    {
+        $dir = $this->parameterBag->get('kernel.project_dir');
+
+        $script = $dir . '/' . $filename;
+
+        if (file_exists($script) === false) {
+            throw new \Exception('Script not found: ' . $script);
+        }
+
+        return file_put_contents($script, $content) !== false;
+    }
+
     public function refreshScripts(): bool
     {
         try {

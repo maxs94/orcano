@@ -8,6 +8,8 @@ namespace App\Controller\Edit;
 
 use App\Context\Context;
 use App\Controller\Page\AbstractPageController;
+use App\DataObject\Page\PageMessageDataObject;
+use App\Service\Api\EntityUpsertService;
 use App\Service\Page\AssetGroupPageLoader;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,14 +18,46 @@ use Symfony\Component\Routing\Annotation\Route;
 class AssetGroupPageController extends AbstractPageController
 {
     public function __construct(
-        private readonly AssetGroupPageLoader $assetGroupPageLoader
-    ) {}
+        Context $context,
+        private readonly AssetGroupPageLoader $assetGroupPageLoader,
+        private readonly EntityUpsertService $entityUpsertService
+    ) {
+        parent::__construct($context);
+    }
 
     #[Route('/edit/asset-group/{id}', name: 'edit_asset_group')]
     public function indexAction(Request $request, Context $context, int $id = null): Response
     {
         $page = $this->assetGroupPageLoader->load($request, $context, $id);
 
-        return $this->renderPage($request, 'edit/asset-group.html.twig', ['page' => $page]);
+        $this->processForm($request, $id);
+
+        return $this->renderPage('edit/asset-group.html.twig', ['page' => $page]);
+    }
+
+    private function processForm(Request $request, int $id): void
+    {
+        $errors = [];
+        if ($request->isMethod('POST')) {
+            $data = $request->request->all();
+
+            if (empty($data['name'])) {
+                $errors['name'] = new PageMessageDataObject('label.name-required', PageMessageDataObject::TYPE_DANGER);
+            }
+
+            $data['id'] = $id;
+
+            try {
+                $this->entityUpsertService->upsert('asset-group', $data);
+            } catch (\Exception $ex) {
+                $this->addMessage($ex->getMessage(), PageMessageDataObject::TYPE_DANGER);
+            }
+
+            $this->setErrors($errors);
+
+            if ($errors === []) {
+                $this->addMessage('label.entity-saved', PageMessageDataObject::TYPE_SUCCESS);
+            }
+        }
     }
 }

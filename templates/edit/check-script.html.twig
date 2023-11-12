@@ -1,0 +1,59 @@
+{% set hx = app.request.get('hx') %}
+{% extends hx == null ? 'base.html.twig' : 'htmx.html.twig' %}
+
+{% set checkScript = page.parameters.get('checkScript') %}
+{% set scriptContent = page.parameters.get('scriptContent') %}
+
+{% block page_title %}{{ 'title.check-script.edit'|trans }}{% endblock %}
+
+{% block page_heading %}{{ 'title.check-script.edit'|trans }}{% endblock %}
+
+{% block page_content %}
+{% block edit_checkScript %}
+<div class="card">
+    <div class="card-body">
+    
+        <form hx-post="{{ path('edit_check_script', {'id': checkScript.id }) }}?hx=1" hx-target="#page-content">
+
+            <div class="form-group">
+                <div hx-target="this" hx-swap="outerHTML">
+                    <label for="name" class="form-label">{{ 'label.name'|trans }}</label>
+                    <input type="text" name="name" id="name" class="form-control" placeholder="{{ 'label.check-script.name.hint'|trans }}" value="{{ checkScript.name }}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="description" class="form-label">{{ 'label.description'|trans }}</label>
+                <input type="text" name="description" id="description" class="form-control" placeholder="{{ 'label.check-script.description.hint'|trans }}" value="{{ checkScript.description }}">
+                {% if errors.description is defined %}
+                <div class="alert alert-danger color-danger mt-1">{{ errors.description.text|trans }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="scriptContent" class="form-label">{{ 'label.script'|trans }}</label>
+                {% if errors.scriptContent is defined %}
+                <div class="alert alert-danger color-danger mt-1">{{ errors.scriptContent.text|trans }}</div>
+                {% endif %}
+
+                <div data-code="true" 
+                    data-keybinding="{{ context.currentUser.codeEditorConfig.keybinding }}"
+                    class="code-editor">{{ scriptContent }}</div>
+
+                <input type="hidden" id="code-editor-textarea" name="scriptContent" value="{{ scriptContent }}">
+
+            </div>
+
+            <hr>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">{{ 'label.save'|trans }}</button>
+                <button hx-get="{{ path('listing', {'entity': 'check-script'}) }}?hx=1" hx-target="#page-content" type="button" class="btn btn-secondary">{{ 'label.back'|trans }}</button>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+{% endblock %}
+{% endblock %}

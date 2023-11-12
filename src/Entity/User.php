@@ -20,6 +20,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, DataObj
     use Trait\IdTrait;
     use Trait\SetDataTrait;
 
+    public const DEFAULT_CODE_EDITOR_KEYBINDING = 'vscode';
+
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
@@ -44,6 +46,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, DataObj
 
     #[ORM\Column(length: 5)]
     private ?string $language = 'auto';
+
+    /** @var array<string, mixed>|null */
+    #[ORM\Column(nullable: true)]
+    private ?array $codeEditorConfig = [
+        'keybinding' => self::DEFAULT_CODE_EDITOR_KEYBINDING,
+    ];
 
     public function __construct()
     {
@@ -70,6 +78,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, DataObj
         $this->setDataIfNotEmptyString($data, 'theme', 'theme');
         $this->setDataIfNotEmptyInteger($data, 'rowLimit', 'rowLimit');
         $this->setDataIfNotEmptyString($data, 'language', 'language');
+
+        $this->codeEditorConfig['keybinding'] = $data['keybinding'] ?? self::DEFAULT_CODE_EDITOR_KEYBINDING;
 
         $this->updatedAt = new \DateTime();
 
@@ -190,6 +200,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, DataObj
     public function setLanguage(string $language): self
     {
         $this->language = $language;
+
+        return $this;
+    }
+
+    /** @return array<string, mixed>|null */
+    public function getCodeEditorConfig(): ?array
+    {
+        return $this->codeEditorConfig;
+    }
+
+    /** @param array<string, mixed>|null $codeEditorConfig */
+    public function setCodeEditorConfig(?array $codeEditorConfig): static
+    {
+        $this->codeEditorConfig = $codeEditorConfig;
 
         return $this;
     }

@@ -49,7 +49,7 @@ trait BaseRepositoryTrait
         string $indexBy = null,
         int $limit = ListingPageDataObject::DEFAULT_LIMIT,
         int $page = 1
-    ): DataObjectCollectionInterface {
+    ): SearchResultDataObjectCollection {
         $qb = $this->createQueryBuilder('a')->select('a');
 
         if ($orderBy !== null) {

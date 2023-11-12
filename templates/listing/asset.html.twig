@@ -1,21 +1,36 @@
-{% extends 'base.html.twig' %}
+{% set hx = app.request.get('hx') %}
+{% extends hx is null ? 'base.html.twig' : 'htmx.html.twig' %}
 
 {% block page_heading_wrapper %}{% endblock %}
 
 {% block page_content %}
+<section class="section">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title">{% if page.title is defined %}{{ page.title }}{% endif %}</h5>
+        </div>
+        <div class="card-body">
+            <div class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns">
 
-{% set tableColumns = [
-{ name: 'hostname', label: 'label.hostname'|trans },
-{ name: 'ipv4Address', label: 'label.ipv4Address'|trans },
-{ name: 'ipv6Address', label: 'label.ipv6Address'|trans },
-{ name: 'createdAt', label: 'label.createdAt'|trans, type: 'datetime', format: 'd-m-Y H:i:s' },
-{ name: 'assetGroups.name', label: 'label.assetGroups'|trans, searchable: false, sortable: false, dataclass: 'badge bg-info me-1' },
-{ name: 'actions', label: 'label.actions'|trans, width: '100px', searchable: false, sortable: false }
-]
-%}
+                <div class="dataTable-container">
+                    <table class="table table-striped dataTable-table w-auto">
+                        <thead>
+                            <th>{{ 'label.hostname'|trans }}</th>
+                            <th>{{ 'label.name'|trans }}</th>
+                            <th>{{ 'label.ipv4Address'|trans }}</th>
+                            <th>{{ 'label.ipv6Address'|trans }}</th>
+                            <th>{{ 'label.createdAt'|trans }}</th>
+                            <th>{{ 'label.assetGroups'|trans }}</th>
+                            <th>{{ 'label.actions'|trans }}</th>
+                        </thead>
+                        <tbody id="asset-listing-body">
+                            {% include 'listing/asset-items.html.twig' %}
+                        </tbody>
+                    </table>
+                </div>
 
-{% set editController = path('edit_asset') %}
-
-{% include 'partials/data-table.html.twig' with { 'page': page, 'tableColumns': tableColumns, 'editController': editController } %}
-
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock %}

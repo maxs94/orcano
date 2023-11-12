@@ -1,0 +1,37 @@
+{% block listing_pagination %}
+<ul class="pagination">
+    {% if pagination.previousLink is not null %}
+        <li class="page-item">
+            <a class="page-link" 
+                hx-get="{{ pagination.previousLink }}"
+                hx-target="#asset-listing-body"
+                hx-push-url="?page={{ pagination.previousPageNo }}"
+                href="?page={{ pagination.previousPageNo }}"
+        >&laquo;</a></li>
+    {% endif %}
+
+    {% for pageNo, pageLink in pagination.pageLinks %}
+
+        <li class="page-item {{ pageNo is same as(pagination.currentPageNo) ? 'active' : '' }}">
+        <a class="page-link" 
+            hx-get="{{ pageLink }}" 
+            hx-target="#asset-listing-body"
+            hx-push-url="?page={{ pageNo }}"
+            href="?page={{ pageNo }}">{{ pageNo }}</a>
+        </li>
+
+    {% endfor %}
+
+    {% if pagination.nextLink is not null %}
+        <li class="page-item">
+        <a class="page-link" 
+            hx-get="{{ pagination.nextLink }}"
+            hx-target="#asset-listing-body"
+            hx-push-url="?page={{ pagination.nextPageNo }}"
+            href="?page={{ pagination.nextPageNo }}"
+        >&raquo;</a></li>
+    {% endif %}
+</ul>
+
+{% endblock %}
+

@@ -6,7 +6,6 @@ declare(strict_types=1);
 
 namespace App\Controller\Page;
 
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -14,12 +13,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class CmsController extends AbstractPageController
 {
     #[Route('/{name}', name: 'pages')]
-    public function index(Request $request, string $name): Response
+    public function index(string $name): Response
     {
-        return $this->renderTwigTemplate($request, $name);
+        return $this->renderTwigTemplate($name);
     }
 
-    private function renderTwigTemplate(Request $request, string $pageName): Response
+    private function renderTwigTemplate(string $pageName): Response
     {
         $filename = sprintf('pages/%s.html.twig', $pageName);
         $path = sprintf('%s/templates/%s', $this->getParameter('kernel.project_dir'), $filename);
@@ -27,6 +26,6 @@ class CmsController extends AbstractPageController
             return $this->redirectToRoute('page_not_found');
         }
 
-        return $this->renderPage($request, $filename);
+        return $this->renderPage($filename);
     }
 }
