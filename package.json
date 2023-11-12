@@ -22,6 +22,9 @@
     },
     "dependencies": {
         "@popperjs/core": "^2.11.7",
+        "@types/ace": "^0.0.51",
+        "ace-builds": "^1.31.1",
+        "ace-code-editor": "^1.2.3",
         "axios": "^1.5.1",
         "bootstrap-icons": "^1.10.5",
         "deepmerge": "^4.3.1",

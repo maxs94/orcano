@@ -19,6 +19,7 @@ import ThemeTogglerPlugin from './plugin/theme-toggler/theme-toggler.plugin';
 import SpinnerPlugin from './plugin/spinner/spinner.plugin';
 import FormPlugin from './plugin/form/form.plugin';
 import SweetAlertPlugin from './plugin/sweetalert/sweetalert.plugin';
+import CodePlugin from './plugin/code/code.plugin';
 
 // init
 window.eventEmitter = new NativeEventEmitter();
@@ -34,9 +35,11 @@ PluginManager.register('ThemeTogglerPlugin', ThemeTogglerPlugin, '#theme-toggler
 PluginManager.register('SpinnerPlugin', SpinnerPlugin, '#topbar-spinner');
 PluginManager.register('FormPlugin', FormPlugin, '[data-form]');
 PluginManager.register('SweetAlertPlugin', SweetAlertPlugin, '[data-sweet-alert]');
+PluginManager.register('CodePlugin', CodePlugin, '[data-code]');
 
 // run plugins 
 document.addEventListener('DOMContentLoaded', () => PluginManager.initializePlugins(), false);
+document.addEventListener('htmx:afterSwap', () => PluginManager.initializePlugins(), false);
 
 // run utils
 new TimezoneUtil();

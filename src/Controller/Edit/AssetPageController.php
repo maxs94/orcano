@@ -8,7 +8,7 @@ namespace App\Controller\Edit;
 
 use App\Context\Context;
 use App\Controller\Page\AbstractPageController;
-use App\DataObject\PageMessageDataObject;
+use App\DataObject\Page\PageMessageDataObject;
 use App\Service\Api\EntityUpsertService;
 use App\Service\Page\AssetPageLoader;
 use Symfony\Component\HttpFoundation\Request;

@@ -32,6 +32,14 @@
                     {% include 'partials/topbar.html.twig' %}
                 </div>
 
+                {% block htmx_messages %}
+                {% if messages is not empty %}
+                {% for message in messages %}
+                <div class="alert alert-{{ message.type }} color-{{ message.type }} mt-1">{{ message.text|trans }}</div>
+                {% endfor %}
+                {% endif %}
+                {% endblock %}
+
                 {% block content_wrapper %}
                     {% block page_heading_wrapper %}
                 <div class="page-heading"><h3>{% block page_heading %}{% endblock %}</h3></div>

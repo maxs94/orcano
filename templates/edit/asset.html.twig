@@ -8,7 +8,7 @@
 {% block page_heading %}{{ 'title.asset.edit'|trans }}{% endblock %}
 
 {% block page_content %}
-{% block edit_service_check %}
+{% block edit_asset %}
 <div class="card">
     <div class="card-body">
     
@@ -25,7 +25,7 @@
                 <label for="hostname" class="form-label">{{ 'label.hostname'|trans }}</label>
                 <input type="text" name="hostname" id="hostname" class="form-control" placeholder="{{ 'label.asset.hostname.hint'|trans }}" value="{{ asset.hostname }}">
                 {% if errors.hostname is defined %}
-                <div class="alert alert-danger color-danger mt-1">{{ errors.hostname|trans }}</div>
+                <div class="alert alert-danger color-danger mt-1">{{ errors.hostname.text|trans }}</div>
                 {% endif %}
             </div>
 
@@ -33,7 +33,7 @@
                 <label for="ipv4-address" class="form-label">{{ 'label.ipv4-address'|trans }}</label>
                 <input type="text" name="ipv4-address" id="ipv4-address" class="form-control" placeholder="{{ 'label.asset.ipv4-address.hint'|trans }}" value="{{ asset.ipv4Address }}">
                 {% if errors.ipv4_address is defined %}
-                <div class="alert alert-danger color-danger mt-1">{{ errors.ipv4_address|trans }}</div>
+                <div class="alert alert-danger color-danger mt-1">{{ errors.ipv4_address.text|trans }}</div>
                 {% endif %}
             </div>
             
@@ -41,7 +41,7 @@
                 <label for="ipv6-address" class="form-label">{{ 'label.ipv6-address'|trans }}</label>
                 <input type="text" name="ipv6-address" id="ipv6-address" class="form-control" placeholder="{{ 'label.asset.ipv6-address.hint'|trans }}" value="{{ asset.ipv6Address }}">
                 {% if errors.ipv6_address is defined %}
-                <div class="alert alert-danger color-danger mt-1">{{ errors.ipv6_address|trans }}</div>
+                <div class="alert alert-danger color-danger mt-1">{{ errors.ipv6_address.text|trans }}</div>
                 {% endif %}
             </div>
 

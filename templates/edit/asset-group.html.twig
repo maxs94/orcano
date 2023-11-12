@@ -12,13 +12,13 @@
 <div class="card">
     <div class="card-body">
     
-        <form hx-post="{{ path('edit_service_check', {'id': assetGroup.id}) }}?hx=1" hx-target="#page-content">
+        <form hx-post="{{ path('edit_asset_group', {'id': assetGroup.id}) }}?hx=1" hx-target="#page-content">
 
             <div class="form-group">
                 <label for="name" class="form-label">{{ 'label.name'|trans }}</label>
                 <input type="text" name="name" id="name" class="form-control" placeholder="{{ 'label.asset-group.name.hint'|trans }}" value="{{ assetGroup.name }}">
                 {% if errors.name is defined %}
-                <div class="alert alert-danger color-danger mt-1">{{ errors.name|trans }}</div>
+                <div class="alert alert-danger color-danger mt-1">{{ errors.name.text|trans }}</div>
                 {% endif %}
             </div>
 

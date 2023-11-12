@@ -1,7 +1,9 @@
 <?PHP 
 declare(strict_types=1);
 
-namespace App\DataObject;
+namespace App\DataObject\Page;
+
+use App\DataObject\DataObjectInterface;
 
 class PageMessageDataObject implements DataObjectInterface
 {

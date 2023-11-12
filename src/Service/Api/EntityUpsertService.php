@@ -66,6 +66,7 @@ class EntityUpsertService
 
             if ($reflectionClass->hasProperty($key) === false) {
                 $this->logger->warning("Property {$key} not found on entity {$reflectionClass->getName()}");
+                $ret[$key] = $value;
                 continue;
             }
 

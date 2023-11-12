@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Controller\Page;
 
 use App\Context\Context;
-use App\DataObject\PageMessageDataObject;
+use App\DataObject\Page\PageMessageDataObject;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -27,7 +27,6 @@ class AbstractPageController extends AbstractController
 
         $response = $this->render($view, $parameters, $response);
 
-        $this->errors = [];
         $this->messages = [];
 
         return $response;
