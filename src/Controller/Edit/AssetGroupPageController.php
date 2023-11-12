@@ -35,11 +35,10 @@ class AssetGroupPageController extends AbstractPageController
         return $this->renderPage('edit/asset-group.html.twig', ['page' => $page]);
     }
 
-    private function processForm(Request $request, int $id): void 
+    private function processForm(Request $request, int $id): void
     {
         $errors = [];
         if ($request->isMethod('POST')) {
-
             $data = $request->request->all();
 
             if (empty($data['name'])) {
@@ -56,11 +55,9 @@ class AssetGroupPageController extends AbstractPageController
 
             $this->setErrors($errors);
 
-            if (count($errors) === 0) {
+            if ($errors === []) {
                 $this->addMessage('label.entity-saved', PageMessageDataObject::TYPE_SUCCESS);
             }
-
-        
         }
     }
 }

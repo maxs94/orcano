@@ -1,5 +1,8 @@
-<?PHP 
+<?php
 declare(strict_types=1);
+/**
+ * © 2023-2023 by the orcano team (https://github.com/maxs94/orcano)
+ */
 
 namespace App\DataObject\Page;
 
@@ -27,15 +30,7 @@ class PageMessageDataObject implements DataObjectInterface
         self::TYPE_INFO,
     ];
 
-    private string $text;
-
-    private string $type;
-
-    public function __construct(string $text = '', string $type = self::TYPE_PRIMARY)
-    {
-        $this->text = $text;
-        $this->type = $type;
-    }
+    public function __construct(private string $text = '', private string $type = self::TYPE_PRIMARY) {}
 
     public function getText(): string
     {
@@ -45,6 +40,7 @@ class PageMessageDataObject implements DataObjectInterface
     public function setText(string $text): self
     {
         $this->text = $text;
+
         return $this;
     }
 
@@ -60,7 +56,7 @@ class PageMessageDataObject implements DataObjectInterface
         }
 
         $this->type = $type;
+
         return $this;
     }
-    
 }

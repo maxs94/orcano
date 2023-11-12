@@ -18,11 +18,11 @@ class Context implements DataObjectInterface
 
     private ?User $currentUser = null;
 
-    public function __construct(?RequestStack $requestStack=null)
+    public function __construct(RequestStack $requestStack = null)
     {
-        if ($requestStack !== null) {
+        if ($requestStack instanceof \Symfony\Component\HttpFoundation\RequestStack) {
             $request = $requestStack->getCurrentRequest();
-            if ($request !== null) {
+            if ($request instanceof \Symfony\Component\HttpFoundation\Request) {
                 $this->activeRoute = $request->attributes->get('_route');
                 $this->pathInfo = $request->getPathInfo();
 
@@ -35,6 +35,13 @@ class Context implements DataObjectInterface
     public function getCurrentUser(): ?User
     {
         return $this->currentUser;
+    }
+
+    public function setCurrentUser(User $currentUser): self
+    {
+        $this->currentUser = $currentUser;
+
+        return $this;
     }
 
     public function getActiveRoute(): string

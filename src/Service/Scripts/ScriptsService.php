@@ -189,5 +189,4 @@ class ScriptsService
 
         return in_array($pathInfo['extension'], self::VALID_SCRIPT_EXTENSIONS);
     }
-
 }

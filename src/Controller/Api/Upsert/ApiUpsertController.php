@@ -26,6 +26,7 @@ class ApiUpsertController extends AbstractApiController
             $this->entityUpsertService->upsert($entity, $data);
         } catch (\Exception $ex) {
             $this->logger->error($ex->getMessage());
+
             return $this->json(['success' => false, 'message' => $ex->getMessage()]);
         }
 
@@ -33,5 +34,4 @@ class ApiUpsertController extends AbstractApiController
 
         return $this->getJson(null, $message);
     }
-
 }

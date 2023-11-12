@@ -1,5 +1,8 @@
-<?PHP 
+<?php
 declare(strict_types=1);
+/**
+ * © 2023-2023 by the orcano team (https://github.com/maxs94/orcano)
+ */
 
 namespace App\DataObject;
 
@@ -77,14 +80,13 @@ class PaginationDataObject implements DataObjectInterface
         return $this;
     }
 
-    public function getNextPageNo(): int 
+    public function getNextPageNo(): int
     {
         return $this->currentPageNo + 1;
     }
 
-    public function getPreviousPageNo(): int 
+    public function getPreviousPageNo(): int
     {
         return $this->currentPageNo - 1;
     }
-    
 }

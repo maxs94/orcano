@@ -39,7 +39,7 @@ class CheckScriptPageController extends AbstractPageController
         return $this->renderPage('edit/check-script.html.twig', ['page' => $page]);
     }
 
-    private function processForm(Request $request, int $id): void 
+    private function processForm(Request $request, int $id): void
     {
         $errors = [];
         if ($request->isMethod('POST')) {
@@ -63,13 +63,13 @@ class CheckScriptPageController extends AbstractPageController
 
             $this->setErrors($errors);
 
-            if (count($errors) === 0) {
+            if ($errors === []) {
                 $this->addMessage('label.entity-saved', PageMessageDataObject::TYPE_SUCCESS);
             }
         }
     }
 
-    private function saveCheckScriptContent(int $id, ?string $content = null): void
+    private function saveCheckScriptContent(int $id, string $content = null): void
     {
         if ($content === null) {
             return;

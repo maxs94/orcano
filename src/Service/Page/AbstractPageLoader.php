@@ -1,5 +1,8 @@
-<?PHP 
+<?php
 declare(strict_types=1);
+/**
+ * © 2023-2023 by the orcano team (https://github.com/maxs94/orcano)
+ */
 
 namespace App\Service\Page;
 
@@ -9,7 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\VarExporter\Exception\ClassNotFoundException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class AbstractPageLoader 
+class AbstractPageLoader
 {
     public function __construct(
         protected readonly EntityManagerInterface $em,

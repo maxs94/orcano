@@ -22,7 +22,7 @@ class ListingPageLoader extends AbstractPageLoader
 
         $limit = $context->getCurrentUser()->getRowLimit();
 
-        $result = $repo->getListing([], null, null, $limit, $page); 
+        $result = $repo->getListing([], null, null, $limit, $page);
 
         $pagination = $this->createPagination($limit, $result->getTotalCount(), $page, $entityName);
 
@@ -40,10 +40,10 @@ class ListingPageLoader extends AbstractPageLoader
     private function createPagination(int $limit, int $total, int $currentPage, string $entityName): PaginationDataObject
     {
         $pagination = new PaginationDataObject();
-        
+
         $totalPages = ceil($total / $limit);
 
-        $pagination->setTotalPages(intval($totalPages));
+        $pagination->setTotalPages((int) $totalPages);
         $pagination->setCurrentPageNo($currentPage);
 
         $prevPageNo = $currentPage - 1;
@@ -55,7 +55,7 @@ class ListingPageLoader extends AbstractPageLoader
             $pagination->setPreviousLink($baseLink . '?page=' . $prevPageNo);
         }
 
-        for ($i = 1; $i <= $totalPages; $i++) {
+        for ($i = 1; $i <= $totalPages; ++$i) {
             $pagination->addPageLink($i, $baseLink . '?page=' . $i);
         }
 
@@ -65,6 +65,4 @@ class ListingPageLoader extends AbstractPageLoader
 
         return $pagination;
     }
-
-
 }

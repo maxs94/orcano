@@ -1,5 +1,8 @@
-<?PHP 
+<?php
 declare(strict_types=1);
+/**
+ * © 2023-2023 by the orcano team (https://github.com/maxs94/orcano)
+ */
 
 namespace App\Service\Api;
 
@@ -14,16 +17,16 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\VarExporter\Exception\ClassNotFoundException;
 
-class EntityUpsertService 
+class EntityUpsertService
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
         private readonly EventDispatcherInterface $eventDispatcher,
         private readonly LoggerInterface $logger
-    ) { }
+    ) {}
 
     /** @param array<string, mixed> $data */
-    public function upsert(string $entityName, array $data): void 
+    public function upsert(string $entityName, array $data): void
     {
         $repository = $this->getEntityRepository($entityName);
 
@@ -49,7 +52,7 @@ class EntityUpsertService
 
         $this->eventDispatcher->dispatch(new EntityUpsertEvent($entity));
     }
-    
+
     /**
      * @param array<string, mixed> $data
      *
@@ -111,5 +114,4 @@ class EntityUpsertService
 
         return $repository;
     }
-
 }

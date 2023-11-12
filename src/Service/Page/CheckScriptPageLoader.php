@@ -20,7 +20,7 @@ class CheckScriptPageLoader
     public function __construct(
         private readonly TranslatorInterface $translator,
         private readonly CheckScriptRepository $checkScriptRepository,
-        private readonly ScriptsService $scriptsService 
+        private readonly ScriptsService $scriptsService
     ) {}
 
     public function load(Request $request, Context $context, int $id = null): PageDataObjectInterface
@@ -38,5 +38,4 @@ class CheckScriptPageLoader
     {
         return $this->checkScriptRepository->find($id);
     }
-
 }

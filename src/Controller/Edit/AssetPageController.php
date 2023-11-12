@@ -33,7 +33,7 @@ class AssetPageController extends AbstractPageController
         $this->processForm($request, $id);
 
         return $this->renderPage('edit/asset.html.twig', [
-            'page' => $page
+            'page' => $page,
         ]);
     }
 
@@ -65,11 +65,9 @@ class AssetPageController extends AbstractPageController
 
             $this->setErrors($errors);
 
-            if (count($errors) === 0) {
+            if ($errors === []) {
                 $this->addMessage('label.entity-saved', PageMessageDataObject::TYPE_SUCCESS);
             }
         }
-
     }
-
 }

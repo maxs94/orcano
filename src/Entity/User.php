@@ -49,16 +49,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, DataObj
 
     /** @var array<string, mixed>|null */
     #[ORM\Column(nullable: true)]
-    private ?array $codeEditorConfig = null;
+    private ?array $codeEditorConfig = [
+        'keybinding' => self::DEFAULT_CODE_EDITOR_KEYBINDING,
+    ];
 
     public function __construct()
     {
         $this->createdAt = new \DateTime();
         $this->updatedAt = new \DateTime();
-
-        $this->codeEditorConfig = [
-            'keybinding' => self::DEFAULT_CODE_EDITOR_KEYBINDING,
-        ];
     }
 
     /** @param array<string, mixed> $data */

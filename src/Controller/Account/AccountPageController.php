@@ -29,7 +29,7 @@ class AccountPageController extends AbstractPageController
     public function indexAction(Request $request): Response
     {
         $user = $this->context->getCurrentUser();
-        if ($user === null) {
+        if (!$user instanceof \App\Entity\User) {
             return $this->redirectToRoute('login');
         }
 
@@ -37,7 +37,7 @@ class AccountPageController extends AbstractPageController
 
         $response = $this->renderPage('account/index.html.twig');
 
-        if ($dataSaved === true) {
+        if ($dataSaved) {
             $response->headers->set('HX-Refresh', 'true');
         }
 
@@ -68,7 +68,7 @@ class AccountPageController extends AbstractPageController
 
             $this->setErrors($errors);
 
-            if (count($errors) === 0) {
+            if ($errors === []) {
                 $this->addMessage('label.entity-saved', PageMessageDataObject::TYPE_SUCCESS);
                 $this->contextLoader->update();
 
