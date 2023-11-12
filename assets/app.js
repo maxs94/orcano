@@ -14,10 +14,8 @@ import BootstrapUtil from 'src/utility/bootstrap/bootstrap.util';
 // import plugins
 import ScrollUpPlugin from 'src/plugin/scroll-up/scroll-up.plugin';
 import SidebarPlugin from './plugin/sidebar/sidebar.plugin';
-import DataTablePlugin from './plugin/data-table/data-table.plugin';
 import ThemeTogglerPlugin from './plugin/theme-toggler/theme-toggler.plugin';
 import SpinnerPlugin from './plugin/spinner/spinner.plugin';
-import FormPlugin from './plugin/form/form.plugin';
 import SweetAlertPlugin from './plugin/sweetalert/sweetalert.plugin';
 import CodePlugin from './plugin/code/code.plugin';
 
@@ -30,10 +28,8 @@ new ViewportDetection();
 // register plugins
 PluginManager.register('ScrollUpPlugin', ScrollUpPlugin, '[data-scroll-up]');
 PluginManager.register('SidebarPlugin', SidebarPlugin);
-PluginManager.register('DataTablePlugin', DataTablePlugin, '[data-table]');
 PluginManager.register('ThemeTogglerPlugin', ThemeTogglerPlugin, '#theme-toggler');
 PluginManager.register('SpinnerPlugin', SpinnerPlugin, '#topbar-spinner');
-PluginManager.register('FormPlugin', FormPlugin, '[data-form]');
 PluginManager.register('SweetAlertPlugin', SweetAlertPlugin, '[data-sweet-alert]');
 PluginManager.register('CodePlugin', CodePlugin, '[data-code]');
 
