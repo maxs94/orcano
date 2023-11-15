@@ -19,10 +19,12 @@ export default class SpinnerPlugin extends Plugin {
 
     registerHtmxSpinnerEvent() {
         document.addEventListener('htmx:beforeRequest', () => {
+            this.htmxRequest = true;
             this.showSpinner();
         });
 
-        document.addEventListener('htmx:afterRequest', () => {
+        document.addEventListener('htmx:afterSwap', () => {
+            this.htmxRequest = false;
             this.hideSpinnerWithTimeout();
         });
     }
@@ -42,6 +44,12 @@ export default class SpinnerPlugin extends Plugin {
                 if (!this._spinner.classList.contains('htmx-request')) {
                     return;
                 }
+
+                // do not hide the spinner if we are in a htmx request
+                if (this.htmxRequest === true) {
+                    return;
+                }
+
                 this.hideSpinnerWithTimeout();
             }
         }, this.options.minRequestDuration);

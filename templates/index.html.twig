@@ -1,4 +1,5 @@
-{% extends "base.html.twig" %}
+{% set hx = app.request.get('hx') %}
+{% extends hx is null ? 'base.html.twig' : 'htmx.html.twig' %}
 
 {% block page_heading %}{{ 'title.welcome'|trans }}{% endblock %}
 
