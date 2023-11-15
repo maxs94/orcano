@@ -1,7 +1,5 @@
 /*
-* Mazer, Technology Innovations Bootstrap HTML5 Landing Page
-*
-* If you want to edit the components, just go to _variables.scss
+* based on Mazer, Technology Innovations Bootstrap HTML5 Landing Page
 */
 
 /**
@@ -93,6 +91,7 @@
 
 // - 2.17. progress
 @import "./components/progress";
+@import "./components/spinner";
 
 // - 2.18. icons
 @import "./components/icons";
