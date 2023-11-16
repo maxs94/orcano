@@ -38,14 +38,14 @@ class CheckResultNotificationHandler
         // AssetGroup -> Asset
         // $conditionTemplateString = // serialized conditions string
         // $conditions = unserialize($conditionTemplateString);
-    /*    $conditions = new ConditionCollection();
-        $conditions->addCondition('result', new EqualsCondition(0));
-        $conditions->addCondition('time', new MinMaxCondition(0, 1000, 20));  // ok if between 0 and 1000, warn if between 20 and 1000
-        
-        echo addslashes(serialize($conditions));*/
+        /*    $conditions = new ConditionCollection();
+            $conditions->addCondition('result', new EqualsCondition(0));
+            $conditions->addCondition('time', new MinMaxCondition(0, 1000, 20));  // ok if between 0 and 1000, warn if between 20 and 1000
+
+            echo addslashes(serialize($conditions));*/
 
         $conditions = $this->conditionService->getCheckConditions(
-            $originalNotification->getAssetId(), 
+            $originalNotification->getAssetId(),
             $originalNotification->getServiceCheckId()
         );
 

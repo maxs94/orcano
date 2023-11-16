@@ -1,5 +1,8 @@
-<?PHP 
+<?php
 declare(strict_types=1);
+/**
+ * © 2023-2023 by the orcano team (https://github.com/maxs94/orcano)
+ */
 
 namespace App\Service\Condition;
 
@@ -7,7 +10,7 @@ use App\Condition\ConditionCollection;
 use App\Repository\AssetGroupServiceCheckConditionRepository;
 use App\Repository\AssetRepository;
 
-class ConditionService 
+class ConditionService
 {
     public function __construct(
         private readonly AssetGroupServiceCheckConditionRepository $assetGroupServiceCheckConditionRepository,
@@ -27,10 +30,10 @@ class ConditionService
 
         $conditions = $this->assetGroupServiceCheckConditionRepository->findBy([
             'assetGroup' => $ids,
-            'serviceCheck' => $serviceCheckId
+            'serviceCheck' => $serviceCheckId,
         ]);
 
-        if (count($conditions) === 0) {
+        if ($conditions === []) {
             throw new \Exception('Could not find any conditions for assetId ' . $assetId . ' and serviceCheckId ' . $serviceCheckId);
         }
 

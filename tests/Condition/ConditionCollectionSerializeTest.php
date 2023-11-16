@@ -1,5 +1,8 @@
-<?PHP 
+<?php
 declare(strict_types=1);
+/**
+ * © 2023-2023 by the orcano team (https://github.com/maxs94/orcano)
+ */
 
 namespace App\Tests\Condition;
 
@@ -8,9 +11,14 @@ use App\Condition\EqualsCondition;
 use App\Condition\MinMaxCondition;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class ConditionCollectionSerializeTest extends TestCase
 {
-    public function testSerialization(): void 
+    public function testSerialization(): void
     {
         $conditionCollection = new ConditionCollection();
         $condition1 = new EqualsCondition('test', 'test');
