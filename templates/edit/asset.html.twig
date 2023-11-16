@@ -2,6 +2,9 @@
 {% extends hx == null ? 'base.html.twig' : 'htmx.html.twig' %}
 
 {% set asset = page.parameters.get('asset') %}
+{% set availableAssetGroups = page.parameters.get('availableAssetGroups') %}
+
+{% block title %}{{ 'title.asset.edit'|trans }}{% endblock %}
 
 {% block page_title %}{{ 'title.asset.edit'|trans }}{% endblock %}
 
@@ -9,6 +12,8 @@
 
 {% block page_content %}
 {% block edit_asset %}
+
+
 <div class="card">
     <div class="card-body">
     
@@ -47,12 +52,14 @@
 
             <div class="form-group">
                 <label for="asset-groups" class="form-label">{{ 'label.assetGroups'|trans }}</label>
-                <div>
-                {% for assetGroup in asset.assetGroups %}
-                    <span class="badge bg-secondary">{{ assetGroup.name }}</span>
-                {% endfor %}
-                </div>
-                <div>TODO: ASSET GROUP PICKER (multiple allowed)</div>
+
+                <select data-choices="true" multiple name="asset-groups[]">
+                    {% for assetGroup in availableAssetGroups %}
+                    {% set exists = asset.assetGroups|existsInCollection('getId', assetGroup.id) %}
+                    <option value="{{ assetGroup.id }}" {% if exists == true %}selected{% endif %}>{{ assetGroup.name }}</option>
+                    {% endfor %}
+                </select>
+
             </div>
 
             <hr>

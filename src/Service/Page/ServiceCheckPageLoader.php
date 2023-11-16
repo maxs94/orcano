@@ -28,10 +28,12 @@ class ServiceCheckPageLoader
     {
         $title = $this->translator->trans('title.service-check.edit');
 
+        $checkScript = is_null($id) ? new ServiceCheck() : $this->getServiceCheck($id);
+
         return (new PageDataObject())
             ->setTitle($title)
             ->addParameter('checkScripts', $this->getAllCheckScripts())
-            ->addParameter('serviceCheck', $this->getServiceCheck($id))
+            ->addParameter('serviceCheck', $checkScript)
         ;
     }
 

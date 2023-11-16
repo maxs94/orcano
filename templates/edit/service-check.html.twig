@@ -14,6 +14,19 @@
     <div class="card-body">
     
         <form hx-post="{{ path('edit_service_check', {'id': serviceCheck.id }) }}?hx=1" hx-target="#page-content">
+            
+            <div class="form-group">
+                <label for="check-script" class="form-label">{{ 'label.check-script'|trans }}</label>
+                <select name="check-script" id="check-script" class="form-control">
+                    <option value="0">{{ 'label.please-choose'|trans }}</option>
+                    {% for checkScript in checkScripts %}
+                    <option value="{{ checkScript.id }}" {% if serviceCheck.checkScript is not null and serviceCheck.checkScript.id == checkScript.id %}selected{% endif %}>{{ checkScript.name }}</option>
+                    {% endfor %}
+                </select>
+                {% if errors.check_script is defined %}
+                <div class="alert alert-danger color-danger mt-1">{{ errors.check_script.text|trans }}</div>
+                {% endif %}
+            </div>
 
             <div class="form-group">
                 <label for="name" class="form-label">{{ 'label.name'|trans }}</label>
@@ -21,15 +34,6 @@
                 {% if errors.name is defined %}
                 <div class="alert alert-danger color-danger mt-1">{{ errors.name.text|trans }}</div>
                 {% endif %}
-            </div>
-
-            <div class="form-group">
-                <label for="check-script" class="form-label">{{ 'label.check-script'|trans }}</label>
-                <select name="check-script" id="check-script" class="form-control">
-                {% for checkScript in checkScripts %}
-                    <option value="{{ checkScript.id }}" {% if serviceCheck.checkScript.id == checkScript.id %}selected{% endif %}>{{ checkScript.name }}</option>
-                {% endfor %}
-                </select>
             </div>
 
             <div class="form-group">

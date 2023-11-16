@@ -18,6 +18,7 @@ import ThemeTogglerPlugin from './plugin/theme-toggler/theme-toggler.plugin';
 import SpinnerPlugin from './plugin/spinner/spinner.plugin';
 import SweetAlertPlugin from './plugin/sweetalert/sweetalert.plugin';
 import CodePlugin from './plugin/code/code.plugin';
+import ChoicesPlugin from './plugin/form/choices.plugin';
 
 // init
 window.eventEmitter = new NativeEventEmitter();
@@ -32,6 +33,7 @@ PluginManager.register('ThemeTogglerPlugin', ThemeTogglerPlugin, '#theme-toggler
 PluginManager.register('SpinnerPlugin', SpinnerPlugin, '#topbar-spinner');
 PluginManager.register('SweetAlertPlugin', SweetAlertPlugin, '[data-sweet-alert]');
 PluginManager.register('CodePlugin', CodePlugin, '[data-code]');
+PluginManager.register('ChoicesPlugin', ChoicesPlugin, '[data-choices]');
 
 // run plugins 
 document.addEventListener('DOMContentLoaded', () => PluginManager.initializePlugins(), false);
