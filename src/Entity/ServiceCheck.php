@@ -27,9 +27,9 @@ class ServiceCheck implements DataObjectInterface, ApiEntityInterface
     private ?string $name = null;
 
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     #[Ignore]
-    private CheckScript $checkScript;
+    private ?CheckScript $checkScript = null;
 
     #[ORM\Column]
     private int $checkIntervalSeconds = self::DEFAULT_CHECK_INTERVAL;
@@ -88,19 +88,19 @@ class ServiceCheck implements DataObjectInterface, ApiEntityInterface
         return $this->name;
     }
 
-    public function setName(string $name): static
+    public function setName(string $name): self
     {
         $this->name = $name;
 
         return $this;
     }
 
-    public function getCheckScript(): CheckScript
+    public function getCheckScript(): ?CheckScript
     {
         return $this->checkScript;
     }
 
-    public function setCheckScript(CheckScript $checkScript): static
+    public function setCheckScript(CheckScript $checkScript): self
     {
         $this->checkScript = $checkScript;
 
@@ -112,7 +112,7 @@ class ServiceCheck implements DataObjectInterface, ApiEntityInterface
         return $this->checkIntervalSeconds;
     }
 
-    public function setCheckIntervalSeconds(int $checkIntervalSeconds): static
+    public function setCheckIntervalSeconds(int $checkIntervalSeconds): self
     {
         $this->checkIntervalSeconds = $checkIntervalSeconds;
 
@@ -124,7 +124,7 @@ class ServiceCheck implements DataObjectInterface, ApiEntityInterface
         return $this->retryIntervalSeconds;
     }
 
-    public function setRetryIntervalSeconds(int $retryIntervalSeconds): static
+    public function setRetryIntervalSeconds(int $retryIntervalSeconds): self
     {
         $this->retryIntervalSeconds = $retryIntervalSeconds;
 
@@ -136,7 +136,7 @@ class ServiceCheck implements DataObjectInterface, ApiEntityInterface
         return $this->maxRetries;
     }
 
-    public function setMaxRetries(int $maxRetries): static
+    public function setMaxRetries(int $maxRetries): self
     {
         $this->maxRetries = $maxRetries;
 
@@ -148,7 +148,7 @@ class ServiceCheck implements DataObjectInterface, ApiEntityInterface
         return $this->notificationsEnabled;
     }
 
-    public function setNotificationsEnabled(bool $notificationsEnabled): static
+    public function setNotificationsEnabled(bool $notificationsEnabled): self
     {
         $this->notificationsEnabled = $notificationsEnabled;
 
@@ -160,14 +160,14 @@ class ServiceCheck implements DataObjectInterface, ApiEntityInterface
         return $this->enabled;
     }
 
-    public function setEnabled(bool $enabled): static
+    public function setEnabled(bool $enabled): self
     {
         $this->enabled = $enabled;
 
         return $this;
     }
 
-    public function addAssetGroup(AssetGroup $assetGroup): static
+    public function addAssetGroup(AssetGroup $assetGroup): self
     {
         if (!$this->assetGroups->contains($assetGroup)) {
             $this->assetGroups->add($assetGroup);
@@ -176,7 +176,7 @@ class ServiceCheck implements DataObjectInterface, ApiEntityInterface
         return $this;
     }
 
-    public function removeAssetGroup(AssetGroup $assetGroup): static
+    public function removeAssetGroup(AssetGroup $assetGroup): self
     {
         $this->assetGroups->removeElement($assetGroup);
 

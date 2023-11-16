@@ -57,7 +57,7 @@ class Asset implements DataObjectInterface, ApiEntityInterface
         return $this->hostname;
     }
 
-    public function setHostname(string $hostname): static
+    public function setHostname(string $hostname): self
     {
         $this->hostname = $hostname;
 
@@ -69,7 +69,7 @@ class Asset implements DataObjectInterface, ApiEntityInterface
         return $this->ipv4Address;
     }
 
-    public function setIpv4Address(?string $ipv4Address): static
+    public function setIpv4Address(?string $ipv4Address): self
     {
         $this->ipv4Address = $ipv4Address;
 
@@ -81,7 +81,7 @@ class Asset implements DataObjectInterface, ApiEntityInterface
         return $this->ipv6Address;
     }
 
-    public function setIpv6Address(?string $ipv6Address): static
+    public function setIpv6Address(?string $ipv6Address): self
     {
         $this->ipv6Address = $ipv6Address;
 
@@ -93,7 +93,7 @@ class Asset implements DataObjectInterface, ApiEntityInterface
         return $this->name;
     }
 
-    public function setName(?string $name): static
+    public function setName(?string $name): self
     {
         $this->name = $name;
 
@@ -108,7 +108,7 @@ class Asset implements DataObjectInterface, ApiEntityInterface
         return $this->assetGroups;
     }
 
-    public function addAssetGroup(AssetGroup $assetGroup): static
+    public function addAssetGroup(AssetGroup $assetGroup): self
     {
         if (!$this->assetGroups->contains($assetGroup)) {
             $this->assetGroups->add($assetGroup);
@@ -117,7 +117,14 @@ class Asset implements DataObjectInterface, ApiEntityInterface
         return $this;
     }
 
-    public function removeAssetGroup(AssetGroup $assetGroup): static
+    public function setAssetGroups(Collection $assetGroups): self
+    {
+        $this->assetGroups = $assetGroups;
+
+        return $this;
+    }
+
+    public function removeAssetGroup(AssetGroup $assetGroup): self
     {
         $this->assetGroups->removeElement($assetGroup);
 

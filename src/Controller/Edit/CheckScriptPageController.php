@@ -10,7 +10,6 @@ use App\Context\Context;
 use App\Controller\Page\AbstractPageController;
 use App\DataObject\Page\PageMessageDataObject;
 use App\Repository\CheckScriptRepository;
-use App\Service\Api\EntityUpsertService;
 use App\Service\Page\CheckScriptPageLoader;
 use App\Service\Scripts\ScriptsService;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,7 +21,6 @@ class CheckScriptPageController extends AbstractPageController
     public function __construct(
         Context $context,
         private readonly CheckScriptPageLoader $checkScriptPageLoader,
-        private readonly EntityUpsertService $entityUpsertService,
         private readonly CheckScriptRepository $checkScriptRepository,
         private readonly ScriptsService $scriptsService
     ) {
@@ -30,16 +28,16 @@ class CheckScriptPageController extends AbstractPageController
     }
 
     #[Route('/edit/check-script/{id}', name: 'edit_check_script', methods: ['GET', 'POST'])]
-    public function indexAction(Request $request, Context $context, int $id): Response
+    public function indexAction(Request $request, Context $context, int $id = null): Response
     {
-        $page = $this->checkScriptPageLoader->load($request, $context, $id);
-
         $this->processForm($request, $id);
+
+        $page = $this->checkScriptPageLoader->load($request, $context, $id);
 
         return $this->renderPage('edit/check-script.html.twig', ['page' => $page]);
     }
 
-    private function processForm(Request $request, int $id): void
+    private function processForm(Request $request, int $id = null): void
     {
         $errors = [];
         if ($request->isMethod('POST')) {
@@ -49,16 +47,18 @@ class CheckScriptPageController extends AbstractPageController
                 $errors['name'] = new PageMessageDataObject('alert.name-empty', PageMessageDataObject::TYPE_DANGER);
             }
 
-            $request->request->set('id', $id);
-
-            try {
-                $this->entityUpsertService->upsert('checkScript', $request->request->all());
-            } catch (\Exception $ex) {
-                $this->addMessage($ex->getMessage(), PageMessageDataObject::TYPE_DANGER);
-            }
-
             if (!empty($data['scriptContent'])) {
                 $this->saveCheckScriptContent($id, $data['scriptContent']);
+            }
+
+            $data['id'] = $id ?? 0;
+
+            if ($errors === []) {
+                try {
+                    $this->checkScriptRepository->upsert($data);
+                } catch (\Exception $ex) {
+                    $this->addMessage($ex->getMessage(), PageMessageDataObject::TYPE_DANGER);
+                }
             }
 
             $this->setErrors($errors);

@@ -9,7 +9,7 @@ namespace App\Controller\Edit;
 use App\Context\Context;
 use App\Controller\Page\AbstractPageController;
 use App\DataObject\Page\PageMessageDataObject;
-use App\Service\Api\EntityUpsertService;
+use App\Repository\AssetGroupRepository;
 use App\Service\Page\AssetGroupPageLoader;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,7 +20,7 @@ class AssetGroupPageController extends AbstractPageController
     public function __construct(
         Context $context,
         private readonly AssetGroupPageLoader $assetGroupPageLoader,
-        private readonly EntityUpsertService $entityUpsertService
+        private readonly AssetGroupRepository $assetGroupRepository
     ) {
         parent::__construct($context);
     }
@@ -28,14 +28,14 @@ class AssetGroupPageController extends AbstractPageController
     #[Route('/edit/asset-group/{id}', name: 'edit_asset_group')]
     public function indexAction(Request $request, Context $context, int $id = null): Response
     {
-        $page = $this->assetGroupPageLoader->load($request, $context, $id);
-
         $this->processForm($request, $id);
+
+        $page = $this->assetGroupPageLoader->load($request, $context, $id);
 
         return $this->renderPage('edit/asset-group.html.twig', ['page' => $page]);
     }
 
-    private function processForm(Request $request, int $id): void
+    private function processForm(Request $request, int $id = null): void
     {
         $errors = [];
         if ($request->isMethod('POST')) {
@@ -45,12 +45,14 @@ class AssetGroupPageController extends AbstractPageController
                 $errors['name'] = new PageMessageDataObject('label.name-required', PageMessageDataObject::TYPE_DANGER);
             }
 
-            $data['id'] = $id;
+            $data['id'] = $id ?? 0;
 
-            try {
-                $this->entityUpsertService->upsert('asset-group', $data);
-            } catch (\Exception $ex) {
-                $this->addMessage($ex->getMessage(), PageMessageDataObject::TYPE_DANGER);
+            if ($errors === []) {
+                try {
+                    $this->assetGroupRepository->upsert($data);
+                } catch (\Exception $ex) {
+                    $this->addMessage($ex->getMessage(), PageMessageDataObject::TYPE_DANGER);
+                }
             }
 
             $this->setErrors($errors);

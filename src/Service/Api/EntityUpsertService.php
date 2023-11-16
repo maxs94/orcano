@@ -13,6 +13,7 @@ use App\Exception\RepositoryNotFoundException;
 use App\Repository\AbstractServiceEntityRepository;
 use App\Service\Converter\CaseConverter;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\Entity;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\VarExporter\Exception\ClassNotFoundException;
@@ -61,11 +62,10 @@ class EntityUpsertService
     private function hydrateEntities(array $data, ApiEntityInterface $entity): array
     {
         $ret = [];
+        $reflectionClass = new \ReflectionClass($entity);
 
         foreach ($data as $key => $value) {
             $key = CaseConverter::kebabCaseToCamelCase($key);
-
-            $reflectionClass = new \ReflectionClass($entity);
 
             if ($reflectionClass->hasProperty($key) === false) {
                 $this->logger->warning("Property {$key} not found on entity {$reflectionClass->getName()}");
@@ -80,7 +80,7 @@ class EntityUpsertService
             $type = $reflectionType->getName();
 
             // if type is an object, try to get the related entity from database
-            if (stristr($type, '\\')) {
+            if (stristr($type, 'App\\')) {
                 /** @phpstan-ignore-next-line */
                 $repo = $this->em->getRepository($type);
                 if ($repo == null) {
@@ -91,6 +91,7 @@ class EntityUpsertService
                 if ($relatedEntity === null) {
                     throw new EntityNotFoundException("Entity {$type} with id {$value} not found");
                 }
+
                 $ret[$key] = $relatedEntity;
             } else {
                 $ret[$key] = $value;

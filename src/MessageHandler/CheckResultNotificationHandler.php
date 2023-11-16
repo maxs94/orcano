@@ -11,6 +11,7 @@ use App\Condition\EqualsCondition;
 use App\Condition\MinMaxCondition;
 use App\DataObject\ScriptResultDataObject;
 use App\Message\CheckResultNotification;
+use App\Service\Condition\ConditionService;
 use App\Service\Scripts\ResultParserService;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -20,6 +21,7 @@ class CheckResultNotificationHandler
 {
     public function __construct(
         private readonly ResultParserService $resultParserService,
+        private readonly ConditionService $conditionService,
         private readonly LoggerInterface $logger
     ) {}
 
@@ -33,12 +35,19 @@ class CheckResultNotificationHandler
         // have specific conditions per checkscript
         //
         // have an inheritance would make very much sense:
-        // ServiceCheck -> AssetGroup -> Asset
+        // AssetGroup -> Asset
         // $conditionTemplateString = // serialized conditions string
         // $conditions = unserialize($conditionTemplateString);
-        $conditions = new ConditionCollection();
-        $conditions->addCondition('result', new EqualsCondition(0));
-        $conditions->addCondition('time', new MinMaxCondition(0, 1000, 20));  // ok if between 0 and 1000, warn if between 20 and 1000
+        /*    $conditions = new ConditionCollection();
+            $conditions->addCondition('result', new EqualsCondition(0));
+            $conditions->addCondition('time', new MinMaxCondition(0, 1000, 20));  // ok if between 0 and 1000, warn if between 20 and 1000
+
+            echo addslashes(serialize($conditions));*/
+
+        $conditions = $this->conditionService->getCheckConditions(
+            $originalNotification->getAssetId(),
+            $originalNotification->getServiceCheckId()
+        );
 
         $checkResult = $this->checkResult($result, $conditions);
 
