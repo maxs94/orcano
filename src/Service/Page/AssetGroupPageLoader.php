@@ -11,6 +11,7 @@ use App\DataObject\Page\PageDataObject;
 use App\DataObject\Page\PageDataObjectInterface;
 use App\Entity\AssetGroup;
 use App\Repository\AssetGroupRepository;
+use App\Service\Condition\ConditionService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -18,7 +19,8 @@ class AssetGroupPageLoader
 {
     public function __construct(
         private readonly TranslatorInterface $translator,
-        private readonly AssetGroupRepository $assetGroupRepository
+        private readonly AssetGroupRepository $assetGroupRepository,
+        private readonly ConditionService $conditionService,
     ) {}
 
     public function load(Request $request, Context $context, int $id = null): PageDataObjectInterface
@@ -27,9 +29,12 @@ class AssetGroupPageLoader
 
         $assetGroup = is_null($id) ? new AssetGroup() : $this->getAssetGroup($id);
 
+        $availableConditions = $this->conditionService->getAllAvailableConditions();
+
         return (new PageDataObject())
             ->setTitle($title)
             ->addParameter('assetGroup', $assetGroup)
+            ->addParameter('availableConditions', $availableConditions)
         ;
     }
 
@@ -37,4 +42,5 @@ class AssetGroupPageLoader
     {
         return $this->assetGroupRepository->find($id);
     }
+
 }

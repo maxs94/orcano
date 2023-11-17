@@ -2,6 +2,7 @@
 {% extends hx == null ? 'base.html.twig' : 'htmx.html.twig' %}
 
 {% set assetGroup = page.parameters.get('assetGroup') %}
+{% set availableConditions = page.parameters.get('availableConditions') %}
 
 {% block page_title %}{{ 'title.asset-group.edit'|trans }}{% endblock %}
 
@@ -24,13 +25,35 @@
 
             <div class="form-group">
                 <label for="assets" class="form-label">{{ 'label.service-checks'|trans }}</label>
-                <div>TODO: SERVICE CHECKS PICKER?<br>
-                    maybe we just enable addding service checks to asset groups in /service-checks/edit,<br>
-                    because they would need to be configurable
+                <div class="accordion" id="accordion-service-checks">
+                    {% for serviceCheck in assetGroup.serviceChecks %}
+                    <div class="accordion-item"> 
+                        <h2 class="accordion-header" id="headingOne">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-service-check-{{ serviceCheck.id }}" aria-expanded="true" aria-controls="collapse-service-check-{{ serviceCheck.id }}">
+                                {{ serviceCheck.name }}
+                            </button>
+                        </h2>
+                        <div id="collapse-service-check-{{ serviceCheck.id }}" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordion-service-checks">
+                        <div class="accordion-body">
+                                todo: overwrite checkIntervalSeconds, retryIntervalSeconds, maxRetries, notificationsEnabled and enabled from ServiceCheck Entity<br><hr>
+                                
+                                <div>
+                                    <select name="condition" hx-get="{{ path('condition_builder_parameters') }}" hx-target="#condition-parameters">
+                                        {% for availableCondition in availableConditions %}
+                                        <option value="{{ availableCondition.class }}">{{ availableCondition.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div>
+                                    <div>todo: select which key this condition should check (ODATA coming from checkScript)</div>
+                                    <div id="condition-parameters"></div>
+                                </div>
+
+                        </div>
+                    </div>
+                    {% endfor %}
                 </div>
             </div>
-
-            <hr>
 
             <div class="form-group">
                 <button type="submit" class="btn btn-primary">{{ 'label.save'|trans }}</button>

@@ -11,11 +11,11 @@
 # 1 = NO REPLY
 # 2 = ERROR
 
-GREP=/bin/grep
-#GREP=/usr/local/bin/ggrep
+#GREP=/bin/grep
+GREP=/usr/local/bin/ggrep
 
-PING="ping -w 3 -c 1"
-#PING="ping -t 3 -c 1"
+#PING="ping -w 3 -c 1"
+PING="ping -t 3 -c 1"
 
 # use ipv4 and lastly the hostname
 if [ -n "$2" ]; then

@@ -1,0 +1,8 @@
+{% block condition_builder_parameters %}
+    {% for parameter in condition.parameters %}
+        <div class="form-group">
+            <label for="{{ parameter.name }}" class="form-label">{{ parameter.name }}</label>
+            <input type="text" name="{{ parameter.name }}" id="{{ parameter.name }}" class="form-control" placeholder="{{ parameter.name }}">
+        </div>
+    {% endfor %}
+{% endblock %}

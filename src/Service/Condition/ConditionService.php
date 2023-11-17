@@ -7,6 +7,8 @@ declare(strict_types=1);
 namespace App\Service\Condition;
 
 use App\Condition\ConditionCollection;
+use App\Condition\EqualsCondition;
+use App\Condition\MinMaxCondition;
 use App\Repository\AssetGroupServiceCheckConditionRepository;
 use App\Repository\AssetRepository;
 
@@ -45,6 +47,52 @@ class ConditionService
 
         if ($result === false) {
             throw new \Exception('Could not unserialize conditions for assetId ' . $assetId . ' and serviceCheckId ' . $serviceCheckId);
+        }
+
+        return $result;
+    }
+
+    /** @return array<array{class: string, parameters: array<array{name: string, optional: bool, type: string}>}> */
+    public function getAllAvailableConditions(): array
+    {
+        $conditions = [];
+
+        // TODO: get them from filesystem
+        $availableConditions = [EqualsCondition::class, MinMaxCondition::class];
+
+        foreach ($availableConditions as $className) {
+            $reflectionClass = new \ReflectionClass($className);
+            $parameters = $reflectionClass->getConstructor()->getParameters();
+
+            $conditions[$className] = [
+                'class' => $className,
+                'name' => $reflectionClass->getShortName(),
+                'parameters' => $this->buildParameters($parameters),
+            ];
+        }
+
+        return $conditions;
+    }
+
+    /**
+     * @param array<\ReflectionParameter> $parameters
+     *
+     * @return array<array{name: string, optional: bool, type: string}>
+     */
+    private function buildParameters(array $parameters): array
+    {
+        $result = [];
+
+        /** @var \ReflectionParameter $parameter */
+        foreach ($parameters as $parameter) {
+            /** @var \ReflectionNamedType $parameterType */
+            $parameterType = $parameter->getType();
+
+            $result[] = [
+                'name' => $parameter->getName(),
+                'optional' => $parameter->isOptional(),
+                'type' => $parameterType->getName(),
+            ];
         }
 
         return $result;
