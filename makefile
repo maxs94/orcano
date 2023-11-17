@@ -10,17 +10,20 @@ help:
 
 clean: ## cleans all dependencies
 	rm -rf vendor
+	rm -rf node_modules
 
 prod: ## installs all vendors in prod mode
 	COMPOSER_MEMORY_LIMIT=-1 composer install --no-dev --optimize-autoloader
 	yarn install --production=true
 	yarn encore prod
+	bin/console doctrine:migrations:migrate --no-interaction
 
 dev: ## installs all vendors in dev mode
 	COMPOSER_MEMORY_LIMIT=-1 composer install -n 
 	patch -t vendor/symfony/error-handler/ErrorHandler.php custom/patches/dev/SymfonyErrorHandler.patch
 	yarn install --production=false
 	yarn encore dev
+	bin/console doctrine:migrations:migrate --no-interaction
 
 watch: ## webpack watcher 
 	yarn encore dev --watch
