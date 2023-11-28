@@ -16,6 +16,6 @@ interface ConditionInterface
 
     /** @return array<string> */
     public function getParameters(): array;
-    
-    public function get(string $parameterName): mixed; 
+
+    public function get(string $parameterName): mixed;
 }

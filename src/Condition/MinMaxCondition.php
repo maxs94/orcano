@@ -69,23 +69,6 @@ class MinMaxCondition extends AbstractCondition
         return $this->operator;
     }
 
-    private function check(mixed $min, mixed $max, mixed $value): bool
-    {
-        if (!is_numeric($value)) {
-            throw new \InvalidArgumentException(sprintf('Value %s is not numeric', $value));
-        }
-
-        if ($min !== null && $value < $min) {
-            return false;
-        }
-
-        if ($max === null) {
-            return true;
-        }
-
-        return $value <= $max;
-    }
-
     public function getOkMin(): mixed
     {
         return $this->okMin;
@@ -104,5 +87,22 @@ class MinMaxCondition extends AbstractCondition
     public function getWarnMax(): mixed
     {
         return $this->warnMax;
+    }
+
+    private function check(mixed $min, mixed $max, mixed $value): bool
+    {
+        if (!is_numeric($value)) {
+            throw new \InvalidArgumentException(sprintf('Value %s is not numeric', $value));
+        }
+
+        if ($min !== null && $value < $min) {
+            return false;
+        }
+
+        if ($max === null) {
+            return true;
+        }
+
+        return $value <= $max;
     }
 }

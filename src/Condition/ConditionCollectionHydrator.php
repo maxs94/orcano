@@ -1,11 +1,14 @@
-<?PHP 
+<?php
 declare(strict_types=1);
+/**
+ * © 2023-2023 by the orcano team (https://github.com/maxs94/orcano)
+ */
 
 namespace App\Condition;
 
 use Psr\Log\LoggerInterface;
 
-class ConditionCollectionHydrator 
+class ConditionCollectionHydrator
 {
     public function __construct(
         private readonly LoggerInterface $logger

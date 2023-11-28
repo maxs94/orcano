@@ -56,5 +56,4 @@ class AssetGroupPageLoader
     {
         return $this->serviceCheckRepository->findAllAsCollection();
     }
-
 }

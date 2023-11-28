@@ -1,5 +1,8 @@
-<?PHP 
+<?php
 declare(strict_types=1);
+/**
+ * © 2023-2023 by the orcano team (https://github.com/maxs94/orcano)
+ */
 
 namespace App\Controller\ConditionBuilder;
 
@@ -37,12 +40,11 @@ class ConditionBuilderController extends AbstractPageController
 
         $serviceCheckId = key($conditions);
         $conditionIndex = key($conditions[$serviceCheckId]);
-        
+
         return $this->renderPage('condition-builder/parameters.html.twig', [
             'serviceCheckId' => $serviceCheckId,
             'conditionIndex' => $conditionIndex,
             'condition' => $availableConditions[$conditions[$serviceCheckId][$conditionIndex]['name']],
         ]);
     }
-    
 }

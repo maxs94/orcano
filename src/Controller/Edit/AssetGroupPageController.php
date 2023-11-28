@@ -63,7 +63,7 @@ class AssetGroupPageController extends AbstractPageController
 
             if ($assetGroup === null) {
                 $this->addMessage('label.entity-not-saved', PageMessageDataObject::TYPE_DANGER);
-            } 
+            }
 
             if (isset($data['condition']) && $assetGroup !== null) {
                 foreach ($data['condition'] as $serviceCheckId => $conditionData) {
@@ -77,7 +77,6 @@ class AssetGroupPageController extends AbstractPageController
             if ($errors === []) {
                 $this->addMessage('label.entity-saved', PageMessageDataObject::TYPE_SUCCESS);
             }
-
         }
     }
 }
