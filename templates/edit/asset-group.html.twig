@@ -51,6 +51,9 @@
                                 <div class="hint">todo: overwrite checkIntervalSeconds, retryIntervalSeconds, maxRetries, notificationsEnabled and enabled from ServiceCheck Entity</div><hr>
                                 <div class="hint">todo: read possible ODATA keys from serviceCheck and fill dropdown</div>
  
+                                {% if assetGroupServiceCheckConditions.get(serviceCheck.id) is null %}
+                                <div class="alert alert-info color-info">TODO: no conditions yet, add new one</div>
+                                {% else %}
                                 {% set result = assetGroupServiceCheckConditions.get(serviceCheck.id).getConditionCollection %}
 
                                 {% for odataKey, condition in result.conditions %}
@@ -68,6 +71,7 @@
                                     } %}
 
                                 {% endfor %}
+                                {% endif %}
 
                         </div>
                     </div>
