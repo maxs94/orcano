@@ -6,10 +6,12 @@ declare(strict_types=1);
 
 namespace App\Controller\Edit;
 
+use App\Condition\ConditionCollectionHydrator;
 use App\Context\Context;
 use App\Controller\Page\AbstractPageController;
 use App\DataObject\Page\PageMessageDataObject;
 use App\Repository\AssetGroupRepository;
+use App\Repository\AssetGroupServiceCheckConditionRepository;
 use App\Service\Page\AssetGroupPageLoader;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,7 +22,9 @@ class AssetGroupPageController extends AbstractPageController
     public function __construct(
         Context $context,
         private readonly AssetGroupPageLoader $assetGroupPageLoader,
-        private readonly AssetGroupRepository $assetGroupRepository
+        private readonly AssetGroupRepository $assetGroupRepository,
+        private readonly ConditionCollectionHydrator $conditionCollectionHydrator,
+        private readonly AssetGroupServiceCheckConditionRepository $assetGroupServiceCheckConditionRepository
     ) {
         parent::__construct($context);
     }
@@ -47,11 +51,24 @@ class AssetGroupPageController extends AbstractPageController
 
             $data['id'] = $id ?? 0;
 
+            $assetGroup = null;
+
             if ($errors === []) {
                 try {
-                    $this->assetGroupRepository->upsert($data);
+                    $assetGroup = $this->assetGroupRepository->upsert($data);
                 } catch (\Exception $ex) {
                     $this->addMessage($ex->getMessage(), PageMessageDataObject::TYPE_DANGER);
+                }
+            }
+
+            if ($assetGroup === null) {
+                $this->addMessage('label.entity-not-saved', PageMessageDataObject::TYPE_DANGER);
+            } 
+
+            if (isset($data['condition']) && $assetGroup !== null) {
+                foreach ($data['condition'] as $serviceCheckId => $conditionData) {
+                    $conditionCollection = $this->conditionCollectionHydrator->hydrateFromFormPost($conditionData);
+                    $this->assetGroupServiceCheckConditionRepository->upsertByIds($assetGroup->getId(), $serviceCheckId, $conditionCollection);
                 }
             }
 
@@ -60,6 +77,7 @@ class AssetGroupPageController extends AbstractPageController
             if ($errors === []) {
                 $this->addMessage('label.entity-saved', PageMessageDataObject::TYPE_SUCCESS);
             }
+
         }
     }
 }

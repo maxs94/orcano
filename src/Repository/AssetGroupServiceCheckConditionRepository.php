@@ -6,6 +6,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Condition\ConditionCollection;
 use App\Entity\AssetGroupServiceCheckCondition;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -20,6 +21,21 @@ class AssetGroupServiceCheckConditionRepository extends AbstractServiceEntityRep
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, AssetGroupServiceCheckCondition::class);
+    }
+
+    public function upsertByIds(int $assetGroupId, int $serviceCheckId, ConditionCollection $conditions): AssetGroupServiceCheckCondition
+    {
+        $em = $this->getEntityManager();
+        $assetGroupServiceCheckCondition = $this->findOneBy(['assetGroup' => $assetGroupId, 'serviceCheck' => $serviceCheckId]) ?? new AssetGroupServiceCheckCondition();
+
+        $assetGroupServiceCheckCondition->setAssetGroup($em->getReference('App\Entity\AssetGroup', $assetGroupId));
+        $assetGroupServiceCheckCondition->setServiceCheck($em->getReference('App\Entity\ServiceCheck', $serviceCheckId));
+        $assetGroupServiceCheckCondition->setConditionCollection($conditions);
+
+        $em->persist($assetGroupServiceCheckCondition);
+        $em->flush();
+
+        return $assetGroupServiceCheckCondition;
     }
 
     //    /**

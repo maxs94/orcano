@@ -1,7 +1,16 @@
-.accordion-button:not(.collapsed) {
-    background-color: var(--o-form-control-bg-focus-color);
+.accordion-button {
+    border-bottom: 1px solid var(--o-form-control-border-color);
+
+    &.collapsed {
+        background-color: var(--o-form-control-bg-color);
+    }
+
+    &:not(.collapsed) {
+        background-color: var(--o-form-control-bg-focus-color);
+    }
 }
 
 .accordion-item {
     color: var(--o-text-color);
 }
+

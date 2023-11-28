@@ -11,4 +11,11 @@ interface ConditionInterface
     public function checkIfOk(mixed $value): bool;
 
     public function checkIfWarn(mixed $value): bool;
+
+    public function getConditionClassName(): string;
+
+    /** @return array<string> */
+    public function getParameters(): array;
+    
+    public function get(string $parameterName): mixed; 
 }

@@ -3,6 +3,8 @@
 
 {% set assetGroup = page.parameters.get('assetGroup') %}
 {% set availableConditions = page.parameters.get('availableConditions') %}
+{% set availableServiceChecks = page.parameters.get('availableServiceChecks') %}
+{% set assetGroupServiceCheckConditions = page.parameters.get('assetGroupServiceCheckConditions') %}
 
 {% block page_title %}{{ 'title.asset-group.edit'|trans }}{% endblock %}
 
@@ -24,7 +26,18 @@
             </div>
 
             <div class="form-group">
-                <label for="assets" class="form-label">{{ 'label.service-checks'|trans }}</label>
+                <label for="service-checks" class="form-label">{{ 'label.serviceChecks'|trans }}</label>
+
+                <select data-choices="true" multiple name="service-checks[]">
+                    {% for serviceCheck in availableServiceChecks %}
+                    {% set exists = assetGroup.serviceChecks|existsInCollection('getId', serviceCheck.id) %}
+                    <option value="{{ serviceCheck.id }}" {% if exists == true %}selected{% endif %}>{{ serviceCheck.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="assets" class="form-label">{{ 'label.service-checks-conditions'|trans }}</label>
                 <div class="accordion" id="accordion-service-checks">
                     {% for serviceCheck in assetGroup.serviceChecks %}
                     <div class="accordion-item"> 
@@ -35,25 +48,34 @@
                         </h2>
                         <div id="collapse-service-check-{{ serviceCheck.id }}" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordion-service-checks">
                         <div class="accordion-body">
-                                todo: overwrite checkIntervalSeconds, retryIntervalSeconds, maxRetries, notificationsEnabled and enabled from ServiceCheck Entity<br><hr>
-                                
-                                <div>
-                                    <select name="condition" hx-get="{{ path('condition_builder_parameters') }}" hx-target="#condition-parameters">
-                                        {% for availableCondition in availableConditions %}
-                                        <option value="{{ availableCondition.class }}">{{ availableCondition.name }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                                <div>
-                                    <div>todo: select which key this condition should check (ODATA coming from checkScript)</div>
-                                    <div id="condition-parameters"></div>
-                                </div>
+                                <div class="hint">todo: overwrite checkIntervalSeconds, retryIntervalSeconds, maxRetries, notificationsEnabled and enabled from ServiceCheck Entity</div><hr>
+                                <div class="hint">todo: read possible ODATA keys from serviceCheck and fill dropdown</div>
+ 
+                                {% set result = assetGroupServiceCheckConditions.get(serviceCheck.id).getConditionCollection %}
+
+                                {% for odataKey, condition in result.conditions %}
+                                {% set conditionIndex = loop.index0 %}
+
+
+                                    {% set name = 'condition[' ~ serviceCheck.id ~ '][' ~ conditionIndex ~ ']' %}
+                                    {% include 'condition-builder/index.html.twig' with {
+                                        'availableConditions': availableConditions,
+                                        'availableServiceChecks': availableServiceChecks,
+                                        'serviceCheck': serviceCheck,
+                                        'selectedCondition': condition,
+                                        'conditionIndex': conditionIndex,
+                                        'odataKey': odataKey,
+                                    } %}
+
+                                {% endfor %}
 
                         </div>
                     </div>
                     {% endfor %}
                 </div>
             </div>
+
+            <hr>
 
             <div class="form-group">
                 <button type="submit" class="btn btn-primary">{{ 'label.save'|trans }}</button>

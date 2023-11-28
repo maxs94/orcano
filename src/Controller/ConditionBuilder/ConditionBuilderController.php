@@ -19,20 +19,29 @@ class ConditionBuilderController extends AbstractPageController
         parent::__construct($context);
     }
 
-    #[Route('/condition-builder/parameters', name: 'condition_builder_parameters')]
+    #[Route('/condition-builder/parameters', name: 'condition_builder_parameters', methods: ['GET'])]
     public function conditionBuilderParameters(Request $request): Response
     {
         $availableConditions = $this->conditionService->getAllAvailableConditions();
-        
-        $className = $request->query->get('condition');
 
-        $condition = $availableConditions[$className] ?? null;
-        if ($condition === null) {
-            throw new \Exception('Could not find condition ' . $className);
+        $all = $request->query->all();
+        if (!isset($all['condition'])) {
+            throw new \Exception('No condition given');
         }
 
+        $conditions = $all['condition'];
+
+        if (!is_array($conditions)) {
+            throw new \Exception('Condition is not an array');
+        }
+
+        $serviceCheckId = key($conditions);
+        $conditionIndex = key($conditions[$serviceCheckId]);
+        
         return $this->renderPage('condition-builder/parameters.html.twig', [
-            'condition' => $condition,
+            'serviceCheckId' => $serviceCheckId,
+            'conditionIndex' => $conditionIndex,
+            'condition' => $availableConditions[$conditions[$serviceCheckId][$conditionIndex]['name']],
         ]);
     }
     

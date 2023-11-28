@@ -6,12 +6,14 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Condition\ConditionCollection;
+use App\DataObject\DataObjectInterface;
 use App\Repository\AssetGroupServiceCheckConditionRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AssetGroupServiceCheckConditionRepository::class)]
-class AssetGroupServiceCheckCondition
+class AssetGroupServiceCheckCondition implements DataObjectInterface
 {
     use Trait\IdTrait;
 
@@ -26,12 +28,18 @@ class AssetGroupServiceCheckCondition
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $conditions = null;
 
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime();
+        $this->updatedAt = new \DateTime();
+    }
+
     public function getAssetGroup(): ?AssetGroup
     {
         return $this->assetGroup;
     }
 
-    public function setAssetGroup(?AssetGroup $assetGroup): static
+    public function setAssetGroup(?AssetGroup $assetGroup): self
     {
         $this->assetGroup = $assetGroup;
 
@@ -43,7 +51,12 @@ class AssetGroupServiceCheckCondition
         return $this->serviceCheck;
     }
 
-    public function setServiceCheck(?ServiceCheck $serviceCheck): static
+    public function getServiceCheckId(): ?int
+    {
+        return $this->serviceCheck->getId();
+    }
+
+    public function setServiceCheck(?ServiceCheck $serviceCheck): self
     {
         $this->serviceCheck = $serviceCheck;
 
@@ -55,10 +68,22 @@ class AssetGroupServiceCheckCondition
         return $this->conditions;
     }
 
-    public function setConditions(?string $conditions): static
+    public function setConditions(?string $conditions): self
     {
         $this->conditions = $conditions;
 
         return $this;
+    }
+
+    public function setConditionCollection(ConditionCollection $conditionCollection): self
+    {
+        $this->conditions = serialize($conditionCollection);
+
+        return $this;
+    }
+
+    public function getConditionCollection(): ConditionCollection
+    {
+        return unserialize($this->conditions, [ConditionCollection::class]);
     }
 }

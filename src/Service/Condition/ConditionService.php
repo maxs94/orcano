@@ -6,6 +6,7 @@ declare(strict_types=1);
 
 namespace App\Service\Condition;
 
+use App\Condition\AbstractCondition;
 use App\Condition\ConditionCollection;
 use App\Condition\EqualsCondition;
 use App\Condition\MinMaxCondition;
@@ -52,7 +53,7 @@ class ConditionService
         return $result;
     }
 
-    /** @return array<array{class: string, parameters: array<array{name: string, optional: bool, type: string}>}> */
+    /** @return array<AbstractCondition> */
     public function getAllAvailableConditions(): array
     {
         $conditions = [];
@@ -61,40 +62,9 @@ class ConditionService
         $availableConditions = [EqualsCondition::class, MinMaxCondition::class];
 
         foreach ($availableConditions as $className) {
-            $reflectionClass = new \ReflectionClass($className);
-            $parameters = $reflectionClass->getConstructor()->getParameters();
-
-            $conditions[$className] = [
-                'class' => $className,
-                'name' => $reflectionClass->getShortName(),
-                'parameters' => $this->buildParameters($parameters),
-            ];
+            $conditions[$className] = new $className();
         }
 
         return $conditions;
-    }
-
-    /**
-     * @param array<\ReflectionParameter> $parameters
-     *
-     * @return array<array{name: string, optional: bool, type: string}>
-     */
-    private function buildParameters(array $parameters): array
-    {
-        $result = [];
-
-        /** @var \ReflectionParameter $parameter */
-        foreach ($parameters as $parameter) {
-            /** @var \ReflectionNamedType $parameterType */
-            $parameterType = $parameter->getType();
-
-            $result[] = [
-                'name' => $parameter->getName(),
-                'optional' => $parameter->isOptional(),
-                'type' => $parameterType->getName(),
-            ];
-        }
-
-        return $result;
     }
 }

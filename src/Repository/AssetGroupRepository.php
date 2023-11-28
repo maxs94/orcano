@@ -9,6 +9,7 @@ namespace App\Repository;
 use App\DataObject\Collection\DataObjectCollection;
 use App\DataObject\Collection\DataObjectCollectionInterface;
 use App\Entity\AssetGroup;
+use App\Entity\ServiceCheck;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -30,6 +31,18 @@ class AssetGroupRepository extends AbstractServiceEntityRepository
         $assetGroup = $data['id'] !== 0 ? $this->find($data['id']) : new AssetGroup();
 
         $assetGroup->setName($data['name'] ?? '');
+
+        $assetGroup->getServiceChecks()->clear();
+
+        if (isset($data['service-checks'])) {
+            foreach ($data['service-checks'] as $serviceCheckId) {
+                $serviceCheck = $em->getRepository(ServiceCheck::class)->find($serviceCheckId);
+                if ($serviceCheck === null) {
+                    throw new \Exception('Service check not found');
+                }
+                $assetGroup->addServiceCheck($serviceCheck);
+            }
+        }
 
         $em->persist($assetGroup);
         $em->flush();
