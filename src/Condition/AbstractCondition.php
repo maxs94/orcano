@@ -6,7 +6,7 @@ declare(strict_types=1);
 
 namespace App\Condition;
 
-abstract class AbstractCondition implements ConditionInterface
+abstract class AbstractCondition implements ConditionInterface, \Stringable
 {
     public function __toString(): string
     {

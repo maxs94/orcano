@@ -28,8 +28,8 @@ class AssetGroupServiceCheckConditionRepository extends AbstractServiceEntityRep
         $em = $this->getEntityManager();
         $assetGroupServiceCheckCondition = $this->findOneBy(['assetGroup' => $assetGroupId, 'serviceCheck' => $serviceCheckId]) ?? new AssetGroupServiceCheckCondition();
 
-        $assetGroupServiceCheckCondition->setAssetGroup($em->getReference('App\Entity\AssetGroup', $assetGroupId));
-        $assetGroupServiceCheckCondition->setServiceCheck($em->getReference('App\Entity\ServiceCheck', $serviceCheckId));
+        $assetGroupServiceCheckCondition->setAssetGroup($em->getReference(\App\Entity\AssetGroup::class, $assetGroupId));
+        $assetGroupServiceCheckCondition->setServiceCheck($em->getReference(\App\Entity\ServiceCheck::class, $serviceCheckId));
         $assetGroupServiceCheckCondition->setConditionCollection($conditions);
 
         $em->persist($assetGroupServiceCheckCondition);

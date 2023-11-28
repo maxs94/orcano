@@ -61,11 +61,11 @@ class AssetGroupPageController extends AbstractPageController
                 }
             }
 
-            if ($assetGroup === null) {
+            if (!$assetGroup instanceof \App\Entity\AssetGroup) {
                 $this->addMessage('label.entity-not-saved', PageMessageDataObject::TYPE_DANGER);
             }
 
-            if (isset($data['condition']) && $assetGroup !== null) {
+            if (isset($data['condition']) && $assetGroup instanceof \App\Entity\AssetGroup) {
                 foreach ($data['condition'] as $serviceCheckId => $conditionData) {
                     $conditionCollection = $this->conditionCollectionHydrator->hydrateFromFormPost($conditionData);
                     $this->assetGroupServiceCheckConditionRepository->upsertByIds($assetGroup->getId(), $serviceCheckId, $conditionCollection);

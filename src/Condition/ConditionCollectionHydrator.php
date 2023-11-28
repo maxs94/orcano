@@ -23,7 +23,7 @@ class ConditionCollectionHydrator
             $conditionClassName = $conditionData['name'] ?? null;
 
             if (empty($conditionClassName)) {
-                $this->logger->warning(sprintf('Could not find condition class name in %s', json_encode($conditionData)));
+                $this->logger->warning(sprintf('Could not find condition class name in %s', json_encode($conditionData, JSON_THROW_ON_ERROR)));
                 continue;
             }
 
