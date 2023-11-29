@@ -1,7 +1,12 @@
 .card {
     margin-bottom: 2.2rem;
     border: none;
-
+    background-color: var(--o-card-bg-color);
+    
+    &.nested {
+        background-color: var(--o-card-nested-bg-color);
+    }
+    
     &.card-statistic {
         box-shadow: 1px 2px 5px  rgba(#2FAAF4, .5);
         background: linear-gradient(to bottom, #25a6f1, #54b9ff);
@@ -51,7 +56,6 @@
     }
     .card-body {
         padding: $card-cap-padding-y $card-cap-padding-x;
-        background-color: var(--o-card-body-bg-color);
     }
     .card-heading {
         color: #555;
@@ -129,4 +133,8 @@
             font-size: 1.8rem;
         }
     }
+
+
+
 }
+

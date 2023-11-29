@@ -38,28 +38,22 @@ class AssetGroupServiceCheckConditionRepository extends AbstractServiceEntityRep
         return $assetGroupServiceCheckCondition;
     }
 
-    //    /**
-    //     * @return AssetGroupServiceCheckCondition[] Returns an array of AssetGroupServiceCheckCondition objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('a')
-    //            ->andWhere('a.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('a.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function deleteByConditionId(int $assetGroupId, int $serviceCheckId, string $conditionId): void
+    {
+        $em = $this->getEntityManager();
+        $assetGroupServiceCheckCondition = $this->findOneBy(['assetGroup' => $assetGroupId, 'serviceCheck' => $serviceCheckId]);
+        if ($assetGroupServiceCheckCondition === null) {
+            throw new \Exception('Asset group service check condition not found');
+        }
 
-    //    public function findOneBySomeField($value): ?AssetGroupServiceCheckCondition
-    //    {
-    //        return $this->createQueryBuilder('a')
-    //            ->andWhere('a.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        $conditionCollection = $assetGroupServiceCheckCondition->getConditionCollection();
+        $conditions = $conditionCollection->getConditions();
+        if (isset($conditions[$conditionId])) {
+            unset($conditions[$conditionId]);
+            $conditionCollection->setConditions($conditions);
+            $assetGroupServiceCheckCondition->setConditionCollection($conditionCollection);
+            $em->persist($assetGroupServiceCheckCondition);
+            $em->flush();
+        }
+    }
 }

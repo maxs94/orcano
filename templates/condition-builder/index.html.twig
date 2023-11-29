@@ -1,13 +1,16 @@
 {% block condition_builder %}
 {% set name = 'condition[' ~ serviceCheck.id ~ '][' ~ conditionIndex ~ ']' %}
+{% set parametersId = 'condition-' ~ serviceCheck.id ~ '-' ~ conditionIndex ~ '-parameters' %}
+{% set odataKey = selectedCondition is defined ? selectedCondition.key : '' %}
+
 <div class="row">
     <div class="col">
-        <select name="{{ name }}[name]" hx-get="{{ path('condition_builder_parameters') }}" hx-target="#condition-{{ serviceCheck.id }}-parameters">
+        <select name="{{ name }}[name]" hx-get="{{ path('condition_builder_parameters') }}" hx-target="#{{ parametersId }}">
         <option value="">Select Condition</option>
         {% for className, availableCondition in availableConditions %}
             <option value="{{ className }}" 
                 {% if selectedCondition is defined %}
-                {% if selectedCondition.getConditionClassName() == className %}selected{% endif %}
+                {% if selectedCondition.condition.getConditionClassName() == className %}selected{% endif %}
                 {% endif %}>{{ availableCondition }}</option>
         {% endfor %}
     </select>
@@ -18,18 +21,16 @@
 </div>
 <div class="mt-2 row">
     <div class="col">
-        <div id="condition-{{ serviceCheck.id }}-parameters">
+    <div id="{{ parametersId }}">
+            {% if selectedCondition is defined %}
             {% include 'condition-builder/parameters.html.twig' with {
                 'serviceCheckId': serviceCheck.id,
                 'conditionIndex': conditionIndex,
-                'condition': selectedCondition
+                'condition': selectedCondition.condition 
             } %}
+
+            {% endif %}
         </div>
-    </div>
-</div>
-<div class="mt-2 row">
-    <div class="col">
-        <button type="submit" class="btn btn-primary">{{ 'label.save'|trans }}</button>
     </div>
 </div>
 {% endblock %}

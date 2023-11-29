@@ -27,12 +27,27 @@ class ConditionCollection
 
     public function addCondition(string $resultKey, AbstractCondition $condition): void
     {
-        $this->conditions[$resultKey] = $condition;
+        $id = md5(serialize($condition) . $resultKey);
+        $this->conditions[$id] = [
+            'key' => $resultKey,
+            'condition' => $condition,
+        ];
+    }
+
+    public function removeCondition(string $id): void
+    {
+        unset($this->conditions[$id]);
     }
 
     /** @return array<string, AbstractCondition> */
     public function getConditions(): array
     {
         return $this->conditions;
+    }
+
+    /** @param array<string, AbstractCondition> $conditions */
+    public function setConditions(array $conditions): void
+    {
+        $this->conditions = $conditions;
     }
 }

@@ -32,7 +32,7 @@ class AssetGroupRepository extends AbstractServiceEntityRepository
 
         $assetGroup->setName($data['name'] ?? '');
 
-        $assetGroup->getServiceChecks()->clear();
+        $this->clearServiceChecks($assetGroup);
 
         if (isset($data['service-checks'])) {
             foreach ($data['service-checks'] as $serviceCheckId) {
@@ -65,28 +65,12 @@ class AssetGroupRepository extends AbstractServiceEntityRepository
         return new DataObjectCollection($result);
     }
 
-    //    /**
-    //     * @return AssetGroup[] Returns an array of AssetGroup objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('a')
-    //            ->andWhere('a.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('a.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    private function clearServiceChecks(AssetGroup $assetGroup): void
+    {
+        $assetGroup->getServiceChecks()->clear();
 
-    //    public function findOneBySomeField($value): ?AssetGroup
-    //    {
-    //        return $this->createQueryBuilder('a')
-    //            ->andWhere('a.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        $conn = $this->getEntityManager()->getConnection();
+        $conn->delete('asset_group_service_check_condition', ['asset_group_id' => $assetGroup->getId()]);
+        $conn->delete('service_check_asset_group', ['asset_group_id' => $assetGroup->getId()]);
+    }
 }

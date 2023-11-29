@@ -42,36 +42,63 @@
                     {% for serviceCheck in assetGroup.serviceChecks %}
                     <div class="accordion-item"> 
                         <h2 class="accordion-header" id="headingOne">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-service-check-{{ serviceCheck.id }}" aria-expanded="true" aria-controls="collapse-service-check-{{ serviceCheck.id }}">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-service-check-{{ serviceCheck.id }}" aria-expanded="false" aria-controls="collapse-service-check-{{ serviceCheck.id }}">
                                 {{ serviceCheck.name }}
                             </button>
                         </h2>
-                        <div id="collapse-service-check-{{ serviceCheck.id }}" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordion-service-checks">
+                        <div id="collapse-service-check-{{ serviceCheck.id }}" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordion-service-checks">
                         <div class="accordion-body">
                                 <div class="hint">todo: overwrite checkIntervalSeconds, retryIntervalSeconds, maxRetries, notificationsEnabled and enabled from ServiceCheck Entity</div><hr>
                                 <div class="hint">todo: read possible ODATA keys from serviceCheck and fill dropdown</div>
  
-                                {% if assetGroupServiceCheckConditions.get(serviceCheck.id) is null %}
-                                <div class="alert alert-info color-info">TODO: no conditions yet, add new one</div>
-                                {% else %}
+                                {% set conditionIndex = 0 %}
+
+                                {% if assetGroupServiceCheckConditions.get(serviceCheck.id) is not null %}
                                 {% set result = assetGroupServiceCheckConditions.get(serviceCheck.id).getConditionCollection %}
 
-                                {% for odataKey, condition in result.conditions %}
-                                {% set conditionIndex = loop.index0 %}
-
-
-                                    {% set name = 'condition[' ~ serviceCheck.id ~ '][' ~ conditionIndex ~ ']' %}
-                                    {% include 'condition-builder/index.html.twig' with {
-                                        'availableConditions': availableConditions,
-                                        'availableServiceChecks': availableServiceChecks,
-                                        'serviceCheck': serviceCheck,
-                                        'selectedCondition': condition,
-                                        'conditionIndex': conditionIndex,
-                                        'odataKey': odataKey,
-                                    } %}
-
+                                {% for conditionId, condition in result.conditions %}
+                                <div class="card nested">
+                                    <div class="card-content">
+                                        <div class="card-body">
+                                                {% set conditionIndex = conditionIndex + 1 %}
+                                                {% include 'condition-builder/index.html.twig' with {
+                                                    'availableConditions': availableConditions,
+                                                    'availableServiceChecks': availableServiceChecks,
+                                                    'serviceCheck': serviceCheck,
+                                                    'selectedCondition': condition,
+                                                    'conditionIndex': conditionIndex,
+                                                } %}
+                                        </div>
+                                        <div class="btn-group align-itme-scenter mx-2 px-1">
+                                            <button type="submit" class="btn btn-link p-2 m-1 text-decoration-none">
+                                                <i class="bi bi-floppy-fill"></i>
+                                            </button>
+                                            <button 
+                                                type="button" 
+                                                hx-delete="{{ path('delete_asset_group_service_check_condition', {'assetGroupId': assetGroup.id, 'serviceCheckId': serviceCheck.id, 'conditionId': conditionId }) }}?hx=1"
+                                                hx-confirm="{{ 'label.delete.confirm'|trans }}"
+                                                class="btn btn-link p-2 m-1 text-decoration-none">
+                                                <i class="bi bi-x-lg"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
                                 {% endfor %}
                                 {% endif %}
+    
+                                <div class="card nested">
+                                    <div class="card-content">
+                                        <div class="card-body">
+                                            {% include 'condition-builder/index.html.twig' with {
+                                                'availableConditions': availableConditions,
+                                                'availableServiceChecks': availableServiceChecks,
+                                                'serviceCheck': serviceCheck,
+                                                'conditionIndex': conditionIndex+1,
+                                            } %}
+                                        </div>
+                                    </div>
+                                </div>
+
 
                         </div>
                     </div>

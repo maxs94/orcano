@@ -39,6 +39,16 @@ class AssetGroupPageController extends AbstractPageController
         return $this->renderPage('edit/asset-group.html.twig', ['page' => $page]);
     }
 
+    #[Route('/delete/asset-group-service-check-condition/{assetGroupId}/{serviceCheckId}/{conditionId}', name: 'delete_asset_group_service_check_condition')]
+    public function deleteAssetGroupServiceCheckConditionAction(int $assetGroupId, int $serviceCheckId, string $conditionId): Response
+    {
+        $this->assetGroupServiceCheckConditionRepository->deleteByConditionId($assetGroupId, $serviceCheckId, $conditionId);
+
+        $this->addMessage('label.entity-deleted', PageMessageDataObject::TYPE_SUCCESS);
+
+        return $this->redirectToRoute('edit_asset_group', ['id' => $assetGroupId]);
+    }
+
     private function processForm(Request $request, int $id = null): void
     {
         $errors = [];
