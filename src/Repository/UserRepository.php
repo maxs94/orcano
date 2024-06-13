@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 /**
- * © 2023-2023 by the orcano team (https://github.com/maxs94/orcano)
+ * © 2023-2024 by the orcano team (https://github.com/maxs94/orcano)
  */
 
 namespace App\Repository;
@@ -12,8 +12,6 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 
 /**
- * @implements PasswordUpgraderInterface<User>
- *
  * @method User|null find($id, $lockMode = null, $lockVersion = null)
  * @method User|null findOneBy(array $criteria, array $orderBy = null)
  * @method User[] findAll()
@@ -33,6 +31,7 @@ class UserRepository extends AbstractServiceEntityRepository implements Password
      */
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
+        /* @phpstan-ignore-next-line */
         $user->setPassword($newHashedPassword);
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush();
