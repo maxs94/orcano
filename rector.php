@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 /**
- * © 2023-2023 by the orcano team (https://github.com/maxs94/orcano)
+ * © 2023-2024 by the orcano team (https://github.com/maxs94/orcano)
  */
 
 use Rector\CodingStyle\Rector\ClassConst\RemoveFinalFromConstRector;
