@@ -3,6 +3,9 @@
 
 {% set asset = page.parameters.get('asset') %}
 {% set availableAssetGroups = page.parameters.get('availableAssetGroups') %}
+{% set availableServiceChecks = page.parameters.get('availableServiceChecks') %}
+{% set availableConditions = page.parameters.get('availableConditions') %}
+{% set assetServiceCheckConditions = page.parameters.get('assetServiceCheckConditions') %}
 
 {% block title %}{{ 'title.asset.edit'|trans }}{% endblock %}
 
@@ -59,8 +62,26 @@
                     <option value="{{ assetGroup.id }}" {% if exists == true %}selected{% endif %}>{{ assetGroup.name }}</option>
                     {% endfor %}
                 </select>
-
             </div>
+
+            <div class="form-group">
+                <label for="service-checks" class="form-label">{{ 'label.serviceChecks'|trans }}</label>
+
+                <select data-choices="true" multiple name="service-checks[]">
+                    {% for serviceCheck in availableServiceChecks %}
+                    {% set exists = asset.serviceChecks|existsInCollection('getId', serviceCheck.id) %}
+                    <option value="{{ serviceCheck.id }}" {% if exists == true %}selected{% endif %}>{{ serviceCheck.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            {{ include('partials/service-check-conditions.html.twig', {
+                'type': 'asset',
+                'entity': asset,
+                'availableConditions': availableConditions,
+                'availableServiceChecks': availableServiceChecks,
+                'selectedServiceCheckConditions': assetServiceCheckConditions,
+            }) }}
 
             <hr>
 

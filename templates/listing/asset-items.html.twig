@@ -9,6 +9,7 @@
     <td>{{ row.ipv4Address }}</td>
     <td>{{ row.ipv6Address }}</td>
     <td>{% for assetGroup in row.assetGroups %}<span class="badge bg-info me-1">{{ assetGroup.name }}</span>{% endfor %}</td>
+    <td>{% for serviceCheck in row.serviceChecks %}<span class="badge bg-info me-1">{{ serviceCheck.name }}</span>{% endfor %}</td>
     <td>{{ row.createdAt|date('d.m.Y H:i:s') }}</td>
     <td><a 
         class="btn btn-sm btn-primary"

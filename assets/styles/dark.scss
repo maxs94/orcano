@@ -1,34 +1,36 @@
 [data-bs-theme=dark] {
-    --bs-heading-color: #e6d5ac;
-    --bs-secondary-color: #ebb22d;
+  --bs-heading-color: #e6d5ac;
+  --bs-secondary-color: #ebb22d;
 
-    --o-sidebar-bg-color: #1c1d1f;
-    --o-sidebar-link-color: #858585;
-    --o-sidebar-icon-color: #fdaf00;
-    
-    --o-text-color: #adadad;
+  --o-sidebar-bg-color: #1c1d1f;
+  --o-sidebar-link-color: #858585;
+  --o-sidebar-icon-color: #fdaf00;
 
-    --o-card-header-bg-color: #3c3837;
-    --o-card-bg-color: #3c3837;
+  --o-text-color: #adadad;
 
-    --o-card-nested-header-bg-color: #272625;
-    --o-card-nested-bg-color: #272625;
+  --o-card-header-bg-color: #3c3837;
+  --o-card-bg-color: #3c3837;
 
-    --o-pagination-bg: #3a3a3a;
-    --o-pagination-border-color: #4f4f4f;
+  --o-card-nested-header-bg-color: #272625;
+  --o-card-nested-bg-color: #272625;
 
-    --o-table-text-color: #b5b5b5;
-    --o-table-heading-color: #e6d5ac;
-    --o-table-border-color: #544e40;
+  --o-pagination-bg: #3a3a3a;
+  --o-pagination-border-color: #4f4f4f;
 
-    --o-topbar-bg-color: #3c3837;
+  --o-table-text-color: #b5b5b5;
+  --o-table-heading-color: #e6d5ac;
+  --o-table-border-color: #544e40;
 
-    --o-form-control-bg-color: #2c2a29;
-    --o-form-control-border-color: #474747;
-    --o-form-control-text-color: #adadad;
-    --o-form-control-bg-focus-color: #252423;
+  --o-topbar-bg-color: #3c3837;
 
-    --o-alert-bg-color: #494949;
-    --o-alert-text-color: #fff;
-    --o-alert-button-color: #fff;
+  --o-form-control-bg-color: #2c2a29;
+  --o-form-control-border-color: #474747;
+  --o-form-control-text-color: #e2e2e2;
+  --o-form-control-bg-focus-color: #252423;
+  --o-form-control-placeholder-color: #7e7e7e;
+
+  --o-alert-bg-color: #494949;
+  --o-alert-text-color: #fff;
+  --o-alert-button-color: #fff;
+
 }

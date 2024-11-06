@@ -7,6 +7,7 @@ declare(strict_types=1);
 namespace App\DataObject\Scripts;
 
 use App\DataObject\DataObjectInterface;
+use App\Entity\CheckScriptParameter;
 
 class MetaDataObject implements DataObjectInterface
 {
@@ -15,6 +16,9 @@ class MetaDataObject implements DataObjectInterface
     private string $name;
 
     private ?string $description = null;
+
+    /** @var array<CheckScriptParameter> */
+    private array $parameters = [];
 
     public function getFilename(): string
     {
@@ -48,6 +52,26 @@ class MetaDataObject implements DataObjectInterface
     public function setDescription(?string $description): self
     {
         $this->description = trim($description);
+
+        return $this;
+    }
+
+    /** @return array<CheckScriptParameter> */
+    public function getParameters(): array
+    {
+        return $this->parameters;
+    }
+
+    public function addParameter(CheckScriptParameter $parameter): self
+    {
+        $this->parameters[] = $parameter;
+
+        return $this;
+    }
+
+    public function setParameters(array $parameters): self
+    {
+        $this->parameters = $parameters;
 
         return $this;
     }

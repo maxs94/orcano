@@ -24,6 +24,7 @@ class ScriptsService
     public const VALID_METADATA_KEYS = [
         'name',
         'desc',
+        'parameters'
     ];
 
     public function __construct(
@@ -95,8 +96,11 @@ class ScriptsService
         $dir = $this->parameterBag->get('kernel.project_dir') . '/' . $this->checkScriptsPath;
 
         foreach (glob($dir . '/*') as $script) {
+
+            $this->logger->debug('Checking script: ' . $script);
+
             if ($this->isValidScript($script) === false) {
-                $this->logger->warning('Invalid script found: ' . $script);
+                $this->logger->warning('Skipping invalid script: ' . $script);
                 $this->logger->warning('Valid script extensions are: ' . implode(', ', self::VALID_SCRIPT_EXTENSIONS));
                 continue;
             }
@@ -117,6 +121,12 @@ class ScriptsService
                 ->setDescription($metaData->getDescription())
                 ->setFilehash($filehash)
             ;
+
+            foreach ($metaData->getParameters() as $parameter) {
+                $parameter->setCheckScript($scriptObj);
+                $scriptObj->addCheckScriptParameter($parameter);
+            }
+
 
             $scripts[] = $scriptObj;
         }
@@ -177,6 +187,10 @@ class ScriptsService
             $checkScript->setDescription($script->getDescription());
             $checkScript->setFilehash($script->getFilehash());
 
+            foreach ($script->getCheckScriptParameters() as $parameter) {
+                $checkScript->addCheckScriptParameter($parameter);
+            }
+
             $this->em->persist($checkScript);
         }
 
@@ -186,6 +200,10 @@ class ScriptsService
     private function isValidScript(string $scriptFilename): bool
     {
         $pathInfo = pathinfo($scriptFilename);
+
+        if (empty($pathInfo['extension'])) {
+            return false;
+        }
 
         return in_array($pathInfo['extension'], self::VALID_SCRIPT_EXTENSIONS);
     }

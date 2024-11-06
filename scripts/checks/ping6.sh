@@ -1,8 +1,7 @@
 #!/bin/bash
-# script will be called by orcano with parameters: $1 = host, $2 = ipv4, $3 = ipv6
-#
 # name: IPV6 Ping
 # desc: Pings the host and returns result
+# parameters: ipv6<string>
 #
 # note: needs GNU grep because of the PCRE option (-oP) and should return ms
 #
@@ -11,16 +10,17 @@
 # 1 = NO REPLY
 # 2 = ERROR
 
-# use ipv6 and lastly the hostname
-if [ -n "$3" ]; then
-    address=$3
-else
-    address=$1
+# decode json and get the ip 
+ipv6=$(echo $1 | jq -r '.ipv6')
+
+if [ -z "${ipv6}" ]; then
+    printf '{"result":"ERROR", "message": "no ipv6 address"}'
+    exit 2
 fi
 
-pingResult=$(ping6 -w 3 -c 1 $1 2>/dev/null)
+pingResult=$(ping6 -w 3 -c 1 $ipv6 2>/dev/null)
 pingResultCode=$?
 pingTime=$(echo "$pingResult" | grep -oP 'time=\K\S+')
 
 # LC_NUMERIC=C is needed to force printf to use a dot instead of a comma for the decimal separator
-LC_NUMERIC=C printf 'ODATA: {"result":%d,"time":"%f"}' $pingResultCode $pingTime
+LC_NUMERIC=C printf '{"result":%d,"time":"%f"}' $pingResultCode $pingTime

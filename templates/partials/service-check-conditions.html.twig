@@ -1,0 +1,85 @@
+{% block service_check_conditions %}
+<div class="form-group">
+    <label for="assets" class="form-label">{{ 'label.service-checks-conditions'|trans }}</label>
+    <div class="accordion" id="accordion-service-checks">
+        {% for serviceCheck in entity.serviceChecks %}
+        <div class="accordion-item"> 
+            <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-service-check-{{ serviceCheck.id }}" aria-expanded="false" aria-controls="collapse-service-check-{{ serviceCheck.id }}">
+                    {{ serviceCheck.name }}
+                </button>
+            </h2>
+            <div id="collapse-service-check-{{ serviceCheck.id }}" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordion-service-checks">
+                <div class="accordion-body">
+                    <div class="hint">todo: overwrite checkIntervalSeconds, retryIntervalSeconds, maxRetries, notificationsEnabled and enabled from ServiceCheck Entity</div><hr>
+                    <div class="hint">todo: read possible keys from serviceCheck and fill dropdown</div>
+
+                    {% set conditionIndex = 0 %}
+
+                    {% if selectedServiceCheckConditions.get(serviceCheck.id) is not null %}
+                    {% set result = selectedServiceCheckConditions.get(serviceCheck.id).getConditionCollection %}
+
+                    {% for conditionId, condition in result.conditions %}
+                    <div class="card nested">
+                        <div class="card-content">
+                            <div class="card-body">
+                                {% set conditionIndex = conditionIndex + 1 %}
+                                {% include 'condition-builder/index.html.twig' with {
+                                'availableConditions': availableConditions,
+                                'availableServiceChecks': availableServiceChecks,
+                                'serviceCheck': serviceCheck,
+                                'selectedCondition': condition,
+                                'conditionIndex': conditionIndex,
+                                } %}
+                            </div>
+                            <div class="btn-group align-itme-scenter mx-2 px-1">
+                                <button type="submit" class="btn btn-link p-2 m-1 text-decoration-none">
+                                    <i class="bi bi-floppy-fill"></i>
+                                </button>
+
+                                {% if type == 'asset-group' %}
+                                <button 
+                                    type="button" 
+                                    hx-delete="{{ path('delete_asset_group_service_check_condition', {'assetGroupId': entity.id, 'serviceCheckId': serviceCheck.id, 'conditionId': conditionId }) }}?hx=1"
+                                    hx-confirm="{{ 'label.delete.confirm'|trans }}"
+                                    class="btn btn-link p-2 m-1 text-decoration-none">
+                                    <i class="bi bi-x-lg"></i>
+                                </button>
+                                {% endif %}
+
+                                {% if type == 'asset' %}
+                                <button 
+                                    type="button" 
+                                    hx-delete="{{ path('delete_asset_service_check_condition', {'assetId': entity.id, 'serviceCheckId': serviceCheck.id, 'conditionId': conditionId }) }}?hx=1"
+                                    hx-confirm="{{ 'label.delete.confirm'|trans }}"
+                                    class="btn btn-link p-2 m-1 text-decoration-none">
+                                    <i class="bi bi-x-lg"></i>
+                                </button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+
+                    <div class="card nested">
+                        <div class="card-content">
+                            <div class="card-body">
+                                {% include 'condition-builder/index.html.twig' with {
+                                'availableConditions': availableConditions,
+                                'availableServiceChecks': availableServiceChecks,
+                                'serviceCheck': serviceCheck,
+                                'conditionIndex': conditionIndex+1,
+                                } %}
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    {% endblock %}

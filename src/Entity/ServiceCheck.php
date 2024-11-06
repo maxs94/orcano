@@ -202,4 +202,5 @@ class ServiceCheck implements DataObjectInterface, ApiEntityInterface
     {
         return $this->assetGroups;
     }
+
 }

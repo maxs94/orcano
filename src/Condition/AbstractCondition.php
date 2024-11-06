@@ -43,4 +43,20 @@ abstract class AbstractCondition implements ConditionInterface, \Stringable
 
         return $this->{$getter}();
     }
+
+    protected function setData(string $key, mixed $value): void 
+    {
+        if (is_float($value)) {
+            $value = (float) $value;
+        } else if (is_numeric($value)) {
+            $value = (int) $value;
+        } else if (is_bool($value)) {
+            $value = (bool) $value;
+        } else if (is_string($value)) {
+            $value = (string) $value;
+        }
+
+        $this->{$key} = $value;
+    }
+
 }

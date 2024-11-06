@@ -42,11 +42,9 @@ class CheckNotificationHandler
             return false;
         }
 
-        $command = sprintf('%s "%s" "%s" "%s"',
+        $command = sprintf('%s \'%s\'',
             $scriptPath,
-            $message->getHostname(),
-            $message->getIpv4Address(),
-            $message->getIpv6Address()
+            $this->createJsonParameter($message),
         );
 
         $this->logger->notice(sprintf('CMD: %s', $command));
@@ -88,5 +86,17 @@ class CheckNotificationHandler
     {
         $message = new CheckResultNotification($result, $originalMessage);
         $this->bus->dispatch($message);
+    }
+
+    private function createJsonParameter(CheckNotification $message): string
+    {
+        // todo: return parameters provided by the asset 
+        // i.e. url parameter when using http_status script 
+       
+        return json_encode([
+            'hostname' => $message->getHostname(),
+            'ipv4' => $message->getIpv4Address(),
+            'ipv6' => $message->getIpv6Address()
+        ]);
     }
 }

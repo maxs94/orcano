@@ -27,22 +27,16 @@ class ResultParserServiceTest extends TestCase
         $this->service = new ResultParserService();
     }
 
-    public function testODATAMissing(): void
-    {
-        $this->expectException(\Exception::class);
-        $this->service->extractJson('INVALID RESULT STRING');
-    }
-
     public function testDecodeJsonError(): void
     {
         $this->expectException(\Exception::class);
-        $this->service->extractJson('ODATA: {"INVALID JSON"}');
+        $this->service->extractJson('{"INVALID JSON"}');
     }
 
     public function testParseResultJson(): void
     {
         $jsonString = json_encode(['result' => 'test']);
-        $result = $this->service->extractJson('ODATA: ' . $jsonString);
+        $result = $this->service->extractJson($jsonString);
         $this->assertEquals('test', $result['result']);
     }
 

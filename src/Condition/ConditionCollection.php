@@ -8,10 +8,10 @@ namespace App\Condition;
 
 class ConditionCollection
 {
-    /** @var array<string, AbstractCondition> */
+    /** @var array<ConditionCollectionItem> */
     private array $conditions = [];
 
-    /** @return array<string, array<string, AbstractCondition>> */
+    /** @return array<string, array<ConditionCollectionItem>> */
     public function __serialize(): array
     {
         return [
@@ -19,7 +19,7 @@ class ConditionCollection
         ];
     }
 
-    /** @param array<string, array<string, AbstractCondition>> $data */
+    /** @param array<string, array<ConditionCollectionItem>> $data */
     public function __unserialize(array $data): void
     {
         $this->conditions = $data['conditions'];
@@ -28,10 +28,7 @@ class ConditionCollection
     public function addCondition(string $resultKey, AbstractCondition $condition): void
     {
         $id = md5(serialize($condition) . $resultKey);
-        $this->conditions[$id] = [
-            'key' => $resultKey,
-            'condition' => $condition,
-        ];
+        $this->conditions[$id] = new ConditionCollectionItem($resultKey, $condition);
     }
 
     public function removeCondition(string $id): void
@@ -39,13 +36,13 @@ class ConditionCollection
         unset($this->conditions[$id]);
     }
 
-    /** @return array<string, AbstractCondition> */
+    /** @return array<ConditionCollectionItem> */
     public function getConditions(): array
     {
         return $this->conditions;
     }
 
-    /** @param array<string, AbstractCondition> $conditions */
+    /** @param array<ConditionCollectionItem> $conditions */
     public function setConditions(array $conditions): void
     {
         $this->conditions = $conditions;

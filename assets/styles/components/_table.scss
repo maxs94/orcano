@@ -10,6 +10,7 @@
 .table {
     > :not(caption) > * > * {
         color: var(--o-table-text-color);
+        padding: 0.2rem;
     }
 
     tr, td, th {
@@ -19,17 +20,17 @@
 
     &.table-sm {
         tr td, tr th {
-            padding: 1rem;
+            padding: 0.2rem;
         }
     }
     &.table-md {
         tr td, tr th {
-            padding: 1rem;
+            padding: 0.2rem;
         }
     }
     &.table-lg {
         tr td, tr th {
-            padding: 1.3rem;
+            padding: 0.2rem;
         }
     }
 }

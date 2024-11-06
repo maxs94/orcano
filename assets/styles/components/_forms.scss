@@ -80,6 +80,11 @@
 
     }
 }
+
+.form-control::placeholder {
+  color: var(--o-form-control-placeholder-color);
+}
+
 .form-control {
     background-color: var(--o-form-control-bg-color); 
     border: 1px solid var(--o-form-control-border-color);
@@ -96,6 +101,7 @@
         background-color: var(--o-form-control-bg-focus-color);
         color: var(--o-form-control-text-color);
     }
+
 }
 .form-check {
     .form-check-input {

@@ -17,7 +17,22 @@ class MinMaxCondition extends AbstractCondition
 
     private string $operator = self::DEFAULT_OPERATOR;
 
-    public function __construct(private mixed $okMin = null, private mixed $okMax = null, private mixed $warnMin = null, private mixed $warnMax = null) {}
+    protected mixed $okMin = null;
+    protected mixed $okMax = null;
+    protected mixed $warnMin = null;
+    protected mixed $warnMax = null;
+
+    public function __construct(
+        mixed $okMin = null, 
+        mixed $okMax = null,
+        mixed $warnMin = null,
+        mixed $warnMax = null
+    ) {
+        $this->setData('okMin', $okMin);
+        $this->setData('okMax', $okMax);
+        $this->setData('warnMin', $warnMin);
+        $this->setData('warnMax', $warnMax);
+    }
 
     /**
      * @return array<string, int|string|null>

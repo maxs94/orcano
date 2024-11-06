@@ -8,7 +8,16 @@ namespace App\Condition;
 
 class EqualsCondition extends AbstractCondition
 {
-    public function __construct(private mixed $okValue = null, private mixed $warnValue = null) {}
+    protected mixed $okValue;
+    protected mixed $warnValue;
+
+    public function __construct(
+        mixed $okValue = null, 
+        mixed $warnValue = null
+    ) {
+        $this->setData('okValue', $okValue);
+        $this->setData('warnValue', $warnValue);
+    }
 
     /**
      * @return array<string, mixed>

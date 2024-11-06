@@ -1,10 +1,11 @@
 #!/bin/bash
-# script will be called by orcano with parameters: $1 = host, $2 = ipv4, $3 = ipv6
-#
 # name: HTTP Status Check
-# desc: Checks the HTTP/S status and returns the result
+# desc: Checks the HTTP status and returns the result
+# parameters: url<string>
 
-httpCode=$(curl -s -o /dev/null -w "%{http_code}" http://$1)
-httpsCode=$(curl -s -o /dev/null -w "%{http_code}" https://$1)
+# decode json and get the url 
+url=$(echo $1 | jq -r '.url')
 
-printf 'ODATA: {"http":%d, "https":%d}' $httpCode $httpsCode
+response=$(curl -s --write-out "%{json}" -o /dev/null $url)
+
+printf '%s' $response

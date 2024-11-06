@@ -7,12 +7,15 @@ declare(strict_types=1);
 namespace App\MessageHandler;
 
 use App\Condition\ConditionCollection;
-use App\Condition\EqualsCondition;
-use App\Condition\MinMaxCondition;
 use App\DataObject\ScriptResultDataObject;
+use App\Entity\CheckResult;
+use App\Message\CheckNotification;
 use App\Message\CheckResultNotification;
+use App\Repository\AssetRepository;
+use App\Repository\ServiceCheckRepository;
 use App\Service\Condition\ConditionService;
 use App\Service\Scripts\ResultParserService;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
@@ -21,6 +24,9 @@ class CheckResultNotificationHandler
 {
     public function __construct(
         private readonly ResultParserService $resultParserService,
+        private readonly AssetRepository $assetRepository,
+        private readonly ServiceCheckRepository $serviceCheckRepository,
+        private readonly EntityManagerInterface $entityManager,
         private readonly ConditionService $conditionService,
         private readonly LoggerInterface $logger
     ) {}
@@ -57,6 +63,29 @@ class CheckResultNotificationHandler
             $checkResult->getCheckResult(),
             $checkResult->getNote()
         ));
+
+        $this->saveCheckResult($checkResult, $originalNotification);
+    }
+
+    private function saveCheckResult(ScriptResultDataObject $scriptResult, CheckNotification $checkNotification): void 
+    {
+        $checkResultEntity = new CheckResult();
+        $checkResultEntity->setData([
+            'result' => $scriptResult->getCheckResult(),
+            'message' => json_encode($scriptResult->getMessage()),
+            'scriptOutput' => json_encode($scriptResult->getScriptOutput()),
+        ]);
+
+        $checkResultEntity->setAsset(
+            $this->assetRepository->find($checkNotification->getAssetId())
+        );
+
+        $checkResultEntity->setServiceCheck(
+            $this->serviceCheckRepository->find($checkNotification->getServiceCheckId())
+        );
+
+        $this->entityManager->persist($checkResultEntity);
+        $this->entityManager->flush();
     }
 
     private function checkResult(ScriptResultDataObject $result, ConditionCollection $conditions): ScriptResultDataObject

@@ -1,7 +1,7 @@
 {% block condition_builder %}
 {% set name = 'condition[' ~ serviceCheck.id ~ '][' ~ conditionIndex ~ ']' %}
 {% set parametersId = 'condition-' ~ serviceCheck.id ~ '-' ~ conditionIndex ~ '-parameters' %}
-{% set odataKey = selectedCondition is defined ? selectedCondition.key : '' %}
+{% set odataKey = selectedCondition is defined ? selectedCondition.getName : '' %}
 
 <div class="row">
     <div class="col">
@@ -16,7 +16,7 @@
     </select>
     </div>
     <div class="col">
-        for ODATA key: <input type="text" name="{{ name }}[key]" placeholder="key" value="{% if odataKey is defined %}{{ odataKey }}{% endif %}">
+        for script json result key: <input class="form-control" type="text" name="{{ name }}[key]" placeholder="key" value="{% if odataKey is defined %}{{ odataKey }}{% endif %}">
     </div>
 </div>
 <div class="mt-2 row">

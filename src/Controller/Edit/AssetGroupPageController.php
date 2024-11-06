@@ -10,6 +10,7 @@ use App\Condition\ConditionCollectionHydrator;
 use App\Context\Context;
 use App\Controller\Page\AbstractPageController;
 use App\DataObject\Page\PageMessageDataObject;
+use App\Entity\AssetGroup;
 use App\Repository\AssetGroupRepository;
 use App\Repository\AssetGroupServiceCheckConditionRepository;
 use App\Service\Page\AssetGroupPageLoader;
@@ -71,11 +72,11 @@ class AssetGroupPageController extends AbstractPageController
                 }
             }
 
-            if (!$assetGroup instanceof \App\Entity\AssetGroup) {
+            if (!$assetGroup instanceof AssetGroup) {
                 $this->addMessage('label.entity-not-saved', PageMessageDataObject::TYPE_DANGER);
             }
 
-            if (isset($data['condition']) && $assetGroup instanceof \App\Entity\AssetGroup) {
+            if (isset($data['condition']) && $assetGroup instanceof AssetGroup) {
                 foreach ($data['condition'] as $serviceCheckId => $conditionData) {
                     $conditionCollection = $this->conditionCollectionHydrator->hydrateFromFormPost($conditionData);
                     $this->assetGroupServiceCheckConditionRepository->upsertByIds($assetGroup->getId(), $serviceCheckId, $conditionCollection);
