@@ -13,7 +13,7 @@ class ScriptResultDataObject implements DataObjectInterface
     public const RESULT_ERROR = 'ERROR';
     public const RESULT_UNKNOWN = 'UNKNOWN';
 
-    private string $checkResult;
+    private string $checkResult = self::RESULT_UNKNOWN;
 
     /** @var array<string, mixed> */
     private array $message = [];

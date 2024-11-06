@@ -12,29 +12,38 @@ use App\Condition\EqualsCondition;
 use App\Condition\MinMaxCondition;
 use App\Repository\AssetGroupServiceCheckConditionRepository;
 use App\Repository\AssetRepository;
+use App\Repository\AssetServiceCheckConditionRepository;
 
 class ConditionService
 {
     public function __construct(
         private readonly AssetGroupServiceCheckConditionRepository $assetGroupServiceCheckConditionRepository,
+        private readonly AssetServiceCheckConditionRepository $assetServiceCheckConditionRepository,
         private readonly AssetRepository $assetRepository,
     ) {}
 
-    // TODO: inheritance from assets
     public function getCheckConditions(int $assetId, int $serviceCheckId): ConditionCollection
     {
-        $asset = $this->assetRepository->find($assetId);
-        $assetGroups = $asset->getAssetGroups();
-
-        $ids = [];
-        foreach ($assetGroups as $assetGroup) {
-            $ids[] = $assetGroup->getId();
-        }
-
-        $conditions = $this->assetGroupServiceCheckConditionRepository->findBy([
-            'assetGroup' => $ids,
+        $conditions = $this->assetServiceCheckConditionRepository->findBy([
+            'asset' => $assetId,
             'serviceCheck' => $serviceCheckId,
         ]);
+
+        // if asset has no conditions for this service check, check asset groups
+        if (empty($conditions)) {
+            $asset = $this->assetRepository->find($assetId);
+            $assetGroups = $asset->getAssetGroups();
+
+            $assetGroupIds = [];
+            foreach ($assetGroups as $assetGroup) {
+                $assetGroupIds[] = $assetGroup->getId();
+            }
+
+            $conditions = $this->assetGroupServiceCheckConditionRepository->findBy([
+                'assetGroup' => $assetGroupIds,
+                'serviceCheck' => $serviceCheckId,
+            ]);
+        }
 
         if ($conditions === []) {
             throw new \Exception('Could not find any conditions for assetId ' . $assetId . ' and serviceCheckId ' . $serviceCheckId);

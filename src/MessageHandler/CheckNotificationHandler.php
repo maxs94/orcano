@@ -92,6 +92,8 @@ class CheckNotificationHandler
     {
         // todo: return parameters provided by the asset 
         // i.e. url parameter when using http_status script 
+
+        $this->logger->warning('todo: create additional json parameter for checkScript execution');
        
         return json_encode([
             'hostname' => $message->getHostname(),
