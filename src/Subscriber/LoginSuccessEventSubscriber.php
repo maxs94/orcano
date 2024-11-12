@@ -23,7 +23,7 @@ class LoginSuccessEventSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function onLoginSuccess(LoginSuccessEvent $event): void
+    public function onLoginSuccess(): void
     {
         $this->contextLoader->update();
     }

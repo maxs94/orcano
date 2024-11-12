@@ -1,0 +1,25 @@
+{% block listing_table_check_script %}
+{% set result = page.result %}
+{% for row in result %}
+{% set url = path('edit_check_script', {'id': row.id}) %}
+{% set hxUrl = url ~ '?hx=1' %}
+<tr>
+    <td>{{ row.name }}</td>
+    <td>{{ row.description }}</td>
+    <td>{{ row.createdAt|date('d.m.Y H:i:s') }}</td>
+    <td><a 
+        class="btn btn-sm btn-primary"
+        hx-get="{{ hxUrl }}"
+        hx-target="#page-content"
+        hx-push-url="{{ url }}"
+        href="{{ url }}">{{ 'label.edit'|trans }}</a></td>
+</tr>
+{% endfor %}
+
+<tr>
+    <td colspan="4">
+    <span class="dataTable-pagination">{% include 'listing/pagination.html.twig' with { 'pagination': page.pagination } %}</span> 
+    </td>
+</tr>
+
+{% endblock %}

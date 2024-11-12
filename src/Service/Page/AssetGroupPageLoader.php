@@ -25,9 +25,11 @@ class AssetGroupPageLoader
     {
         $title = $this->translator->trans('title.asset-group.edit');
 
+        $assetGroup = is_null($id) ? new AssetGroup() : $this->getAssetGroup($id);
+
         return (new PageDataObject())
             ->setTitle($title)
-            ->addParameter('assetGroup', $this->getAssetGroup($id))
+            ->addParameter('assetGroup', $assetGroup)
         ;
     }
 

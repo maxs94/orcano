@@ -10,6 +10,7 @@ class CheckNotification
 {
     public function __construct(
         private readonly int $assetId,
+        private readonly int $serviceCheckId,
         private readonly string $hostname,
         private readonly ?string $ipv4Address,
         private readonly ?string $ipv6Address,
@@ -19,6 +20,11 @@ class CheckNotification
     public function getAssetId(): int
     {
         return $this->assetId;
+    }
+
+    public function getServiceCheckId(): int
+    {
+        return $this->serviceCheckId;
     }
 
     public function getHostname(): string

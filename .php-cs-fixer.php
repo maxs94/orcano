@@ -3,9 +3,7 @@
 declare(strict_types=1);
 
 $finder = PhpCsFixer\Finder::create()
-->exclude(['vendor'])
-->exclude(['var'])
-->exclude(['migrations'])
+->exclude(['vendor', 'var', 'migrations', 'node_modules'])
 ->in(__DIR__);
 $year = date('Y');
 $header = "© 2023-" . $year . " by the orcano team (https://github.com/maxs94/orcano)";

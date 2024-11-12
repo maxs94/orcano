@@ -1,6 +1,6 @@
 {% block spinner %}
-<button class="btn btn-secondary d-none" type="button" disabled="">
+<div id="spinner" class="htmx-indicator">
     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
     <span class="visually-hidden">{{ 'label.loading'|trans }}</span>
-</button>
+</div>
 {% endblock %}

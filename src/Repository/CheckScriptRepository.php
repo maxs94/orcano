@@ -24,6 +24,20 @@ class CheckScriptRepository extends AbstractServiceEntityRepository
         parent::__construct($registry, CheckScript::class);
     }
 
+    public function upsert(array $data): CheckScript
+    {
+        $em = $this->getEntityManager();
+        $checkScript = $data['id'] !== 0 ? $this->find($data['id']) : new CheckScript();
+
+        $checkScript->setName($data['name'] ?? '');
+        $checkScript->setDescription($data['description'] ?? '');
+
+        $em->persist($checkScript);
+        $em->flush();
+
+        return $checkScript;
+    }
+
     public function findByFilehash(string $filehash): ?CheckScript
     {
         return $this->findOneBy(['filehash' => $filehash]);

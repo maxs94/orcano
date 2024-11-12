@@ -1,9 +1,33 @@
-@import "_variables.scss";
+@import "variables";
 
 @import "~bootstrap-icons/font/bootstrap-icons.css";
 @import "~bootstrap/scss/bootstrap";
 
-@import "mazer.scss";
+@import "./components/alert";
+@import "./components/avatar";
+@import "./components/badge";
+@import "./components/buttons";
+@import "./components/breadcrumb";
+@import "./components/carousel";
+@import "./components/card";
+@import "./components/divider";
+@import "./components/dropdowns";
+@import "./components/forms";
+@import "./components/form-select";
+@import "./components/choices";
+@import "./components/modal";
+@import "./components/sidebar";
+@import "./components/topbar";
+@import "./components/navs";
+@import "./components/navbar";
+@import "./components/pagination";
+@import "./components/table";
+@import "./components/progress";
+@import "./components/spinner";
+@import "./components/icons";
+@import "./components/debug.scss";
+@import "./layouts/main.scss";
+@import "./layouts/footer.scss";
 
 @import "pages/auth";
 

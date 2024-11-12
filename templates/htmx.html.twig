@@ -1,0 +1,10 @@
+{% block page_content %}
+{% endblock %}
+
+{% block htmx_messages %}
+{% if messages is not empty %}
+{% for message in messages %}
+        <div class="alert alert-{{ message.type }} color-{{ message.type }} mt-1">{{ message.text|trans }}</div>
+    {% endfor %}
+{% endif %}
+{% endblock %}

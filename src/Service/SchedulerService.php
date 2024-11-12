@@ -56,6 +56,7 @@ class SchedulerService
 
         $message = new CheckNotification(
             $asset->getId(),
+            $check->getId(),
             $asset->getHostname(),
             $asset->getIpv4Address(),
             $asset->getIpv6Address(),

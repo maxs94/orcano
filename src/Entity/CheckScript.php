@@ -53,7 +53,7 @@ class CheckScript implements DataObjectInterface, ApiEntityInterface
         return $this->name;
     }
 
-    public function setName(string $name): static
+    public function setName(string $name): self
     {
         $this->name = $name;
 
@@ -65,7 +65,7 @@ class CheckScript implements DataObjectInterface, ApiEntityInterface
         return $this->filename;
     }
 
-    public function setFilename(string $filename): static
+    public function setFilename(string $filename): self
     {
         $this->filename = $filename;
 
@@ -77,7 +77,7 @@ class CheckScript implements DataObjectInterface, ApiEntityInterface
         return $this->description;
     }
 
-    public function setDescription(?string $description): static
+    public function setDescription(?string $description): self
     {
         $this->description = $description;
 
@@ -89,7 +89,7 @@ class CheckScript implements DataObjectInterface, ApiEntityInterface
         return $this->filehash;
     }
 
-    public function setFilehash(string $filehash): static
+    public function setFilehash(string $filehash): self
     {
         $this->filehash = $filehash;
 
@@ -106,7 +106,7 @@ class CheckScript implements DataObjectInterface, ApiEntityInterface
         return $this->isChangedInFilesystem;
     }
 
-    public function setIsChangedInFilesystem(bool $isChangedInFilesystem): static
+    public function setIsChangedInFilesystem(bool $isChangedInFilesystem): self
     {
         $this->isChangedInFilesystem = $isChangedInFilesystem;
 

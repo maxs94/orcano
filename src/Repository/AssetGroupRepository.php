@@ -24,6 +24,19 @@ class AssetGroupRepository extends AbstractServiceEntityRepository
         parent::__construct($registry, AssetGroup::class);
     }
 
+    public function upsert(array $data): AssetGroup
+    {
+        $em = $this->getEntityManager();
+        $assetGroup = $data['id'] !== 0 ? $this->find($data['id']) : new AssetGroup();
+
+        $assetGroup->setName($data['name'] ?? '');
+
+        $em->persist($assetGroup);
+        $em->flush();
+
+        return $assetGroup;
+    }
+
     /**
      * @param array<string> $names
      */

@@ -50,10 +50,21 @@ label.language.en: English
 label.language.de: Deutsch
 label.row-limit: 'Row limit'
 label.entity-saved: 'Entity saved'
+label.assetGroups: 'Asset groups'
+label.asset.name.hint: 'Asset name'
+label.asset.hostname.hint: 'www.orcano.net'
+label.ipv4-address: 'Ipv4 address'
+label.asset.ipv4-address.hint: '127.0.0.1'
+label.ipv6-address: 'Ipv6 address'
+label.asset.ipv6-address.hint: '::1'
+label.assets: 'Assets'
+label.service-checks: 'Service checks'
 alert.passwords-not-match: 'Passwords do not match'
 label.loading: Loading
 alert.email-required: 'Email is required'
+alert.hostname-required: 'Hostname is required'
 title.service-check.edit: 'Edit Services'
+label.edit: Edit
 label.actions: Actions
 label.service-check.name.hint: 'Name of the Service'
 label.check-script: 'Script'
@@ -65,3 +76,9 @@ label.max-retries: Maximum Retries
 label.service-check.max-retries.hint: 'The max count of retries'
 label.notifications-enabled: 'Notifications enabled'
 alert.service-check.name.empty: 'The name of the service is empty'
+label.back: Back
+label.add: Add
+label.please-choose: 'Please choose'
+label.serviceChecks: 'Service checks'
+label.asset-group.name.hint: 'Asset group name'
+label.script: 'Script'
