@@ -1,7 +1,7 @@
 #!/bin/bash
 # name: HTTP Status Check
 # desc: Checks the HTTP status and returns the result
-# parameters: url<string>
+# parameters: url<string>:url to check
 
 # decode json and get the url 
 url=$(echo $1 | jq -r '.url')

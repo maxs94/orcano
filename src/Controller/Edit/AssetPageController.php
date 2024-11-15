@@ -12,7 +12,7 @@ use App\Controller\Page\AbstractPageController;
 use App\DataObject\Page\PageMessageDataObject;
 use App\Entity\Asset;
 use App\Repository\AssetRepository;
-use App\Repository\AssetServiceCheckConditionRepository;
+use App\Repository\AssetServiceCheckRepository;
 use App\Service\Page\AssetPageLoader;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,7 +25,7 @@ class AssetPageController extends AbstractPageController
         private readonly AssetPageLoader $assetPageLoader,
         private readonly AssetRepository $assetRepository,
         private readonly ConditionCollectionHydrator $conditionCollectionHydrator,
-        private readonly AssetServiceCheckConditionRepository $assetServiceCheckConditionRepository
+        private readonly AssetServiceCheckRepository $assetServiceCheckRepository
     ) {
         parent::__construct($context);
     }
@@ -45,7 +45,7 @@ class AssetPageController extends AbstractPageController
     #[Route('/delete/asset-service-check-condition/{assetId}/{serviceCheckId}/{conditionId}', name: 'delete_asset_service_check_condition')]
     public function deleteAssetServiceCheckConditionAction(int $assetId, int $serviceCheckId, string $conditionId): Response
     {
-        $this->assetServiceCheckConditionRepository->deleteByConditionId($assetId, $serviceCheckId, $conditionId);
+        $this->assetServiceCheckRepository->deleteByConditionId($assetId, $serviceCheckId, $conditionId);
 
         $this->addMessage('label.entity-deleted', PageMessageDataObject::TYPE_SUCCESS);
 
@@ -89,7 +89,7 @@ class AssetPageController extends AbstractPageController
             if (isset($data['condition']) && $asset instanceof Asset) {
                 foreach ($data['condition'] as $serviceCheckId => $conditionData) {
                     $conditionCollection = $this->conditionCollectionHydrator->hydrateFromFormPost($conditionData);
-                    $this->assetServiceCheckConditionRepository->upsertByIds($asset->getId(), $serviceCheckId, $conditionCollection);
+                    $this->assetServiceCheckRepository->upsertByIds($asset->getId(), $serviceCheckId, $conditionCollection);
                 }
             }
 

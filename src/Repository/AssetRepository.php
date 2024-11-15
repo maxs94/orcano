@@ -19,8 +19,6 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class AssetRepository extends AbstractServiceEntityRepository
 {
-    use BaseRepositoryTrait;
-
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Asset::class);

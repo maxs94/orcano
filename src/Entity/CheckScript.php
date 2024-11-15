@@ -127,17 +127,24 @@ class CheckScript implements DataObjectInterface, ApiEntityInterface
         return $this->checkScriptParameters;
     }
 
-    public function addCheckScriptParameter(CheckScriptParameter $checkScriptParameter): static
+    public function setCheckScriptParameters(Collection $checkScriptParameters): self 
     {
-        if (!$this->checkScriptParameters->contains($checkScriptParameter)) {
-            $this->checkScriptParameters->add($checkScriptParameter);
+        $this->checkScriptParameters = $checkScriptParameters;
+
+        return $this;
+    }
+
+    public function addCheckScriptParameter(CheckScriptParameter $checkScriptParameter): self
+    {
+        if (!$this->checkScriptParameters->containsKey($checkScriptParameter->getName())) {
+            $this->checkScriptParameters->set($checkScriptParameter->getName(), $checkScriptParameter);
             $checkScriptParameter->setCheckScript($this);
         }
 
         return $this;
     }
 
-    public function removeCheckScriptParameter(CheckScriptParameter $checkScriptParameter): static
+    public function removeCheckScriptParameter(CheckScriptParameter $checkScriptParameter): self
     {
         if ($this->checkScriptParameters->removeElement($checkScriptParameter)) {
             // set the owning side to null (unless already changed)

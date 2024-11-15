@@ -9,7 +9,9 @@ namespace App\Service\Scripts;
 use App\DataObject\Collection\DataObjectCollection;
 use App\DataObject\Collection\DataObjectCollectionInterface;
 use App\Entity\CheckScript;
+use App\Repository\CheckScriptParameterRepository;
 use App\Repository\CheckScriptRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -33,6 +35,8 @@ class ScriptsService
         private readonly MetaDataService $metaDataService,
         private readonly HashService $hashService,
         private readonly EntityManagerInterface $em,
+        private readonly CheckScriptRepository $checkScriptRepository,
+        private readonly CheckScriptParameterRepository $checkScriptParameterRepository,
         private readonly LoggerInterface $logger
     ) {}
 
@@ -136,10 +140,7 @@ class ScriptsService
 
     public function getAllScripts(): DataObjectCollectionInterface
     {
-        /** @var CheckScriptRepository $checkScriptRepository */
-        $checkScriptRepository = $this->em->getRepository(CheckScript::class);
-
-        $dbCheckScripts = $checkScriptRepository->findAllAsCollection();
+        $dbCheckScripts = $this->checkScriptRepository->findAllAsCollection();
         $filesystemCheckScripts = $this->getAllScriptsFromFilesystem();
 
         $scripts = [];
@@ -163,19 +164,20 @@ class ScriptsService
 
     private function upsertCheckScripts(DataObjectCollectionInterface $scripts): void
     {
-        $checkScriptRepository = $this->em->getRepository(CheckScript::class);
-
         /** @var CheckScript $script */
         foreach ($scripts as $script) {
             $relativePath = str_replace($this->parameterBag->get('kernel.project_dir') . '/', '', $script->getFilename());
 
-            $checkScript = $checkScriptRepository->findOneBy(['filename' => $relativePath]);
+            $checkScript = $this->checkScriptRepository->findOneBy(['filename' => $relativePath]);
 
             if ($checkScript instanceof CheckScript) {
                 if ($script->getFilehash() === $checkScript->getFilehash()) {
                     $this->logger->debug('Script contents have not changed, skipping: ' . $relativePath);
                     continue;
                 }
+
+                $this->checkScriptParameterRepository->deleteParametersForCheckScript($checkScript);
+
                 $this->logger->info('Updating script ' . $relativePath);
             } else {
                 $checkScript = new CheckScript();

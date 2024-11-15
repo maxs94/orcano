@@ -15,8 +15,6 @@
 
 {% block page_content %}
 {% block edit_asset %}
-
-
 <div class="card">
     <div class="card-body">
     
@@ -65,23 +63,23 @@
             </div>
 
             <div class="form-group">
-                <label for="service-checks" class="form-label">{{ 'label.serviceChecks'|trans }}</label>
+                <label class="form-label">{{ 'label.asset-service-checks'|trans }}</label>
 
-                <select data-choices="true" multiple name="service-checks[]">
-                    {% for serviceCheck in availableServiceChecks %}
-                    {% set exists = asset.serviceChecks|existsInCollection('getId', serviceCheck.id) %}
-                    <option value="{{ serviceCheck.id }}" {% if exists == true %}selected{% endif %}>{{ serviceCheck.name }}</option>
-                    {% endfor %}
-                </select>
+                {% block asset_service_checks %}
+                    {% set search = [{
+                        'field': 'asset',
+                        'operator': 'equals',
+                        'value': asset.id
+                    }] %}
+                <div id="asset-service-checks" 
+                    hx-target="#asset-service-checks" 
+                    hx-trigger="load" 
+                    hx-push-url="false"
+                    hx-post="{{ path('listing', {'entity': 'asset-service-check', 'search': search|json_encode, 'assetId': asset.id} ) }}">
+                </div>
+                {% endblock %}
+
             </div>
-
-            {{ include('partials/service-check-conditions.html.twig', {
-                'type': 'asset',
-                'entity': asset,
-                'availableConditions': availableConditions,
-                'availableServiceChecks': availableServiceChecks,
-                'selectedServiceCheckConditions': assetServiceCheckConditions,
-            }) }}
 
             <hr>
 

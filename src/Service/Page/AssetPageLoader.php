@@ -7,7 +7,6 @@ declare(strict_types=1);
 namespace App\Service\Page;
 
 use App\Context\Context;
-use App\DataObject\Collection\DataObjectCollection;
 use App\DataObject\Collection\DataObjectCollectionInterface;
 use App\DataObject\Page\PageDataObject;
 use App\DataObject\Page\PageDataObjectInterface;
@@ -15,6 +14,7 @@ use App\Entity\Asset;
 use App\Repository\AssetGroupRepository;
 use App\Repository\AssetRepository;
 use App\Repository\AssetServiceCheckConditionRepository;
+use App\Repository\AssetServiceCheckRepository;
 use App\Repository\ServiceCheckRepository;
 use App\Service\Condition\ConditionService;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,7 +27,7 @@ class AssetPageLoader
         private readonly AssetRepository $assetRepository,
         private readonly AssetGroupRepository $assetGroupRepository,
         private readonly ServiceCheckRepository $serviceCheckRepository,
-        private readonly AssetServiceCheckConditionRepository $assetServiceCheckConditionRepository,
+        private readonly AssetServiceCheckRepository $assetServiceCheckRepository,
         private readonly ConditionService $conditionService
     ) {}
 
@@ -64,7 +64,7 @@ class AssetPageLoader
 
     private function getAssetServiceCheckConditions(Asset $asset): DataObjectCollectionInterface
     {
-        return $this->assetServiceCheckConditionRepository->findByAsCollection(['asset' => $asset], null, 'serviceCheckId');
+        return $this->assetServiceCheckRepository->findByAsCollection(['asset' => $asset], null, 'serviceCheckId');
     }
 
 }

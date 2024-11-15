@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\CheckScript;
 use App\Entity\CheckScriptParameter;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -19,6 +20,17 @@ class CheckScriptParameterRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, CheckScriptParameter::class);
+    }
+
+    public function deleteParametersForCheckScript(CheckScript $checkScript): void
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = 'DELETE FROM check_script_parameter WHERE check_script_id = :check_script_id';
+        $stmt = $conn->prepare($sql);
+    
+        $stmt->bindValue('check_script_id', $checkScript->getId());
+        $stmt->executeStatement();
     }
 
 //    /**

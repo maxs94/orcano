@@ -33,8 +33,8 @@ class Asset implements DataObjectInterface, ApiEntityInterface
 
     #[ORM\ManyToMany(targetEntity: AssetGroup::class, inversedBy: 'assets')]
     private Collection $assetGroups;
-    
-    #[ORM\ManyToMany(targetEntity: ServiceCheck::class, inversedBy: 'assets')]
+
+    #[ORM\OneToMany(mappedBy: 'asset', targetEntity: AssetServiceCheck::class, orphanRemoval: true)]
     private Collection $serviceChecks;
 
     public function __construct()
@@ -145,7 +145,7 @@ class Asset implements DataObjectInterface, ApiEntityInterface
 
         return rtrim($assetGroupsAsString, ', ');
     }
-    
+
     /**
      * @return Collection<int, ServiceCheck>
      */
@@ -154,7 +154,7 @@ class Asset implements DataObjectInterface, ApiEntityInterface
         return $this->serviceChecks;
     }
 
-    public function addServiceCheck(ServiceCheck $serviceCheck): static
+    public function addServiceCheck(ServiceCheck $serviceCheck): self
     {
         if (!$this->serviceChecks->contains($serviceCheck)) {
             $this->serviceChecks->add($serviceCheck);
@@ -163,10 +163,11 @@ class Asset implements DataObjectInterface, ApiEntityInterface
         return $this;
     }
 
-    public function removeServiceCheck(ServiceCheck $serviceCheck): static
+    public function removeServiceCheck(ServiceCheck $serviceCheck): self
     {
         $this->serviceChecks->removeElement($serviceCheck);
 
         return $this;
     }
+    
 }

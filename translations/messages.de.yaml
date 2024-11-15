@@ -47,6 +47,15 @@ label.language.en: English
 label.language.de: Deutsch
 label.row-limit: Zeilenlimit
 label.save: Speichern
+label.add: Hinzufügen
+label.edit: Bearbeiten
+label.remove: Entfernen
+label.delete: Löschen
+label.service-check: 'Service Check'
+label.service-checks: 'Service Checks'
+label.number-of-conditions: Bedingungen
+label.config: Konfiguration
+label.asset-service-check.add: Asset Service Check hinzufügen
 alert.passwords-not-match: 'Passwörter stimmen nicht überein'
 alert.email-required: 'Email erforderlich'
 title.welcome: Willkommen
@@ -63,3 +72,6 @@ label.max-retries: 'Maximale Wiederholungen'
 label.service-check.max-retries.hint: 'Die Anzahl der maximalen Wiederholungen'
 label.notifications-enabled: 'Benachrichtigungen aktiviert'
 alert.service-check.name.empty: 'Die Bezeichnung des Dienstes wurde nicht gesetzt'
+label.service-checks-parameter: Scriptparameter
+label.service-checks-conditions: Bedingungen
+

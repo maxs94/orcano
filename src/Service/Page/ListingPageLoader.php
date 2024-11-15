@@ -22,19 +22,37 @@ class ListingPageLoader extends AbstractPageLoader
 
         $limit = $context->getCurrentUser()->getRowLimit();
 
-        $result = $repo->getListing([], null, null, $limit, $page);
+        $search = $request->query->getString('search');
+        if (!empty($search)) {
+            $searches = json_decode($search, true, 512, JSON_THROW_ON_ERROR);
+        } else {
+            $searches = [];
+        }
+
+        $result = $repo->getListing($searches, null, null, $limit, $page);
 
         $pagination = $this->createPagination($limit, $result->getTotalCount(), $page, $entityName);
 
         $title = $this->translator->trans('title.' . $entityName . '.listing');
 
-        return (new ListingPageDataObject())
+        $listingPageDataObject = (new ListingPageDataObject())
             ->setEntityName($entityName)
             ->setPage($page)
             ->setPagination($pagination)
             ->setResult($result)
             ->setTitle($title)
         ;
+
+        $this->addQueryParametersToPage($request, $listingPageDataObject);
+
+        return $listingPageDataObject;
+    }
+
+    private function addQueryParametersToPage(Request $request, PageDataObjectInterface $page): void
+    {
+        foreach ($request->query->all() as $key => $value) {
+            $page->addParameter($key, $value);
+        }
     }
 
     private function createPagination(int $limit, int $total, int $currentPage, string $entityName): PaginationDataObject

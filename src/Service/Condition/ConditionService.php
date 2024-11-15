@@ -12,19 +12,19 @@ use App\Condition\EqualsCondition;
 use App\Condition\MinMaxCondition;
 use App\Repository\AssetGroupServiceCheckConditionRepository;
 use App\Repository\AssetRepository;
-use App\Repository\AssetServiceCheckConditionRepository;
+use App\Repository\AssetServiceCheckRepository;
 
 class ConditionService
 {
     public function __construct(
         private readonly AssetGroupServiceCheckConditionRepository $assetGroupServiceCheckConditionRepository,
-        private readonly AssetServiceCheckConditionRepository $assetServiceCheckConditionRepository,
+        private readonly AssetServiceCheckRepository $assetServiceCheckRepository,
         private readonly AssetRepository $assetRepository,
     ) {}
 
     public function getCheckConditions(int $assetId, int $serviceCheckId): ConditionCollection
     {
-        $conditions = $this->assetServiceCheckConditionRepository->findBy([
+        $conditions = $this->assetServiceCheckRepository->findBy([
             'asset' => $assetId,
             'serviceCheck' => $serviceCheckId,
         ]);

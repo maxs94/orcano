@@ -17,6 +17,10 @@ abstract class AbstractPageDataObject implements PageDataObjectInterface, DataOb
 
     public function getParameters(): ParameterBag
     {
+        if (!$this->parameters instanceof ParameterBag) {
+            $this->parameters = new ParameterBag();
+        }
+
         return $this->parameters;
     }
 
@@ -33,6 +37,10 @@ abstract class AbstractPageDataObject implements PageDataObjectInterface, DataOb
 
     public function getParameter(string $key): mixed
     {
+        if (!$this->parameters instanceof ParameterBag) {
+            $this->parameters = new ParameterBag();
+        }
+
         return $this->parameters->get($key);
     }
 

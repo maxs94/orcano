@@ -3,18 +3,15 @@
 namespace App\Repository;
 
 use App\Entity\CheckResult;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<CheckResult>
- *
  * @method CheckResult|null find($id, $lockMode = null, $lockVersion = null)
  * @method CheckResult|null findOneBy(array $criteria, array $orderBy = null)
  * @method CheckResult[]    findAll()
  * @method CheckResult[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class CheckResultRepository extends ServiceEntityRepository
+class CheckResultRepository extends AbstractServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {

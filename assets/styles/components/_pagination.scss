@@ -1,4 +1,5 @@
 .pagination {
+    margin: 0;
     @each $key, $value in $theme-colors {
         &.pagination-#{$key} {
             .page-item.active {
@@ -20,14 +21,13 @@
         }
     }
     i, svg {
-        font-size: 13px;
-        width: 13px;
-        height: 13px;
+        font-size: .6rem;
     }
     .page-link {
-        font-size: .875rem;
+        font-size: .6rem;
         background-color: var(--o-pagination-bg);
         border-color: var(--o-pagination-border-color);
+        padding: $pagination-padding-y-sm $pagination-padding-x-sm;
         &:focus {
             box-shadow: none;
         }

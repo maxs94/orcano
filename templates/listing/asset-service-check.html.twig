@@ -1,0 +1,31 @@
+{% block page_heading_wrapper %}{% endblock %}
+
+{% set assetId = page.parameters.get('assetId') %}
+
+{% block asset_service_checks %}
+<div id="asset-service-checks" class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns">
+    <div class="col">
+        <button class="btn btn-primary" hx-get="{{ path('edit_asset_service_check', {'assetId': assetId }) }}?hx=1" hx-target="#asset-service-checks">
+            <i class="fas fa-plus"></i>
+            {{ 'label.asset-service-check.add'|trans }}
+        </button>
+    </div>
+    <div class="dataTable-container">
+        <table class="table table-striped dataTable-table w-auto">
+            <thead>
+                <th>{{ 'label.name'|trans }}</th>
+                <th>{{ 'label.service-check'|trans }}</th>
+                <th>{{ 'label.number-of-conditions'|trans }}</th>
+                <th>{{ 'label.config'|trans }}</th>
+                <th>{{ 'label.createdAt'|trans }}</th>
+            </thead>
+
+            <tbody id="asset-service-checks-body">
+                {% include 'listing/asset-service-check-items.html.twig' %}
+            </tbody>
+
+        </table>
+    </div>
+
+</div>
+{% endblock %}

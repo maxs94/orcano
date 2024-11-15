@@ -1,0 +1,33 @@
+{% set hx = app.request.get('hx') %}
+
+{% set availableServiceChecks = page.parameters.get('availableServiceChecks') %}
+{% set assetServiceCheck = page.parameters.get('assetServiceCheck') %}
+{% set assetId = page.parameters.get('assetId') %}
+{% set checkScriptParameter = page.parameters.get('checkScriptParameter') %}
+{% set assetServiceCheckConfig = page.parameters.get('assetServiceCheckConfig') %}
+
+{% block page_title %}{% endblock %}
+{% block page_heading %}{% endblock %}
+
+{% block page_content %}
+{% block edit_service_check_parameter %}
+{% if checkScriptParameter is not empty %}
+<div class="card nested mt-2">
+    <div class="card-body">
+        {% for parameter in checkScriptParameter %}
+            {% set parameterName = 'check-script-parameter[' ~ parameter.id ~ ']' %}
+
+            {% if assetServiceCheckConfig is null %}
+                {% set parameterValue = '' %}
+            {% else %}
+                {% set parameterValue = assetServiceCheckConfig.checkScriptParameter[parameter.id] %}
+            {% endif %}
+
+            <label for="{{ parameterName }}">{{ parameter.name }}</label>
+            <input type="text" class="form-control" name="{{ parameterName }}" value="{{ parameterValue }}">
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+{% endblock %}
