@@ -11,9 +11,8 @@ use App\DataObject\ScriptResultDataObject;
 use App\Entity\CheckResult;
 use App\Message\CheckNotification;
 use App\Message\CheckResultNotification;
-use App\Repository\AssetRepository;
 use App\Repository\AssetServiceCheckRepository;
-use App\Repository\ServiceCheckRepository;
+use App\Repository\CheckResultRepository;
 use App\Service\Condition\ConditionService;
 use App\Service\Scripts\ResultParserService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -25,10 +24,9 @@ class CheckResultNotificationHandler
 {
     public function __construct(
         private readonly ResultParserService $resultParserService,
-        private readonly AssetRepository $assetRepository,
-        private readonly ServiceCheckRepository $serviceCheckRepository,
         private readonly AssetServiceCheckRepository $assetServiceCheckRepository,
         private readonly EntityManagerInterface $entityManager,
+        private readonly CheckResultRepository $checkResultRepository,
         private readonly ConditionService $conditionService,
         private readonly LoggerInterface $logger
     ) {}
@@ -66,10 +64,18 @@ class CheckResultNotificationHandler
             $checkResult->getNote()
         ));
 
-        $this->saveCheckResult($checkResult, $originalNotification);
+
+        $checkResultEntity = $this->transformCheckResult($checkResult, $originalNotification);
+
+        $serviceCheckName = $checkResultEntity->getServiceCheck()->getName();
+        
+        $this->checkResultRepository->updateCheckResultTableStructure($checkResult, $serviceCheckName);
+        
+        $this->entityManager->persist($checkResultEntity);
+        $this->entityManager->flush();
     }
 
-    private function saveCheckResult(ScriptResultDataObject $scriptResult, CheckNotification $checkNotification): void 
+    private function transformCheckResult(ScriptResultDataObject $scriptResult, CheckNotification $checkNotification): CheckResult
     {
         $checkResultEntity = new CheckResult();
         $checkResultEntity->setData([
@@ -87,9 +93,9 @@ class CheckResultNotificationHandler
         $checkResultEntity->setServiceCheck($assetServiceCheck->getServiceCheck());
         $checkResultEntity->setAssetServiceCheck($assetServiceCheck);
 
-        $this->entityManager->persist($checkResultEntity);
-        $this->entityManager->flush();
+        return $checkResultEntity;
     }
+
 
     private function checkResult(ScriptResultDataObject $result, ConditionCollection $conditions): ScriptResultDataObject
     {
