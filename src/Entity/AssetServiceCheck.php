@@ -104,12 +104,20 @@ class AssetServiceCheck implements DataObjectInterface
 
     public function getConditionCollection(): ConditionCollection
     {
+        if ($this->conditions === null) {
+            return new ConditionCollection();
+        }
+
         return unserialize($this->conditions, [ConditionCollection::class]);
     }
 
-    /** @return ?array<string, mixed> */
-    public function getConfig(): ?array
+    /** @return array<string, mixed> */
+    public function getConfig(): array
     {
+        if ($this->config === null) {
+            return [];
+        }
+
         return $this->config;
     }
 

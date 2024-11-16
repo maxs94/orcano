@@ -8,6 +8,7 @@ namespace App\Service;
 
 use App\Entity\Asset;
 use App\Entity\AssetGroup;
+use App\Entity\AssetServiceCheck;
 use App\Entity\ServiceCheck;
 use App\Entity\ServiceCheckWorkerStats;
 use App\Message\CheckNotification;
@@ -76,32 +77,33 @@ class SchedulerService
         }
     }
 
-    private function runCheck(Asset $asset, ServiceCheck $check): void
+    private function runCheck(Asset $asset, AssetServiceCheck $assetServiceCheck): void
     {
-        $this->logger->info(sprintf('Running check %s on %s (%d)', $check->getName(), $asset->getHostname(), $asset->getId()));
+        $this->logger->info(sprintf('Running check %s (%s) on %s (%d)', 
+            $assetServiceCheck->getName(), 
+            $assetServiceCheck->getServiceCheck()->getName(), 
+            $asset->getHostname(), 
+            $asset->getId())
+        );
 
-        $checkScript = $check->getCheckScript();
+        $serviceCheck = $assetServiceCheck->getServiceCheck();
+        $checkScript = $serviceCheck->getCheckScript();
 
         $message = new CheckNotification(
             $asset->getId(),
-            $check->getId(),
+            $assetServiceCheck->getId(),
+            $serviceCheck->getId(),
             $asset->getHostname(),
             $asset->getIpv4Address(),
             $asset->getIpv6Address(),
-            $checkScript->getFilename()
-        );
-
-        $this->logger->info(sprintf('Scheduling check %s on %s (%d) using script %s',
-            $check->getName(),
-            $asset->getHostname(),
-            $message->getAssetId(),
-            $checkScript->getFilename())
+            $checkScript->getFilename(),
+            $assetServiceCheck->getConfig()
         );
 
         $this->bus->dispatch($message);
     }
 
-    private function isCheckScheduled(Asset $asset, ServiceCheck $check): bool
+    private function isCheckScheduled(Asset $asset, AssetServiceCheck $check): bool
     {
         $serviceCheckWorkerStats = $this->serviceCheckWorkerStatsRepository->findOneBy([
             'asset' => $asset,

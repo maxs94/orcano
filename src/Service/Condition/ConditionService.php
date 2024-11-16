@@ -22,15 +22,17 @@ class ConditionService
         private readonly AssetRepository $assetRepository,
     ) {}
 
-    public function getCheckConditions(int $assetId, int $serviceCheckId): ConditionCollection
+    public function getCheckConditions(int $assetId, int $assetServiceCheckId): ConditionCollection
     {
-        $conditions = $this->assetServiceCheckRepository->findBy([
-            'asset' => $assetId,
-            'serviceCheck' => $serviceCheckId,
-        ]);
+        $assetServiceCheck = $this->assetServiceCheckRepository->find($assetServiceCheckId);
+        if ($assetServiceCheck === null) {
+            throw new \Exception('Asset service check not found');
+        }
+
+        $conditions = $assetServiceCheck->getConditionCollection();
 
         // if asset has no conditions for this service check, check asset groups
-        if (empty($conditions)) {
+        if ($conditions->getCount() === 0) {
             $asset = $this->assetRepository->find($assetId);
             $assetGroups = $asset->getAssetGroups();
 
@@ -41,22 +43,22 @@ class ConditionService
 
             $conditions = $this->assetGroupServiceCheckConditionRepository->findBy([
                 'assetGroup' => $assetGroupIds,
-                'serviceCheck' => $serviceCheckId,
+                'serviceCheck' => $assetServiceCheck->getServiceCheck()->getId(),
             ]);
         }
 
         if ($conditions === []) {
-            throw new \Exception('Could not find any conditions for assetId ' . $assetId . ' and serviceCheckId ' . $serviceCheckId);
+            return new ConditionCollection();
         }
 
         if (count($conditions) > 1) {
-            throw new \Exception('Found more than one condition collection for assetId ' . $assetId . ' and serviceCheckId ' . $serviceCheckId . ' - this is not yet supported (which one has priority?)');
+            throw new \Exception('Found more than one condition collection for assetId ' . $assetId . ' and assetServiceCheckId ' . $assetServiceCheckId . ' - this is not yet supported (which one has priority?)');
         }
 
         $result = unserialize($conditions[0]->getConditions());
 
         if ($result === false) {
-            throw new \Exception('Could not unserialize conditions for assetId ' . $assetId . ' and serviceCheckId ' . $serviceCheckId);
+            throw new \Exception('Could not unserialize conditions for assetId ' . $assetId . ' and assetServiceCheckId ' . $assetServiceCheckId);
         }
 
         return $result;

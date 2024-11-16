@@ -12,7 +12,7 @@ use Symfony\Polyfill\Intl\Icu\Exception\MethodNotImplementedException;
 class DataObjectCollection implements DataObjectCollectionInterface
 {
     /** @var array<DataObjectInterface> */
-    private array $objects;
+    protected array $objects;
 
     /**
      * @param array<DataObjectInterface> $dataObjects

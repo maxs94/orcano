@@ -6,7 +6,9 @@ declare(strict_types=1);
 
 namespace App\Condition;
 
-class ConditionCollectionItem 
+use App\DataObject\DataObjectInterface;
+
+class ConditionCollectionItem implements DataObjectInterface
 {
     public function __construct(
         private readonly string $name,

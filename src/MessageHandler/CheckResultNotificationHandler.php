@@ -12,6 +12,7 @@ use App\Entity\CheckResult;
 use App\Message\CheckNotification;
 use App\Message\CheckResultNotification;
 use App\Repository\AssetRepository;
+use App\Repository\AssetServiceCheckRepository;
 use App\Repository\ServiceCheckRepository;
 use App\Service\Condition\ConditionService;
 use App\Service\Scripts\ResultParserService;
@@ -26,6 +27,7 @@ class CheckResultNotificationHandler
         private readonly ResultParserService $resultParserService,
         private readonly AssetRepository $assetRepository,
         private readonly ServiceCheckRepository $serviceCheckRepository,
+        private readonly AssetServiceCheckRepository $assetServiceCheckRepository,
         private readonly EntityManagerInterface $entityManager,
         private readonly ConditionService $conditionService,
         private readonly LoggerInterface $logger
@@ -52,7 +54,7 @@ class CheckResultNotificationHandler
 
         $conditions = $this->conditionService->getCheckConditions(
             $originalNotification->getAssetId(),
-            $originalNotification->getServiceCheckId()
+            $originalNotification->getAssetServiceCheckId()
         );
 
         $checkResult = $this->checkResult($result, $conditions);
@@ -76,13 +78,14 @@ class CheckResultNotificationHandler
             'scriptOutput' => json_encode($scriptResult->getScriptOutput()),
         ]);
 
-        $checkResultEntity->setAsset(
-            $this->assetRepository->find($checkNotification->getAssetId())
-        );
+        $assetServiceCheck = $this->assetServiceCheckRepository->find($checkNotification->getAssetServiceCheckId());
+        if ($assetServiceCheck === null) {
+            throw new \Exception('Asset service check not found');
+        }
 
-        $checkResultEntity->setServiceCheck(
-            $this->serviceCheckRepository->find($checkNotification->getServiceCheckId())
-        );
+        $checkResultEntity->setAsset($assetServiceCheck->getAsset());
+        $checkResultEntity->setServiceCheck($assetServiceCheck->getServiceCheck());
+        $checkResultEntity->setAssetServiceCheck($assetServiceCheck);
 
         $this->entityManager->persist($checkResultEntity);
         $this->entityManager->flush();

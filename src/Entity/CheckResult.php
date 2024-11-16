@@ -35,6 +35,10 @@ class CheckResult implements DataObjectInterface, ApiEntityInterface
     #[ORM\JoinColumn(nullable: false)]
     private ?ServiceCheck $serviceCheck = null;
 
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?AssetServiceCheck $assetServiceCheck = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTime();
@@ -107,6 +111,18 @@ class CheckResult implements DataObjectInterface, ApiEntityInterface
     public function setServiceCheck(?ServiceCheck $serviceCheck): self
     {
         $this->serviceCheck = $serviceCheck;
+
+        return $this;
+    }
+
+    public function getAssetServiceCheck(): ?AssetServiceCheck
+    {
+        return $this->assetServiceCheck;
+    }
+
+    public function setAssetServiceCheck(?AssetServiceCheck $assetServiceCheck): self
+    {
+        $this->assetServiceCheck = $assetServiceCheck;
 
         return $this;
     }

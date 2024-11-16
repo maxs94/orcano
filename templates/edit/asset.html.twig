@@ -62,23 +62,25 @@
                 </select>
             </div>
 
-            <div class="form-group">
-                <label class="form-label">{{ 'label.asset-service-checks'|trans }}</label>
+            <div class="card nested p-2">
+                <div class="form-group">
+                    <label class="form-label">{{ 'label.asset-service-checks'|trans }}</label>
 
-                {% block asset_service_checks %}
+                    {% block asset_service_checks %}
                     {% set search = [{
                         'field': 'asset',
                         'operator': 'equals',
                         'value': asset.id
                     }] %}
-                <div id="asset-service-checks" 
-                    hx-target="#asset-service-checks" 
-                    hx-trigger="load" 
-                    hx-push-url="false"
-                    hx-post="{{ path('listing', {'entity': 'asset-service-check', 'search': search|json_encode, 'assetId': asset.id} ) }}">
-                </div>
-                {% endblock %}
+                    <div id="asset-service-checks" 
+                        hx-target="#asset-service-checks" 
+                        hx-trigger="load" 
+                        hx-push-url="false"
+                        hx-post="{{ path('listing', {'entity': 'asset-service-check', 'search': search|json_encode, 'assetId': asset.id} ) }}">
+                    </div>
+                    {% endblock %}
 
+                </div>
             </div>
 
             <hr>

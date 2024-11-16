@@ -44,7 +44,7 @@ class CheckNotificationHandler
 
         $command = sprintf('%s \'%s\'',
             $scriptPath,
-            $this->createJsonParameter($message),
+            $this->createJsonArguments($message),
         );
 
         $this->logger->notice(sprintf('CMD: %s', $command));
@@ -88,17 +88,19 @@ class CheckNotificationHandler
         $this->bus->dispatch($message);
     }
 
-    private function createJsonParameter(CheckNotification $message): string
+    private function createJsonArguments(CheckNotification $message): string
     {
-        // todo: return parameters provided by the asset 
-        // i.e. url parameter when using http_status script 
-
-        $this->logger->warning('todo: create additional json parameter for checkScript execution');
-       
-        return json_encode([
+        $arguments = [
             'hostname' => $message->getHostname(),
             'ipv4' => $message->getIpv4Address(),
             'ipv6' => $message->getIpv6Address()
-        ]);
+        ];
+
+        $config = $message->getConfig();
+        if (isset($config['checkScriptParameter']) && !empty($config['checkScriptParameter'])) {
+            $arguments = array_merge($arguments, $config['checkScriptParameter']);
+        }
+
+        return json_encode($arguments);
     }
 }
