@@ -22,6 +22,58 @@ class CheckResultRepository extends AbstractServiceEntityRepository
         parent::__construct($registry, CheckResult::class);
     }
 
+    public function insertCheckResult(ScriptResultDataObject $scriptResult, string $serviceCheckName, int $checkResultId): void
+    {
+        $scriptMessage = $scriptResult->getMessage();
+
+        if (!is_array($scriptMessage)) {
+            return;
+        }
+
+        $tableName = $this->transformTableName($serviceCheckName);
+
+        $keysSql = implode(',', array_keys($scriptMessage));
+        $keysPlaceholerSql = implode(', :', array_keys($scriptMessage));
+        $placeholderString = ':' . $keysPlaceholerSql;
+
+        $q =<<<SQL
+        INSERT INTO {$tableName}
+            (check_result_id, created_at, {$keysSql}) 
+        VALUES 
+            (:check_result_id, NOW(), {$placeholderString}); 
+        SQL;
+
+        $em = $this->getEntityManager();
+        $conn = $em->getConnection();
+        $stmt = $conn->prepare($q);
+
+        $stmt->bindValue('check_result_id', $checkResultId);
+
+        foreach ($scriptMessage as $key => $value) {
+            $parameterType = MySqlTypeService::getParameterType($value);
+            $stmt->bindValue($key, $value, $parameterType);
+        }
+
+        $stmt->executeStatement();
+
+    }
+
+    /** 
+     * @param array<string, string> $scriptMessage
+     * @return array<string, string>
+     **/
+    private function transformScriptMessageValues(array $scriptMessage): array 
+    {
+        $values = [];
+        foreach ($scriptMessage as $key => $value) {
+
+
+
+
+        }
+        return $values;
+    }
+
     public function updateCheckResultTableStructure(ScriptResultDataObject $scriptResult, string $serviceCheckName): void
     {
         $scriptMessage = $scriptResult->getMessage();

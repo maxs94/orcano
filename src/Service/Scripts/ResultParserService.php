@@ -10,6 +10,7 @@ use App\Condition\ConditionCollection;
 use App\DataObject\ScriptResultDataObject;
 use App\Exception\ArrayIsNullException;
 use App\Exception\MissingKeyException;
+use App\Service\DataTransformer\StringDataTransformer;
 
 class ResultParserService
 {
@@ -22,7 +23,7 @@ class ResultParserService
             throw new ArrayIsNullException(sprintf('Could not decode json string: %s', $result));
         }
 
-        return $this->convertAllKeysToLowerCase($array);
+        return $this->transformAllKeys($array);
     }
 
     /**
@@ -69,10 +70,11 @@ class ResultParserService
      *
      * @return array<string, mixed>
      */
-    private function convertAllKeysToLowerCase(array $array): array
+    private function transformAllKeys(array $array): array
     {
         $result = [];
         foreach ($array as $key => $value) {
+            $key = StringDataTransformer::transformStringToLatin($key);
             $result[strtolower($key)] = $value;
         }
 

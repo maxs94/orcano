@@ -69,10 +69,11 @@ class CheckResultNotificationHandler
 
         $serviceCheckName = $checkResultEntity->getServiceCheck()->getName();
         
-        $this->checkResultRepository->updateCheckResultTableStructure($checkResult, $serviceCheckName);
-        
         $this->entityManager->persist($checkResultEntity);
         $this->entityManager->flush();
+
+        $this->checkResultRepository->updateCheckResultTableStructure($checkResult, $serviceCheckName);
+        $this->checkResultRepository->insertCheckResult($checkResult, $serviceCheckName, $checkResultEntity->getId());
     }
 
     private function transformCheckResult(ScriptResultDataObject $scriptResult, CheckNotification $checkNotification): CheckResult
