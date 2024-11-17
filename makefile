@@ -73,3 +73,12 @@ ifndef mode
 else ifeq ($(mode), no-dry-run)
 	php ./vendor/bin/rector process
 endif
+
+fixtures: APP_ENV=test ## Load Fixtures in Test Environment
+fixtures: ## Load Example data
+	@php bin/console doctrine:database:drop --force || true
+	@php bin/console doctrine:database:create
+	@php bin/console make:migration
+	@php bin/console doctrine:migrations:migrate -n
+	@php bin/console doctrine:fixtures:load -n
+	rm ./migrations/*.php

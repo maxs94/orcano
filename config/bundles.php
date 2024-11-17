@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 /**
- * © 2023-2023 by the orcano team (https://github.com/maxs94/orcano)
+ * © 2023-2024 by the orcano team (https://github.com/maxs94/orcano)
  */
 
 return [
@@ -16,4 +16,5 @@ return [
     Symfony\Bundle\MonologBundle\MonologBundle::class => ['all' => true],
     Symfony\Bundle\MakerBundle\MakerBundle::class => ['dev' => true],
     Symfony\WebpackEncoreBundle\WebpackEncoreBundle::class => ['all' => true],
+    Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle::class => ['dev' => true, 'test' => true],
 ];
