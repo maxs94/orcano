@@ -33,6 +33,9 @@ class UserFixtures extends Fixture
             ${$key}->setTheme($data['theme']);
             ${$key}->setRowLimit($data['rowLimit']);
             ${$key}->setLanguage($data['language']);
+
+            $this->addReference($key, ${$key});
+
             $manager->persist(${$key});
 
         }
@@ -40,6 +43,9 @@ class UserFixtures extends Fixture
         $manager->flush();
     }
 
+    /**
+     * @return array<string, array<string, array<int, string>|int|string>>
+     */
     private function getUserData(): array
     {
 
