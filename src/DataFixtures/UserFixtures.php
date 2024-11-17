@@ -49,7 +49,7 @@ class UserFixtures extends Fixture
     private function getUserData(): array
     {
 
-        $users = [
+        return [
             'standard-user' => [
                 'email' => 'test@localhost.local',
                 'roles' => ['ROLE_USER'],
@@ -69,8 +69,6 @@ class UserFixtures extends Fixture
                 'language' => 'auto'
             ]
         ];
-
-        return $users;
 
     }
 }
