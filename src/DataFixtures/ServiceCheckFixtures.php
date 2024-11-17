@@ -1,4 +1,8 @@
 <?php
+declare(strict_types=1);
+/**
+ * © 2023-2024 by the orcano team (https://github.com/maxs94/orcano)
+ */
 
 namespace App\DataFixtures;
 
@@ -11,7 +15,6 @@ class ServiceCheckFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
-
         $serviceCheck = (new ServiceCheck())
             ->setName('Fixture Service Check')
             ->setCheckScript($this->getReference(CheckScriptFixtures::REFERENCE_KEY_CHECK_SCRIPT))
@@ -30,7 +33,7 @@ class ServiceCheckFixtures extends Fixture implements DependentFixtureInterface
         return [
             UserFixtures::class,
             AssetGroupFixtures::class,
-            CheckScriptFixtures::class
+            CheckScriptFixtures::class,
         ];
     }
 }

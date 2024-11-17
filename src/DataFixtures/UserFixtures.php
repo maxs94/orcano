@@ -1,27 +1,25 @@
 <?php
+declare(strict_types=1);
+/**
+ * © 2023-2024 by the orcano team (https://github.com/maxs94/orcano)
+ */
 
 namespace App\DataFixtures;
 
 use App\Entity\User;
-use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Symfony\Component\PasswordHasher\PasswordHasherInterface;
-use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactory;
+use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserFixtures extends Fixture
 {
-
-    public function __construct(private readonly UserPasswordHasherInterface $hasher)
-    {}
+    public function __construct(private readonly UserPasswordHasherInterface $hasher) {}
 
     public function load(ObjectManager $manager): void
     {
-        
         $users = $this->getUserData();
 
-        foreach($users as $key => $data){
-
+        foreach ($users as $key => $data) {
             ${$key} = new User();
             ${$key}->setEmail($data['email']);
             ${$key}->setRoles($data['roles']);
@@ -37,7 +35,6 @@ class UserFixtures extends Fixture
             $this->addReference($key, ${$key});
 
             $manager->persist(${$key});
-
         }
 
         $manager->flush();
@@ -48,7 +45,6 @@ class UserFixtures extends Fixture
      */
     private function getUserData(): array
     {
-
         return [
             'standard-user' => [
                 'email' => 'test@localhost.local',
@@ -57,7 +53,7 @@ class UserFixtures extends Fixture
                 'name' => 'User',
                 'theme' => 'dark',
                 'rowLimit' => 25,
-                'language' => 'auto'
+                'language' => 'auto',
             ],
             'admin-user' => [
                 'email' => 'admin@localhost.local',
@@ -66,9 +62,8 @@ class UserFixtures extends Fixture
                 'name' => 'Admin',
                 'theme' => 'light',
                 'rowLimit' => 25,
-                'language' => 'auto'
-            ]
+                'language' => 'auto',
+            ],
         ];
-
     }
 }

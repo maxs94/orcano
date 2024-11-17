@@ -1,11 +1,15 @@
 <?php
+declare(strict_types=1);
+/**
+ * © 2023-2024 by the orcano team (https://github.com/maxs94/orcano)
+ */
 
 namespace App\DataFixtures;
 
 use App\Entity\Asset;
-use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
+use Doctrine\Persistence\ObjectManager;
 
 class AssetFixtures extends Fixture implements DependentFixtureInterface
 {
@@ -26,7 +30,7 @@ class AssetFixtures extends Fixture implements DependentFixtureInterface
     {
         return [
             UserFixtures::class,
-            AssetGroupFixtures::class
+            AssetGroupFixtures::class,
         ];
     }
 }

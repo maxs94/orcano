@@ -1,4 +1,8 @@
 <?php
+declare(strict_types=1);
+/**
+ * © 2023-2024 by the orcano team (https://github.com/maxs94/orcano)
+ */
 
 namespace App\DataFixtures;
 
@@ -10,15 +14,12 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class CheckScriptFixtures extends Fixture implements DependentFixtureInterface
 {
+    public const REFERENCE_KEY_CHECK_SCRIPT = 'ref-CheckScript-Fixtures';
 
     private const SCRIPT_PATH = '/scripts/checks/';
     private const SCRIPT_FILE = 'ping4.sh';
-    public const REFERENCE_KEY_CHECK_SCRIPT = 'ref-CheckScript-Fixtures';
 
-    public function __construct(private readonly KernelInterface $kernel)
-    {
-        
-    }
+    public function __construct(private readonly KernelInterface $kernel) {}
 
     public function load(ObjectManager $manager): void
     {
@@ -37,7 +38,7 @@ class CheckScriptFixtures extends Fixture implements DependentFixtureInterface
     public function getDependencies()
     {
         return [
-            UserFixtures::class
+            UserFixtures::class,
         ];
     }
 }
