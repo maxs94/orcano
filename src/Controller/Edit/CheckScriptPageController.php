@@ -9,9 +9,12 @@ namespace App\Controller\Edit;
 use App\Context\Context;
 use App\Controller\Page\AbstractPageController;
 use App\DataObject\Page\PageMessageDataObject;
+use App\Message\CheckNotification;
 use App\Repository\CheckScriptRepository;
 use App\Service\Page\CheckScriptPageLoader;
 use App\Service\Scripts\ScriptsService;
+use App\Service\Scripts\ScriptRunnerService;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -22,7 +25,8 @@ class CheckScriptPageController extends AbstractPageController
         Context $context,
         private readonly CheckScriptPageLoader $checkScriptPageLoader,
         private readonly CheckScriptRepository $checkScriptRepository,
-        private readonly ScriptsService $scriptsService
+        private readonly ScriptsService $scriptsService,
+        private readonly ScriptRunnerService $scriptRunnerService
     ) {
         parent::__construct($context);
     }
@@ -35,6 +39,35 @@ class CheckScriptPageController extends AbstractPageController
         $page = $this->checkScriptPageLoader->load($request, $context, $id);
 
         return $this->renderPage('edit/check-script.html.twig', ['page' => $page]);
+    }
+    
+    #[Route('/edit/test-check-script/{id}', name: 'test_check_script', methods: ['POST'])]
+    public function testAction(Request $request, Context $context, int $id = null): Response
+    {
+        // todo: get script config from form
+        $config = [];
+
+        // todo: get correct script filename
+        $scriptFile = 'scripts/checks/http_status.sh';
+
+        // todo: get hostname, ipv4 and ipv6 from form
+        $message = new CheckNotification(
+            0,
+            0,
+            0,
+            'hostname',
+            '127.0.0.1',
+            '::1',
+            $scriptFile,
+            $config
+        );
+
+        $result = $this->scriptRunnerService->runScript($message);
+
+        // todo: format JSON response for output
+        $response = new JsonResponse($result->getScriptOutput());
+
+        return $response;
     }
 
     private function processForm(Request $request, int $id = null): void

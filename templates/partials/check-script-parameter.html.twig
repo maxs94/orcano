@@ -1,0 +1,18 @@
+{% block check_script_parameter %}
+{% if checkScriptParameter is not empty %}
+    <div class="form-group">
+        {% for parameter in checkScriptParameter %}
+            {% set parameterName = 'check-script-parameter[' ~ parameter.name ~ ']' %}
+
+            {% if assetServiceCheckConfig.checkScriptParameter is not defined %}
+                {% set parameterValue = '' %}
+            {% else %}
+                {% set parameterValue = assetServiceCheckConfig.checkScriptParameter[parameter.name] %}
+            {% endif %}
+
+            <label for="{{ parameterName }}">{{ parameter.name }}</label>
+            <input type="text" class="form-control" name="{{ parameterName }}" value="{{ parameterValue }}">
+        {% endfor %}
+    </div>
+{% endif %}
+{% endblock %}

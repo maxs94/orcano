@@ -8,6 +8,7 @@ use App\Service\DataTransformer\StringDataTransformer;
 use App\Service\MySqlTypeService;
 use Doctrine\Persistence\ManagerRegistry;
 use Exception;
+use Psr\Log\LoggerInterface;
 
 /**
  * @method CheckResult|null find($id, $lockMode = null, $lockVersion = null)
@@ -17,9 +18,11 @@ use Exception;
  */
 class CheckResultRepository extends AbstractServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, CheckResult::class);
+    public function __construct(
+        private readonly ManagerRegistry $registry,
+        private readonly LoggerInterface $logger
+    ) {
+        parent::__construct($this->registry, CheckResult::class);
     }
 
     public function insertCheckResult(ScriptResultDataObject $scriptResult, string $serviceCheckName, int $checkResultId): void
@@ -34,13 +37,20 @@ class CheckResultRepository extends AbstractServiceEntityRepository
 
         $keysSql = implode(',', array_keys($scriptMessage));
         $keysPlaceholerSql = implode(', :', array_keys($scriptMessage));
-        $placeholderString = ':' . $keysPlaceholerSql;
+
+        if (!empty($keysPlaceholerSql)) {
+            $keysSql = ', ' . $keysSql;
+            $placeholderString = ', :' . $keysPlaceholerSql;
+        } else {
+            $keysSql = '';
+            $placeholderString = '';
+        }
 
         $q =<<<SQL
         INSERT INTO {$tableName}
-            (check_result_id, created_at, {$keysSql}) 
+            (check_result_id, created_at {$keysSql}) 
         VALUES 
-            (:check_result_id, NOW(), {$placeholderString}); 
+            (:check_result_id, NOW() {$placeholderString}); 
         SQL;
 
         $em = $this->getEntityManager();
@@ -58,22 +68,6 @@ class CheckResultRepository extends AbstractServiceEntityRepository
 
     }
 
-    /** 
-     * @param array<string, string> $scriptMessage
-     * @return array<string, string>
-     **/
-    private function transformScriptMessageValues(array $scriptMessage): array 
-    {
-        $values = [];
-        foreach ($scriptMessage as $key => $value) {
-
-
-
-
-        }
-        return $values;
-    }
-
     public function updateCheckResultTableStructure(ScriptResultDataObject $scriptResult, string $serviceCheckName): void
     {
         $scriptMessage = $scriptResult->getMessage();
@@ -85,22 +79,29 @@ class CheckResultRepository extends AbstractServiceEntityRepository
         $tableName = $this->transformTableName($serviceCheckName);
 
         $existingColumns = $this->getTableColumns($tableName);
+        
+        $qFields = $this->createFieldsSql($existingColumns, $scriptMessage);
 
         if (empty($existingColumns)) {
+
+            $this->logger->info('Creating result table ' . $tableName);
 
             $q = 'CREATE TABLE ' . $tableName . ' (
                 `id` INT AUTO_INCREMENT PRIMARY KEY,
                 `check_result_id` INT NOT NULL,
-                `created_at` DATETIME NOT NULL,';
+                `created_at` DATETIME NOT NULL ';
 
-            $q .= $this->createFieldsSql($existingColumns, $scriptMessage);
+            if (!empty($qFields)) {
+                $q .= ', ' . $qFields;
+            }
 
             $q .= ') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
             ';
 
         } else {
 
-            $qFields = $this->createFieldsSql($existingColumns, $scriptMessage);
+            $this->logger->info('Updating result table ' . $tableName);
+
             if ($qFields !== '') {
                 $q = 'ALTER TABLE ' . $tableName . ' ADD ' . $qFields;
             }
@@ -129,7 +130,7 @@ class CheckResultRepository extends AbstractServiceEntityRepository
                 continue;
             }
 
-            $mysqlType = MySqlTypeService::getTypeOfString($value);
+            $mysqlType = MySqlTypeService::getType($value);
             $fields[$key] = sprintf('`%s` %s', $key, $mysqlType);
         }
 
@@ -145,7 +146,11 @@ class CheckResultRepository extends AbstractServiceEntityRepository
         $q = 'DESC ' . $tableName;
         $stmt = $this->getEntityManager()->getConnection()->prepare($q);
 
-        $results = $stmt->executeQuery();
+        try {
+            $results = $stmt->executeQuery();
+        } catch (Exception $e) {
+            return [];
+        }
 
         if ($results->rowCount() === 0) {
             return [];

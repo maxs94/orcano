@@ -36,20 +36,6 @@ class CheckResultNotificationHandler
         $result = $message->getResult();
         $originalNotification = $message->getOriginalNotification();
 
-        // todo:
-        //
-        // have specific conditions per checkscript
-        //
-        // have an inheritance would make very much sense:
-        // AssetGroup -> Asset
-        // $conditionTemplateString = // serialized conditions string
-        // $conditions = unserialize($conditionTemplateString);
-        /*    $conditions = new ConditionCollection();
-            $conditions->addCondition('result', new EqualsCondition(0));
-            $conditions->addCondition('time', new MinMaxCondition(0, 1000, 20));  // ok if between 0 and 1000, warn if between 20 and 1000
-
-            echo addslashes(serialize($conditions));*/
-
         $conditions = $this->conditionService->getCheckConditions(
             $originalNotification->getAssetId(),
             $originalNotification->getAssetServiceCheckId()
@@ -64,14 +50,13 @@ class CheckResultNotificationHandler
             $checkResult->getNote()
         ));
 
-
         $checkResultEntity = $this->transformCheckResult($checkResult, $originalNotification);
 
         $serviceCheckName = $checkResultEntity->getServiceCheck()->getName();
         
         $this->entityManager->persist($checkResultEntity);
         $this->entityManager->flush();
-
+        
         $this->checkResultRepository->updateCheckResultTableStructure($checkResult, $serviceCheckName);
         $this->checkResultRepository->insertCheckResult($checkResult, $serviceCheckName, $checkResultEntity->getId());
     }
