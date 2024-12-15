@@ -33,7 +33,7 @@ class SchedulerService
     public function run(): void
     {
         $this->runAssetChecks();
-        //$this->runAssetGroupChecks();
+        $this->runAssetGroupChecks();
     }
 
     private function runAssetChecks(): void 
@@ -44,7 +44,7 @@ class SchedulerService
         foreach ($assets as $asset) {
             $checks = $asset->getServiceChecks();
 
-            /** @var ServiceCheck $check */
+            /** @var AssetServiceCheck $check */
             foreach ($checks as $check) {
                 if ($this->isCheckScheduled($asset, $check)) {
                     $this->runCheck($asset, $check);
@@ -77,33 +77,49 @@ class SchedulerService
         }
     }
 
-    private function runCheck(Asset $asset, AssetServiceCheck $assetServiceCheck): void
+    /**
+     * TODO: parameters: this is confusing - ServiceCheck would be from AssetGroups (should we support this?)
+     * maybe we just support checks directly on the assets as those would need to be configured anyway
+     * - besides ping4/ping6 - which we could support for internal host online checks
+     */
+    private function runCheck(Asset $asset, ServiceCheck|AssetServiceCheck $check): void
     {
+        if ($check instanceof AssetServiceCheck) {
+            $serviceCheck = $check->getServiceCheck();
+        } else {
+            $serviceCheck = $check;
+        }
+
+
+        if (!$serviceCheck instanceof ServiceCheck) {
+            $this->logger->warning(sprintf('Service check not found for check %s', $check->getId()));
+            return;
+        }
+
         $this->logger->info(sprintf('Running check %s (%s) on %s (%d)', 
-            $assetServiceCheck->getName(), 
-            $assetServiceCheck->getServiceCheck()->getName(), 
+            $check->getName(), 
+            $serviceCheck->getName(),
             $asset->getHostname(), 
             $asset->getId())
         );
 
-        $serviceCheck = $assetServiceCheck->getServiceCheck();
         $checkScript = $serviceCheck->getCheckScript();
 
         $message = new CheckNotification(
             $asset->getId(),
-            $assetServiceCheck->getId(),
+            $check->getId(),
             $serviceCheck->getId(),
             $asset->getHostname(),
             $asset->getIpv4Address(),
             $asset->getIpv6Address(),
             $checkScript->getFilename(),
-            $assetServiceCheck->getConfig()
+            $check->getConfig()
         );
 
         $this->bus->dispatch($message);
     }
 
-    private function isCheckScheduled(Asset $asset, AssetServiceCheck $check): bool
+    private function isCheckScheduled(Asset $asset, ServiceCheck|AssetServiceCheck $check): bool
     {
         $serviceCheckWorkerStats = $this->serviceCheckWorkerStatsRepository->findOneBy([
             'asset' => $asset,
