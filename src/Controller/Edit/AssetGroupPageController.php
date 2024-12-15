@@ -6,10 +6,13 @@ declare(strict_types=1);
 
 namespace App\Controller\Edit;
 
+use App\Condition\ConditionCollectionHydrator;
 use App\Context\Context;
 use App\Controller\Page\AbstractPageController;
 use App\DataObject\Page\PageMessageDataObject;
+use App\Entity\AssetGroup;
 use App\Repository\AssetGroupRepository;
+use App\Repository\AssetGroupServiceCheckConditionRepository;
 use App\Service\Page\AssetGroupPageLoader;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,7 +23,9 @@ class AssetGroupPageController extends AbstractPageController
     public function __construct(
         Context $context,
         private readonly AssetGroupPageLoader $assetGroupPageLoader,
-        private readonly AssetGroupRepository $assetGroupRepository
+        private readonly AssetGroupRepository $assetGroupRepository,
+        private readonly ConditionCollectionHydrator $conditionCollectionHydrator,
+        private readonly AssetGroupServiceCheckConditionRepository $assetGroupServiceCheckConditionRepository
     ) {
         parent::__construct($context);
     }
@@ -35,6 +40,16 @@ class AssetGroupPageController extends AbstractPageController
         return $this->renderPage('edit/asset-group.html.twig', ['page' => $page]);
     }
 
+    #[Route('/delete/asset-group-service-check-condition/{assetGroupId}/{serviceCheckId}/{conditionId}', name: 'delete_asset_group_service_check_condition')]
+    public function deleteAssetGroupServiceCheckConditionAction(int $assetGroupId, int $serviceCheckId, string $conditionId): Response
+    {
+        $this->assetGroupServiceCheckConditionRepository->deleteByConditionId($assetGroupId, $serviceCheckId, $conditionId);
+
+        $this->addMessage('label.entity-deleted', PageMessageDataObject::TYPE_SUCCESS);
+
+        return $this->redirectToRoute('edit_asset_group', ['id' => $assetGroupId]);
+    }
+
     private function processForm(Request $request, int $id = null): void
     {
         $errors = [];
@@ -47,11 +62,24 @@ class AssetGroupPageController extends AbstractPageController
 
             $data['id'] = $id ?? 0;
 
+            $assetGroup = null;
+
             if ($errors === []) {
                 try {
-                    $this->assetGroupRepository->upsert($data);
+                    $assetGroup = $this->assetGroupRepository->upsert($data);
                 } catch (\Exception $ex) {
                     $this->addMessage($ex->getMessage(), PageMessageDataObject::TYPE_DANGER);
+                }
+            }
+
+            if (!$assetGroup instanceof AssetGroup) {
+                $this->addMessage('label.entity-not-saved', PageMessageDataObject::TYPE_DANGER);
+            }
+
+            if (isset($data['condition']) && $assetGroup instanceof AssetGroup) {
+                foreach ($data['condition'] as $serviceCheckId => $conditionData) {
+                    $conditionCollection = $this->conditionCollectionHydrator->hydrateFromFormPost($conditionData);
+                    $this->assetGroupServiceCheckConditionRepository->upsertByIds($assetGroup->getId(), $serviceCheckId, $conditionCollection);
                 }
             }
 

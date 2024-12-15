@@ -53,6 +53,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, DataObj
         'keybinding' => self::DEFAULT_CODE_EDITOR_KEYBINDING,
     ];
 
+    #[ORM\Column]
+    private ?string $scriptTestData = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTime();
@@ -214,6 +217,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, DataObj
     public function setCodeEditorConfig(?array $codeEditorConfig): static
     {
         $this->codeEditorConfig = $codeEditorConfig;
+
+        return $this;
+    }
+
+    public function getScriptTestData(): ?string
+    {
+        return $this->scriptTestData;
+    }
+
+    public function setScriptTestData(?string $scriptTestData): static
+    {
+        $this->scriptTestData = $scriptTestData;
 
         return $this;
     }

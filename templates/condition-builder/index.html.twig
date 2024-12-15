@@ -1,0 +1,36 @@
+{% block condition_builder %}
+{% set name = 'condition[' ~ serviceCheck.id ~ '][' ~ conditionIndex ~ ']' %}
+{% set parametersId = 'condition-' ~ serviceCheck.id ~ '-' ~ conditionIndex ~ '-parameters' %}
+{% set odataKey = selectedCondition is defined ? selectedCondition.getName : '' %}
+
+<div class="row">
+    <div class="col">
+        <select name="{{ name }}[name]" hx-get="{{ path('condition_builder_parameters') }}" hx-target="#{{ parametersId }}">
+        <option value="">Select Condition</option>
+        {% for className, availableCondition in availableConditions %}
+            <option value="{{ className }}" 
+                {% if selectedCondition is defined %}
+                {% if selectedCondition.condition.getConditionClassName() == className %}selected{% endif %}
+                {% endif %}>{{ availableCondition }}</option>
+        {% endfor %}
+    </select>
+    </div>
+    <div class="col">
+        for script json result key: <input class="form-control" type="text" name="{{ name }}[key]" placeholder="key" value="{% if odataKey is defined %}{{ odataKey }}{% endif %}">
+    </div>
+</div>
+<div class="mt-2 row">
+    <div class="col">
+    <div id="{{ parametersId }}">
+            {% if selectedCondition is defined %}
+            {% include 'condition-builder/parameters.html.twig' with {
+                'serviceCheckId': serviceCheck.id,
+                'conditionIndex': conditionIndex,
+                'condition': selectedCondition.condition 
+            } %}
+
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

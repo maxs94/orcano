@@ -9,6 +9,7 @@
     <td>{{ row.ipv4Address }}</td>
     <td>{{ row.ipv6Address }}</td>
     <td>{% for assetGroup in row.assetGroups %}<span class="badge bg-info me-1">{{ assetGroup.name }}</span>{% endfor %}</td>
+    <td>{% for serviceCheck in row.serviceChecks %}<span class="badge bg-info me-1">{{ serviceCheck.name }}</span>{% endfor %}</td>
     <td>{{ row.createdAt|date('d.m.Y H:i:s') }}</td>
     <td><a 
         class="btn btn-sm btn-primary"
@@ -21,7 +22,7 @@
 
 <tr>
     <td colspan="7">
-    <span class="dataTable-pagination">{% include 'listing/pagination.html.twig' with { 'pagination': page.pagination } %}</span> 
+    <span class="dataTable-pagination">{% include 'listing/pagination.html.twig' with { 'target': '#asset-listing-body', 'pagination': page.pagination } %}</span> 
     </td>
 </tr>
 

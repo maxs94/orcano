@@ -8,9 +8,13 @@ namespace App\Service;
 
 use App\Entity\Asset;
 use App\Entity\AssetGroup;
+use App\Entity\AssetServiceCheck;
 use App\Entity\ServiceCheck;
 use App\Entity\ServiceCheckWorkerStats;
 use App\Message\CheckNotification;
+use App\Repository\AssetGroupRepository;
+use App\Repository\AssetRepository;
+use App\Repository\ServiceCheckWorkerStatsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -20,17 +24,40 @@ class SchedulerService
     public function __construct(
         private readonly EntityManagerInterface $em,
         private readonly MessageBusInterface $bus,
+        private readonly AssetGroupRepository $assetGroupRepository,
+        private readonly AssetRepository $assetRepository,
+        private readonly ServiceCheckWorkerStatsRepository $serviceCheckWorkerStatsRepository,
         private readonly LoggerInterface $logger
     ) {}
 
     public function run(): void
     {
-        /* @var AssetGroupRepository $assetGroupRepo */
-        $assetGroupRepo = $this->em->getRepository(AssetGroup::class);
+        $this->runAssetChecks();
+        $this->runAssetGroupChecks();
+    }
 
-        $this->em->getRepository(Asset::class);
+    private function runAssetChecks(): void 
+    {
+        $assets = $this->assetRepository->findAll();
 
-        $assetGroups = $assetGroupRepo->findAll();
+        /** @var Asset $asset */
+        foreach ($assets as $asset) {
+            $checks = $asset->getServiceChecks();
+
+            /** @var AssetServiceCheck $check */
+            foreach ($checks as $check) {
+                if ($this->isCheckScheduled($asset, $check)) {
+                    $this->runCheck($asset, $check);
+                } else {
+                    $this->logger->info(sprintf('Check %s is not scheduled for asset %s', $check->getId(), $asset->getId()));
+                }
+            }
+        }
+    }
+
+    private function runAssetGroupChecks(): void 
+    {
+        $assetGroups = $this->assetGroupRepository->findAll();
 
         /** @var AssetGroup $assetGroup */
         foreach ($assetGroups as $assetGroup) {
@@ -50,41 +77,61 @@ class SchedulerService
         }
     }
 
-    private function runCheck(Asset $asset, ServiceCheck $check): void
+    /**
+     * TODO: parameters: this is confusing - ServiceCheck would be from AssetGroups (should we support this?)
+     * maybe we just support checks directly on the assets as those would need to be configured anyway
+     * - besides ping4/ping6 - which we could support for internal host online checks
+     */
+    private function runCheck(Asset $asset, ServiceCheck|AssetServiceCheck $check): void
     {
-        $checkScript = $check->getCheckScript();
+        if ($check instanceof AssetServiceCheck) {
+            $serviceCheck = $check->getServiceCheck();
+        } else {
+            $serviceCheck = $check;
+        }
+
+
+        if (!$serviceCheck instanceof ServiceCheck) {
+            $this->logger->warning(sprintf('Service check not found for check %s', $check->getId()));
+            return;
+        }
+
+        $this->logger->info(sprintf('Running check %s (%s) on %s (%d)', 
+            $check->getName(), 
+            $serviceCheck->getName(),
+            $asset->getHostname(), 
+            $asset->getId())
+        );
+
+        $checkScript = $serviceCheck->getCheckScript();
 
         $message = new CheckNotification(
             $asset->getId(),
             $check->getId(),
+            $serviceCheck->getId(),
             $asset->getHostname(),
             $asset->getIpv4Address(),
             $asset->getIpv6Address(),
-            $checkScript->getFilename()
-        );
-
-        $this->logger->info(sprintf('Scheduling check %s on %s (%d) using script %s',
-            $check->getName(),
-            $asset->getHostname(),
-            $message->getAssetId(),
-            $checkScript->getFilename())
+            $checkScript->getFilename(),
+            $check->getConfig()
         );
 
         $this->bus->dispatch($message);
     }
 
-    private function isCheckScheduled(Asset $asset, ServiceCheck $check): bool
+    private function isCheckScheduled(Asset $asset, ServiceCheck|AssetServiceCheck $check): bool
     {
-        $serviceCheckWorkerStatsRepo = $this->em->getRepository(ServiceCheckWorkerStats::class);
-        $serviceCheckWorkerStats = $serviceCheckWorkerStatsRepo->findOneBy([
+        $serviceCheckWorkerStats = $this->serviceCheckWorkerStatsRepository->findOneBy([
             'asset' => $asset,
             'serviceCheck' => $check,
         ]);
+
+        $this->logger->warning('todo: check if check is actually scheduled');
 
         if ($serviceCheckWorkerStats === null) {
             return true;
         }
 
-        dd('TODO: check if check is scheduled');
+        return false;
     }
 }

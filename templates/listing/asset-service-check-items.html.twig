@@ -1,0 +1,30 @@
+{% block listing_table_asset_service_check_items %}
+
+{% set result = page.result %}
+{% for row in result %}
+{% set url = path('edit_asset_service_check', {'assetId': assetId, 'id': row.id}) %}
+{% set hxUrl = url ~ '?hx=1' %}
+<tr>
+    <td>{{ row.name }}</td>
+    <td>{{ row.serviceCheck.name }}</td>
+    <td>conditions todo</td>
+    <td>config todo</td>
+    <td>{{ row.createdAt|date('d.m.Y H:i:s') }}</td>
+    <td><a 
+        class="btn btn-sm btn-primary"
+        hx-get="{{ hxUrl }}"
+        hx-target="#asset-service-checks"
+        hx-push-url="false"
+        href="{{ url }}">{{ 'label.edit'|trans }}</a></td>
+</tr>
+{% endfor %}
+
+
+<tr>
+    <td colspan="6">
+        <span>todo: pagination here does not work correctly</span>
+    <span class="dataTable-pagination">{% include 'listing/pagination.html.twig' with { 'target': '#asset-service-check-listing-body', 'pagination': page.pagination } %}</span> 
+    </td>
+</tr>
+
+{% endblock %}

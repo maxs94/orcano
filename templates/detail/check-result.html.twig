@@ -1,0 +1,68 @@
+{% set hx = app.request.get('hx') %}
+{% extends hx == null ? 'base.html.twig' : 'htmx.html.twig' %}
+
+{% set checkResult = page.parameters.get('checkResult') %}
+{% set checkResultDetails = page.parameters.get('checkResultDetails') %}
+
+{% block title %}{{ 'title.check-result.detail'|trans }}{% endblock %}
+
+{% block page_title %}{{ 'title.check-result.detail'|trans }}{% endblock %}
+
+{% block page_heading %}{{ 'title.check-result.detail'|trans }}{% endblock %}
+
+{% block page_content %}
+{% block detail_check_result %}
+<div class="card">
+    <div class="card-body">
+
+        <div class="row">
+            <div class="col">
+                {{ dump(checkResult) }}
+                <table class="table mb-0 mw-500">
+                    <thead>
+                        <th>{{ 'label.key'|trans }}</th>
+                        <th>{{ 'label.value'|trans }}</th>
+                    </thead>
+                    <tbody>
+                        <tr> 
+                            <td>ID</td><td>{{ checkResult.id }}</td> 
+                        </tr>
+                        <tr>
+                            <td>{{ 'label.check-result.result'|trans }}</td><td>{{ checkResult.result }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ 'label.createdAt'|trans }}</td><td>{{ checkResult.createdAt|date('d.m.Y H:i:s') }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ 'label.duration'|trans }}</td><td>{{ checkResult.durationMs|millisecondsToTime }}</td>
+                        </tr>
+
+
+
+                    </tbody>
+
+                </table>
+                
+            </div>
+        </div>
+
+        <hr>
+        
+        <div class="row">
+            <div class="col">
+                {{ dump(checkResultDetails) }}
+                <h4>{{ 'title.check-result.result'|trans }}</h4>    
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="form-group">
+            <button hx-get="{{ path('listing', {'entity': 'check-result'}) }}?hx=1" hx-target="#page-content" type="button" class="btn btn-secondary">{{ 'label.back'|trans }}</button>
+        </div>
+
+
+    </div>
+</div>
+{% endblock %}
+{% endblock %}

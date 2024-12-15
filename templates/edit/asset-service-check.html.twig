@@ -1,0 +1,87 @@
+{% set hx = app.request.get('hx') %}
+
+{% set availableServiceChecks = page.parameters.get('availableServiceChecks') %}
+{% set assetServiceCheck = page.parameters.get('assetServiceCheck') %}
+{% set assetId = page.parameters.get('assetId') %}
+
+{% block page_title %}{{ 'title.asset-service-check.edit'|trans }}{% endblock %}
+{% block page_heading %}{{ 'title.asset-service-check.edit'|trans }}{% endblock %}
+
+{% block page_content %}
+{% block edit_service_check %}
+    <div class="card-body">
+    
+        <form hx-post="{{ path('edit_asset_service_check', {'assetId': assetId, 'id': assetServiceCheck.id }) }}?hx=1" hx-target="#asset-service-checks">
+            <input type="hidden" name="assetId" value="{{ assetId }}">
+            <div class="form-group">
+                <label for="service-check" class="form-label">{{ 'label.service-check'|trans }}</label>
+                <select 
+                    name="service-check" 
+                    id="service-check" 
+                    class="form-control" 
+                    hx-get="{{ path('edit_asset_service_check_parameter', {'assetId': assetId, 'id': assetServiceCheck.id ?? 0 }) }}"
+                    hx-target="#asset-service-check-parameter"
+                    hx-trigger="load, change"
+                >
+                    <option value="0">{{ 'label.please-choose'|trans }}</option>
+                    {% for serviceCheck in availableServiceChecks %}
+                    <option value="{{ serviceCheck.id }}" {% if assetServiceCheck.serviceCheck is not null and assetServiceCheck.serviceCheck.id == serviceCheck.id %}selected{% endif %}>
+                        {{ serviceCheck.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+                {% if errors.asset_service_check is defined %}
+                <div class="alert alert-danger color-danger mt-1">{{ errors.asset_service_check.text|trans }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="name" class="form-label">{{ 'label.name'|trans }}</label>
+                <input type="text" name="name" id="name" class="form-control" placeholder="{{ 'label.asset-service-check.name.hint'|trans }}" value="{{ assetServiceCheck.name }}">
+                {% if errors.name is defined %}
+                <div class="alert alert-danger color-danger mt-1">{{ errors.name.text|trans }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <div id="asset-service-check-parameter"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="conditions" class="form-label">{{ 'label.service-checks-conditions'|trans }}</label>
+                <div>
+                    CONDITIONS for this check
+                </div>
+            </div>
+
+            {#
+            <div class="form-check">
+                <input type="checkbox" name="enabled" id="enabled" class="form-check-input" {% if serviceCheck.enabled %}checked{% endif %}>
+                <label for="enabled" class="form-check-label">{{ 'label.enabled'|trans }}</label>
+            </div>
+            #}
+
+            <hr>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">{{ 'label.save'|trans }}</button>
+
+                {% set search = [{
+                    'field': 'asset',
+                    'operator': 'equals',
+                    'value': assetId
+                }] %}
+                <button
+                    type="button" class="btn btn-secondary"
+                    hx-target="#asset-service-checks" 
+                    hx-push-url="false"
+                    hx-post="{{ path('listing', {'entity': 'asset-service-check', 'search': search|json_encode, 'assetId': assetId} ) }}">
+                    {{ 'label.back'|trans }}
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+{% endblock %}
+{% endblock %}

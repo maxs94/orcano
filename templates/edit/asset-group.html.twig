@@ -2,6 +2,9 @@
 {% extends hx == null ? 'base.html.twig' : 'htmx.html.twig' %}
 
 {% set assetGroup = page.parameters.get('assetGroup') %}
+{% set availableConditions = page.parameters.get('availableConditions') %}
+{% set availableServiceChecks = page.parameters.get('availableServiceChecks') %}
+{% set assetGroupServiceCheckConditions = page.parameters.get('assetGroupServiceCheckConditions') %}
 
 {% block page_title %}{{ 'title.asset-group.edit'|trans }}{% endblock %}
 
@@ -23,12 +26,23 @@
             </div>
 
             <div class="form-group">
-                <label for="assets" class="form-label">{{ 'label.service-checks'|trans }}</label>
-                <div>TODO: SERVICE CHECKS PICKER?<br>
-                    maybe we just enable addding service checks to asset groups in /service-checks/edit,<br>
-                    because they would need to be configurable
-                </div>
+                <label for="service-checks" class="form-label">{{ 'label.service-checks'|trans }}</label>
+
+                <select data-choices="true" multiple name="service-checks[]">
+                    {% for serviceCheck in availableServiceChecks %}
+                    {% set exists = assetGroup.serviceChecks|existsInCollection('getId', serviceCheck.id) %}
+                    <option value="{{ serviceCheck.id }}" {% if exists == true %}selected{% endif %}>{{ serviceCheck.name }}</option>
+                    {% endfor %}
+                </select>
             </div>
+
+            {{ include('partials/service-check-conditions.html.twig', {
+                'type': 'asset-group',
+                'entity': assetGroup,
+                'availableConditions': availableConditions,
+                'availableServiceChecks': availableServiceChecks,
+                'selectedServiceCheckConditions': assetGroupServiceCheckConditions,
+            }) }}
 
             <hr>
 

@@ -6,33 +6,47 @@ declare(strict_types=1);
 
 namespace App\Condition;
 
-class ConditionCollection
-{
-    /** @var array<string, AbstractCondition> */
-    private array $conditions = [];
+use App\DataObject\Collection\DataObjectCollection;
 
-    /** @return array<string, array<string, AbstractCondition>> */
+class ConditionCollection extends DataObjectCollection
+{
+    /** @var array<string, ConditionCollectionItem> */
+    protected array $objects = [];
+
+    /** @return array<string, array<ConditionCollectionItem>> */
     public function __serialize(): array
     {
         return [
-            'conditions' => $this->conditions,
+            'conditions' => $this->objects,
         ];
     }
 
-    /** @param array<string, array<string, AbstractCondition>> $data */
+    /** @param array<string, array<ConditionCollectionItem>> $data */
     public function __unserialize(array $data): void
     {
-        $this->conditions = $data['conditions'];
+        $this->objects = $data['objects'] ?? [];
     }
 
     public function addCondition(string $resultKey, AbstractCondition $condition): void
     {
-        $this->conditions[$resultKey] = $condition;
+        $id = md5(serialize($condition) . $resultKey);
+        $this->objects[$id] = new ConditionCollectionItem($resultKey, $condition);
     }
 
-    /** @return array<string, AbstractCondition> */
+    public function removeCondition(string $id): void
+    {
+        unset($this->objects[$id]);
+    }
+
+    /** @return array<ConditionCollectionItem> */
     public function getConditions(): array
     {
-        return $this->conditions;
+        return $this->objects;
+    }
+
+    /** @param array<ConditionCollectionItem> $objects */
+    public function setConditions(array $objects): void
+    {
+        $this->objects = $objects;
     }
 }

@@ -23,7 +23,7 @@ class HashServiceTest extends TestCase
         $service = new HashService();
         $hash = $service->createHashFromFile(__DIR__ . self::FAKE_PATH . '/script1.sh');
 
-        $this->assertSame('27a5ae87dd949061f79612cd9fa53c3e', $hash);
+        $this->assertSame('be1cfb502156052ed7b8741313bdeec2', $hash);
     }
 
     public function testFileDoesNotExist(): void

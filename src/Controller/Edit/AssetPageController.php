@@ -6,10 +6,13 @@ declare(strict_types=1);
 
 namespace App\Controller\Edit;
 
+use App\Condition\ConditionCollectionHydrator;
 use App\Context\Context;
 use App\Controller\Page\AbstractPageController;
 use App\DataObject\Page\PageMessageDataObject;
+use App\Entity\Asset;
 use App\Repository\AssetRepository;
+use App\Repository\AssetServiceCheckRepository;
 use App\Service\Page\AssetPageLoader;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,7 +23,9 @@ class AssetPageController extends AbstractPageController
     public function __construct(
         Context $context,
         private readonly AssetPageLoader $assetPageLoader,
-        private readonly AssetRepository $assetRepository
+        private readonly AssetRepository $assetRepository,
+        private readonly ConditionCollectionHydrator $conditionCollectionHydrator,
+        private readonly AssetServiceCheckRepository $assetServiceCheckRepository
     ) {
         parent::__construct($context);
     }
@@ -35,6 +40,16 @@ class AssetPageController extends AbstractPageController
         return $this->renderPage('edit/asset.html.twig', [
             'page' => $page,
         ]);
+    }
+    
+    #[Route('/delete/asset-service-check-condition/{assetId}/{serviceCheckId}/{conditionId}', name: 'delete_asset_service_check_condition')]
+    public function deleteAssetServiceCheckConditionAction(int $assetId, int $serviceCheckId, string $conditionId): Response
+    {
+        $this->assetServiceCheckRepository->deleteByConditionId($assetId, $serviceCheckId, $conditionId);
+
+        $this->addMessage('label.entity-deleted', PageMessageDataObject::TYPE_SUCCESS);
+
+        return $this->redirectToRoute('edit_asset', ['id' => $assetId]);
     }
 
     private function processForm(Request $request, int $id = null): void
@@ -57,11 +72,24 @@ class AssetPageController extends AbstractPageController
 
             $data['id'] = $id ?? 0;
 
+            $asset = null;
+
             if ($errors === []) {
                 try {
-                    $this->assetRepository->upsert($data);
+                    $asset = $this->assetRepository->upsert($data);
                 } catch (\Exception $ex) {
                     $this->addMessage($ex->getMessage(), PageMessageDataObject::TYPE_DANGER);
+                }
+            }
+
+            if (!$asset instanceof Asset) {
+                $this->addMessage('label.entity-not-saved', PageMessageDataObject::TYPE_DANGER);
+            }
+
+            if (isset($data['condition']) && $asset instanceof Asset) {
+                foreach ($data['condition'] as $serviceCheckId => $conditionData) {
+                    $conditionCollection = $this->conditionCollectionHydrator->hydrateFromFormPost($conditionData);
+                    $this->assetServiceCheckRepository->upsertByIds($asset->getId(), $serviceCheckId, $conditionCollection);
                 }
             }
 

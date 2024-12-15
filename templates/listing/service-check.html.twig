@@ -20,7 +20,7 @@
                 </div>
 
                 <div class="dataTable-container">
-                    <table class="table table-striped dataTable-table w-auto">
+                    <table class="table table-striped dataTable-table w-100">
                         <thead>
                             <th>{{ 'label.name'|trans }}</th>
                             <th>{{ 'label.checkIntervalSeconds'|trans }}</th>
@@ -31,7 +31,7 @@
                             <th>{{ 'label.createdAt'|trans }}</th>
                             <th>{{ 'label.actions'|trans }}</th>
                         </thead>
-                        <tbody id="asset-listing-body">
+                        <tbody id="service-check-listing-body">
                             {% include 'listing/service-check-items.html.twig' %}
                         </tbody>
                     </table>

@@ -1,0 +1,16 @@
+{% set hx = app.request.get('hx') %}
+
+{% set availableServiceChecks = page.parameters.get('availableServiceChecks') %}
+{% set assetServiceCheck = page.parameters.get('assetServiceCheck') %}
+{% set assetId = page.parameters.get('assetId') %}
+{% set checkScriptParameter = page.parameters.get('checkScriptParameter') %}
+{% set assetServiceCheckConfig = page.parameters.get('assetServiceCheckConfig') %}
+
+{% block page_title %}{% endblock %}
+{% block page_heading %}{% endblock %}
+
+{% block page_content %}
+{% block edit_service_check_parameter %}
+    {% include 'partials/check-script-parameter.html.twig' with { checkScriptParameter: checkScriptParameter } %}
+{% endblock %}
+{% endblock %}

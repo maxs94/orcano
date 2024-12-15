@@ -13,7 +13,7 @@ class ScriptResultDataObject implements DataObjectInterface
     public const RESULT_ERROR = 'ERROR';
     public const RESULT_UNKNOWN = 'UNKNOWN';
 
-    private string $checkResult;
+    private string $checkResult = self::RESULT_UNKNOWN;
 
     /** @var array<string, mixed> */
     private array $message = [];
@@ -21,7 +21,13 @@ class ScriptResultDataObject implements DataObjectInterface
     /** @var array<string, mixed> */
     private array $scriptOutput = [];
 
+    private string $rawScriptOutput = '';
+
+    private float $durationMs = 0;
+
     private ?string $note = null;
+
+    private string $executedCommand = '';
 
     public function getCheckResult(): string
     {
@@ -71,6 +77,42 @@ class ScriptResultDataObject implements DataObjectInterface
     public function setScriptOutput(array $scriptOutput): self
     {
         $this->scriptOutput = $scriptOutput;
+
+        return $this;
+    }
+
+    public function getRawScriptOutput(): string
+    {
+        return $this->rawScriptOutput;
+    }
+
+    public function setRawScriptOutput(string $rawScriptOutput): self
+    {
+        $this->rawScriptOutput = $rawScriptOutput;
+
+        return $this;
+    }
+
+    public function getExecutedCommand(): string
+    {
+        return $this->executedCommand;
+    }
+
+    public function setExecutedCommand(string $executedCommand): self
+    {
+        $this->executedCommand = $executedCommand;
+
+        return $this;
+    }
+
+    public function getDurationMs(): float
+    {
+        return $this->durationMs;
+    }
+
+    public function setDurationMs(float $durationMs): self
+    {
+        $this->durationMs = $durationMs;
 
         return $this;
     }

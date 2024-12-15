@@ -456,7 +456,7 @@ $font-family-code: var(--#{$variable-prefix}font-monospace) !default;
 // $font-size-root effects the value of `rem`, which is used for as well font sizes, paddings and margins
 // $font-size-base effects the font size of the body text
 $font-size-root: null !default;
-$font-size-base: 1rem !default; // Assumes the browser default, typically `16px`
+$font-size-base: 0.85rem !default; // Assumes the browser default, typically `16px`
 $font-size-sm: $font-size-base * .875 !default;
 $font-size-lg: $font-size-base * 1.25 !default;
 
@@ -699,7 +699,6 @@ $input-padding-x-lg: $input-btn-padding-x-lg !default;
 $input-font-size-lg: $input-btn-font-size-lg !default;
 
 $input-bg: $white !default;
-$input-disabled-bg: $gray-200 !default;
 $input-disabled-border-color: null !default;
 
 $input-color: $body-color !default;
@@ -1065,8 +1064,8 @@ $card-border-width: $border-width !default;
 $card-border-radius: .7rem !default;
 $card-border-color: rgba($black, .125) !default;
 $card-inner-border-radius: subtract($card-border-radius, $card-border-width) !default;
-$card-cap-padding-y: 1.5rem !default;
-$card-cap-padding-x: 1.5rem !default;
+$card-cap-padding-y: 0.5rem !default;
+$card-cap-padding-x: 0.5rem !default;
 $card-cap-bg: white !default;
 $card-cap-color: null !default;
 $card-height: null !default;

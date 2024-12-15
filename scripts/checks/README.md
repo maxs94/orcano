@@ -1,14 +1,18 @@
 % check scripts
-scripts will be called by orcano with the following parameters:
+scripts will be called by orcano with a JSON string containing the following:
 
-```bash
-$1 = hostname 
-$2 = Ipv4 address 
-$3 = Ipv6 address
+```json
+{
+    "host": "hostname",
+    "ipv4": "127.0.0.1",
+    "ipv6": "::fff",
+
+    ... aditional data based on check ...
+}
 ```
 
 Example:
- `/scripts/checks/./ping4.sh localhost 127.0.0.1 ::fff`
+ `/scripts/checks/./ping4.sh '{"host":"google.com","ipv4":"127.0.0.1"}'`
 
 After adding/updating a script, refresh the scripts by typing:
 `bin/console orcano:script:refresh`

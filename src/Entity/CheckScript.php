@@ -8,6 +8,8 @@ namespace App\Entity;
 
 use App\DataObject\DataObjectInterface;
 use App\Repository\CheckScriptRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Ignore;
@@ -32,10 +34,14 @@ class CheckScript implements DataObjectInterface, ApiEntityInterface
 
     private bool $isChangedInFilesystem = false;
 
+    #[ORM\OneToMany(mappedBy: 'checkScript', targetEntity: CheckScriptParameter::class, cascade: ['persist'])]
+    private Collection $checkScriptParameters;
+
     public function __construct()
     {
         $this->createdAt = new \DateTime();
         $this->updatedAt = new \DateTime();
+        $this->checkScriptParameters = new ArrayCollection();
     }
 
     #[Ignore]
@@ -109,6 +115,43 @@ class CheckScript implements DataObjectInterface, ApiEntityInterface
     public function setIsChangedInFilesystem(bool $isChangedInFilesystem): self
     {
         $this->isChangedInFilesystem = $isChangedInFilesystem;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CheckScriptParameter>
+     */
+    public function getCheckScriptParameters(): Collection
+    {
+        return $this->checkScriptParameters;
+    }
+
+    public function setCheckScriptParameters(Collection $checkScriptParameters): self 
+    {
+        $this->checkScriptParameters = $checkScriptParameters;
+
+        return $this;
+    }
+
+    public function addCheckScriptParameter(CheckScriptParameter $checkScriptParameter): self
+    {
+        if (!$this->checkScriptParameters->containsKey($checkScriptParameter->getName())) {
+            $this->checkScriptParameters->set($checkScriptParameter->getName(), $checkScriptParameter);
+            $checkScriptParameter->setCheckScript($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCheckScriptParameter(CheckScriptParameter $checkScriptParameter): self
+    {
+        if ($this->checkScriptParameters->removeElement($checkScriptParameter)) {
+            // set the owning side to null (unless already changed)
+            if ($checkScriptParameter->getCheckScript() === $this) {
+                $checkScriptParameter->setCheckScript(null);
+            }
+        }
 
         return $this;
     }

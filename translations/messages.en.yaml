@@ -50,6 +50,10 @@ label.language.en: English
 label.language.de: Deutsch
 label.row-limit: 'Row limit'
 label.entity-saved: 'Entity saved'
+label.service-check: 'Service Check'
+label.service-checks: 'Service Checks'
+label.number-of-conditions: Conditions
+label.config: Config
 label.assetGroups: 'Asset groups'
 label.asset.name.hint: 'Asset name'
 label.asset.hostname.hint: 'www.orcano.net'
@@ -58,7 +62,6 @@ label.asset.ipv4-address.hint: '127.0.0.1'
 label.ipv6-address: 'Ipv6 address'
 label.asset.ipv6-address.hint: '::1'
 label.assets: 'Assets'
-label.service-checks: 'Service checks'
 alert.passwords-not-match: 'Passwords do not match'
 label.loading: Loading
 alert.email-required: 'Email is required'
@@ -78,7 +81,18 @@ label.notifications-enabled: 'Notifications enabled'
 alert.service-check.name.empty: 'The name of the service is empty'
 label.back: Back
 label.add: Add
+label.asset-service-check.add: Add Asset Service Check
 label.please-choose: 'Please choose'
-label.serviceChecks: 'Service checks'
 label.asset-group.name.hint: 'Asset group name'
 label.script: 'Script'
+label.service-checks-parameter: 'Service check parameter'
+label.service-checks-conditions: Conditions
+title.check-script.test: 'Test Script'
+label.test-script: 'Test script'
+label.executed-command: 'Executed command'
+label.check-result: 'Check result'
+label.check-result-message: 'Check result message'
+label.check-result-note: 'Check result note'
+label.check-result-raw: 'Check result raw'
+label.check-result-output: 'Check result parsed output'
+help.check-script.name: 'The name will be the table name in the database. If you change the name, you will lose previous results for this check. The database table is created as soon as the first check runs.'

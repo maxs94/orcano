@@ -9,7 +9,9 @@ namespace App\Service\Scripts;
 use App\DataObject\Collection\DataObjectCollection;
 use App\DataObject\Collection\DataObjectCollectionInterface;
 use App\Entity\CheckScript;
+use App\Repository\CheckScriptParameterRepository;
 use App\Repository\CheckScriptRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -24,6 +26,7 @@ class ScriptsService
     public const VALID_METADATA_KEYS = [
         'name',
         'desc',
+        'parameters'
     ];
 
     public function __construct(
@@ -32,6 +35,8 @@ class ScriptsService
         private readonly MetaDataService $metaDataService,
         private readonly HashService $hashService,
         private readonly EntityManagerInterface $em,
+        private readonly CheckScriptRepository $checkScriptRepository,
+        private readonly CheckScriptParameterRepository $checkScriptParameterRepository,
         private readonly LoggerInterface $logger
     ) {}
 
@@ -95,8 +100,11 @@ class ScriptsService
         $dir = $this->parameterBag->get('kernel.project_dir') . '/' . $this->checkScriptsPath;
 
         foreach (glob($dir . '/*') as $script) {
+
+            $this->logger->debug('Checking script: ' . $script);
+
             if ($this->isValidScript($script) === false) {
-                $this->logger->warning('Invalid script found: ' . $script);
+                $this->logger->warning('Skipping invalid script: ' . $script);
                 $this->logger->warning('Valid script extensions are: ' . implode(', ', self::VALID_SCRIPT_EXTENSIONS));
                 continue;
             }
@@ -118,6 +126,12 @@ class ScriptsService
                 ->setFilehash($filehash)
             ;
 
+            foreach ($metaData->getParameters() as $parameter) {
+                $parameter->setCheckScript($scriptObj);
+                $scriptObj->addCheckScriptParameter($parameter);
+            }
+
+
             $scripts[] = $scriptObj;
         }
 
@@ -126,10 +140,7 @@ class ScriptsService
 
     public function getAllScripts(): DataObjectCollectionInterface
     {
-        /** @var CheckScriptRepository $checkScriptRepository */
-        $checkScriptRepository = $this->em->getRepository(CheckScript::class);
-
-        $dbCheckScripts = $checkScriptRepository->findAllAsCollection();
+        $dbCheckScripts = $this->checkScriptRepository->findAllAsCollection();
         $filesystemCheckScripts = $this->getAllScriptsFromFilesystem();
 
         $scripts = [];
@@ -153,19 +164,20 @@ class ScriptsService
 
     private function upsertCheckScripts(DataObjectCollectionInterface $scripts): void
     {
-        $checkScriptRepository = $this->em->getRepository(CheckScript::class);
-
         /** @var CheckScript $script */
         foreach ($scripts as $script) {
             $relativePath = str_replace($this->parameterBag->get('kernel.project_dir') . '/', '', $script->getFilename());
 
-            $checkScript = $checkScriptRepository->findOneBy(['filename' => $relativePath]);
+            $checkScript = $this->checkScriptRepository->findOneBy(['filename' => $relativePath]);
 
             if ($checkScript instanceof CheckScript) {
                 if ($script->getFilehash() === $checkScript->getFilehash()) {
                     $this->logger->debug('Script contents have not changed, skipping: ' . $relativePath);
                     continue;
                 }
+
+                $this->checkScriptParameterRepository->deleteParametersForCheckScript($checkScript);
+
                 $this->logger->info('Updating script ' . $relativePath);
             } else {
                 $checkScript = new CheckScript();
@@ -177,6 +189,10 @@ class ScriptsService
             $checkScript->setDescription($script->getDescription());
             $checkScript->setFilehash($script->getFilehash());
 
+            foreach ($script->getCheckScriptParameters() as $parameter) {
+                $checkScript->addCheckScriptParameter($parameter);
+            }
+
             $this->em->persist($checkScript);
         }
 
@@ -186,6 +202,10 @@ class ScriptsService
     private function isValidScript(string $scriptFilename): bool
     {
         $pathInfo = pathinfo($scriptFilename);
+
+        if (empty($pathInfo['extension'])) {
+            return false;
+        }
 
         return in_array($pathInfo['extension'], self::VALID_SCRIPT_EXTENSIONS);
     }

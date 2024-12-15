@@ -7,13 +7,21 @@ declare(strict_types=1);
 namespace App\Service\Scripts;
 
 use App\DataObject\Scripts\MetaDataObject;
+use App\Entity\CheckScriptParameter;
 use App\Exception\MetaDataNotFoundException;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 
 class MetaDataService
 {
     public const MAX_LINES_TO_READ = 20;
+    public const VALID_DATATYPES = ['string', 'int', 'float', 'bool'];
+
     private string $commentStartsWith = '#';
+
+    public function __construct(
+        private readonly LoggerInterface $logger
+    ) { }
 
     /**
      * @param array<string> $validKeys
@@ -49,11 +57,50 @@ class MetaDataService
             throw new MetaDataNotFoundException(null, 0, null, $filename);
         }
 
+        $parameters = $this->parseParameterString($metaData['parameters']);
+
         return (new MetaDataObject())
             ->setFilename($filename)
             ->setName($metaData['name'])
             ->setDescription($metaData['desc'])
+            ->setParameters($parameters)
         ;
+    }
+
+    /** @return array<CheckScriptParameter> */
+    private function parseParameterString(string $parameterString): array
+    {
+        $parameters = [];
+        $parameterString = trim($parameterString);
+
+        $parts = explode(',', $parameterString);
+
+        // parameterString is 'parameter1<string>, parameter2<int>'
+        foreach ($parts as $part) {
+            $part = trim($part);
+            $parts2 = explode('<', $part);
+            if (count($parts2) !== 2) {
+                continue;
+            }
+            $key = trim($parts2[0]);
+            $type = trim($parts2[1]);
+            $type = str_replace('>', '', $type);
+
+            if (!in_array($type, self::VALID_DATATYPES, true)) {
+                $this->logger->warning(sprintf('Parameter %s has invalid type %s', $key, $type));
+                continue;
+            }
+
+            $checkScriptParameter = new CheckScriptParameter();
+            $checkScriptParameter->setName($key);
+            $checkScriptParameter->setDataType($type);
+
+            $parameters[] = $checkScriptParameter;
+
+        }
+
+        return $parameters;
+
     }
 
     /**

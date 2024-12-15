@@ -1,0 +1,39 @@
+{% set hx = app.request.get('hx') %}
+{% extends hx is null ? 'base.html.twig' : 'htmx.html.twig' %}
+
+{% block page_heading_wrapper %}{% endblock %}
+
+{% block page_content %}
+<section class="section">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title">{% if page.title is defined %}{{ page.title }}{% endif %}</h5>
+        </div>
+        <div class="card-body">
+            <div class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns">
+
+                <div class="col">
+                    TODO: FILTERING/SORTING
+                </div>
+
+                <div class="dataTable-container">
+                    <table class="table table-striped dataTable-table w-100">
+                        <thead>
+                            <th>{{ 'label.hostname'|trans }}</th>
+                            <th>{{ 'label.service-name'|trans }}</th>
+                            <th>{{ 'label.result'|trans }}</th>
+                            <th>{{ 'label.check-duration'|trans }}</th>
+                            <th>{{ 'label.createdAt'|trans }}</th>
+                            <th>{{ 'label.actions'|trans }}</th>
+                        </thead>
+                        <tbody id="check-result-listing-body">
+                            {% include 'listing/check-result-items.html.twig' %}
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

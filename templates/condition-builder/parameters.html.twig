@@ -1,0 +1,11 @@
+{% block condition_builder_parameters %}
+ 
+{% for parameter in condition.getParameters %}
+{% set name = 'condition[' ~ serviceCheckId ~ '][' ~ conditionIndex ~ '][' ~ parameter ~ ']' %}
+
+<div class="form-group">
+    <label for="{{ name }}" class="form-label">{{ parameter }}</label>
+    <input type="text" name="{{ name }}" id="{{ name }}" class="form-control" placeholder="{{ parameter }}" value="{{ condition.get(parameter) }}">
+</div>
+{% endfor %}
+{% endblock %}

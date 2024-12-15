@@ -7,12 +7,16 @@ declare(strict_types=1);
 namespace App\MessageHandler;
 
 use App\Condition\ConditionCollection;
-use App\Condition\EqualsCondition;
-use App\Condition\MinMaxCondition;
 use App\DataObject\ScriptResultDataObject;
+use App\Entity\CheckResult;
+use App\Entity\CheckScript;
+use App\Message\CheckNotification;
 use App\Message\CheckResultNotification;
+use App\Repository\AssetServiceCheckRepository;
+use App\Repository\CheckResultRepository;
 use App\Service\Condition\ConditionService;
 use App\Service\Scripts\ResultParserService;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
@@ -21,6 +25,9 @@ class CheckResultNotificationHandler
 {
     public function __construct(
         private readonly ResultParserService $resultParserService,
+        private readonly AssetServiceCheckRepository $assetServiceCheckRepository,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly CheckResultRepository $checkResultRepository,
         private readonly ConditionService $conditionService,
         private readonly LoggerInterface $logger
     ) {}
@@ -30,46 +37,72 @@ class CheckResultNotificationHandler
         $result = $message->getResult();
         $originalNotification = $message->getOriginalNotification();
 
-        // todo:
-        //
-        // have specific conditions per checkscript
-        //
-        // have an inheritance would make very much sense:
-        // AssetGroup -> Asset
-        // $conditionTemplateString = // serialized conditions string
-        // $conditions = unserialize($conditionTemplateString);
-        /*    $conditions = new ConditionCollection();
-            $conditions->addCondition('result', new EqualsCondition(0));
-            $conditions->addCondition('time', new MinMaxCondition(0, 1000, 20));  // ok if between 0 and 1000, warn if between 20 and 1000
-
-            echo addslashes(serialize($conditions));*/
-
         $conditions = $this->conditionService->getCheckConditions(
             $originalNotification->getAssetId(),
-            $originalNotification->getServiceCheckId()
+            $originalNotification->getAssetServiceCheckId()
         );
 
-        $checkResult = $this->checkResult($result, $conditions);
+        $this->checkResult($result, $conditions);
 
         $this->logger->notice(sprintf('check %s on %s, result: %s (%s)',
             $originalNotification->getCheckScriptFilename(),
             $originalNotification->getHostname(),
-            $checkResult->getCheckResult(),
-            $checkResult->getNote()
+            $result->getCheckResult(),
+            $result->getNote()
         ));
+
+        $checkResultEntity = $this->transformCheckResult($result, $originalNotification, $result);
+
+        $serviceCheckName = $checkResultEntity->getServiceCheck()->getName();
+        $checkScript = $checkResultEntity->getServiceCheck()->getCheckScript();
+
+        if (!$checkScript instanceof CheckScript) {
+            $this->logger->error(sprintf('Check script not found for service check %s', $serviceCheckName));
+            return;
+        }
+
+        $this->entityManager->persist($checkResultEntity);
+        $this->entityManager->flush();
+
+        if ($checkScript->getName() === null) {
+            $this->logger->error(sprintf('Check script name not found for service check %s.', $serviceCheckName));
+            return;
+        }
+
+        $this->checkResultRepository->updateCheckResultTableStructure($result, $checkScript->getName());
+        $this->checkResultRepository->insertCheckResult($result, $checkScript->getName(), $checkResultEntity->getId());
     }
 
-    private function checkResult(ScriptResultDataObject $result, ConditionCollection $conditions): ScriptResultDataObject
+    private function transformCheckResult(ScriptResultDataObject $scriptResult, CheckNotification $checkNotification): CheckResult
     {
-        $output = $result->getScriptOutput();
+        $checkResultEntity = new CheckResult();
+        $checkResultEntity->setData([
+            'result' => $scriptResult->getCheckResult(),
+            'message' => json_encode($scriptResult->getMessage()),
+            'durationMs' => $scriptResult->getDurationMs(),
+            'scriptOutput' => json_encode($scriptResult->getScriptOutput()),
+        ]);
 
+        $assetServiceCheck = $this->assetServiceCheckRepository->find($checkNotification->getAssetServiceCheckId());
+        if ($assetServiceCheck === null) {
+            throw new \Exception('Asset service check not found');
+        }
+
+        $checkResultEntity->setAsset($assetServiceCheck->getAsset());
+        $checkResultEntity->setServiceCheck($assetServiceCheck->getServiceCheck());
+        $checkResultEntity->setAssetServiceCheck($assetServiceCheck);
+
+        return $checkResultEntity;
+    }
+
+
+    private function checkResult(ScriptResultDataObject $result, ConditionCollection $conditions): void
+    {
         try {
-            $result = $this->resultParserService->parseResultJson($output, $conditions);
+            $this->resultParserService->parseResultJson($result, $conditions);
         } catch (\Exception $e) {
             $this->logger->error(sprintf('ResultParserService failed: %s', $e->getMessage()), $output);
             $result->setCheckResult(ScriptResultDataObject::RESULT_UNKNOWN);
         }
-
-        return $result;
     }
 }

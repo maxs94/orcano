@@ -23,7 +23,7 @@ class ServiceCheck implements DataObjectInterface, ApiEntityInterface
 
     public const DEFAULT_MAX_RETRIES = 3;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $name = null;
 
     #[ORM\ManyToOne]
@@ -202,4 +202,5 @@ class ServiceCheck implements DataObjectInterface, ApiEntityInterface
     {
         return $this->assetGroups;
     }
+
 }

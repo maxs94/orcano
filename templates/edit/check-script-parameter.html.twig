@@ -1,0 +1,12 @@
+{% set hx = app.request.get('hx') %}
+
+{% set checkScriptParameter = page.parameters.get('checkScriptParameter') %}
+
+{% block page_title %}{% endblock %}
+{% block page_heading %}{% endblock %}
+
+{% block page_content %}
+{% block edit_service_check_parameter %}
+    {% include 'partials/check-script-parameter.html.twig' with { checkScriptParameter: checkScriptParameter } %}
+{% endblock %}
+{% endblock %}

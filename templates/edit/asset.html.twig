@@ -3,6 +3,9 @@
 
 {% set asset = page.parameters.get('asset') %}
 {% set availableAssetGroups = page.parameters.get('availableAssetGroups') %}
+{% set availableServiceChecks = page.parameters.get('availableServiceChecks') %}
+{% set availableConditions = page.parameters.get('availableConditions') %}
+{% set assetServiceCheckConditions = page.parameters.get('assetServiceCheckConditions') %}
 
 {% block title %}{{ 'title.asset.edit'|trans }}{% endblock %}
 
@@ -12,8 +15,6 @@
 
 {% block page_content %}
 {% block edit_asset %}
-
-
 <div class="card">
     <div class="card-body">
     
@@ -59,7 +60,27 @@
                     <option value="{{ assetGroup.id }}" {% if exists == true %}selected{% endif %}>{{ assetGroup.name }}</option>
                     {% endfor %}
                 </select>
+            </div>
 
+            <div class="card nested p-2">
+                <div class="form-group">
+                    <label class="form-label">{{ 'label.asset-service-checks'|trans }}</label>
+
+                    {% block asset_service_checks %}
+                    {% set search = [{
+                        'field': 'asset',
+                        'operator': 'equals',
+                        'value': asset.id
+                    }] %}
+                    <div id="asset-service-checks" 
+                        hx-target="#asset-service-checks" 
+                        hx-trigger="load" 
+                        hx-push-url="false"
+                        hx-post="{{ path('listing', {'entity': 'asset-service-check', 'search': search|json_encode, 'assetId': asset.id} ) }}">
+                    </div>
+                    {% endblock %}
+
+                </div>
             </div>
 
             <hr>

@@ -1,8 +1,15 @@
 [data-bs-theme=light] {
-    --o-sidebar-bg-color: #e7e7e7;
+  --o-sidebar-bg-color: #f6f6f6;
 
-    --o-topbar-bg-color: #e7e7e7;
+  --o-topbar-bg-color: #e7e7e7;
 
-    --o-card-header-bg-color: #fff;
-    --o-card-body-bg-color: #fff;
+  --o-card-header-bg-color: #fff;
+  --o-card-body-bg-color: #fff;
+
+  --o-form-control-bg-color: #fff;
+  --o-form-control-border-color: #f2f2f2;
+  --o-form-control-text-color: #555252;
+
+  --o-form-control-placeholder-color: #b0b0b0;
+
 }

@@ -34,11 +34,15 @@ class Asset implements DataObjectInterface, ApiEntityInterface
     #[ORM\ManyToMany(targetEntity: AssetGroup::class, inversedBy: 'assets')]
     private Collection $assetGroups;
 
+    #[ORM\OneToMany(mappedBy: 'asset', targetEntity: AssetServiceCheck::class, orphanRemoval: true)]
+    private Collection $serviceChecks;
+
     public function __construct()
     {
         $this->createdAt = new \DateTime();
         $this->updatedAt = new \DateTime();
         $this->assetGroups = new ArrayCollection();
+        $this->serviceChecks = new ArrayCollection();
     }
 
     #[Ignore]
@@ -141,4 +145,29 @@ class Asset implements DataObjectInterface, ApiEntityInterface
 
         return rtrim($assetGroupsAsString, ', ');
     }
+
+    /**
+     * @return Collection<int, ServiceCheck>
+     */
+    public function getServiceChecks(): Collection
+    {
+        return $this->serviceChecks;
+    }
+
+    public function addServiceCheck(ServiceCheck $serviceCheck): self
+    {
+        if (!$this->serviceChecks->contains($serviceCheck)) {
+            $this->serviceChecks->add($serviceCheck);
+        }
+
+        return $this;
+    }
+
+    public function removeServiceCheck(ServiceCheck $serviceCheck): self
+    {
+        $this->serviceChecks->removeElement($serviceCheck);
+
+        return $this;
+    }
+    
 }

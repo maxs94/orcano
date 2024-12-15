@@ -8,6 +8,7 @@ namespace App\Repository;
 
 use App\Entity\Asset;
 use App\Entity\AssetGroup;
+use App\Entity\ServiceCheck;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -18,8 +19,6 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class AssetRepository extends AbstractServiceEntityRepository
 {
-    use BaseRepositoryTrait;
-
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Asset::class);
@@ -51,6 +50,18 @@ class AssetRepository extends AbstractServiceEntityRepository
                     throw new \Exception('AssetGroup not found');
                 }
                 $asset->addAssetGroup($assetGroup);
+            }
+        }
+
+        $asset->getServiceChecks()->clear();
+
+        if (isset($data['service-checks'])) {
+            foreach ($data['service-checks'] as $serviceCheckId) {
+                $serviceCheck = $em->getRepository(ServiceCheck::class)->find($serviceCheckId);
+                if ($serviceCheck === null) {
+                    throw new \Exception('ServiceCheck not found');
+                }
+                $asset->addServiceCheck($serviceCheck);
             }
         }
 

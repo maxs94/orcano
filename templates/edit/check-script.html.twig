@@ -18,7 +18,10 @@
             <div class="form-group">
                 <div hx-target="this" hx-swap="outerHTML">
                     <label for="name" class="form-label">{{ 'label.name'|trans }}</label>
-                    <input type="text" name="name" id="name" class="form-control" placeholder="{{ 'label.check-script.name.hint'|trans }}" value="{{ checkScript.name }}">
+                    <input type="text" name="name" id="name" class="form-control" placeholder="{{ 'label.check-script.name.hint'|trans }}" value="{{ checkScript.name }}" 
+                        {% if checkScript.id != 0 %}disabled{% endif %}
+                    >
+                    <p><small class="text-muted">{{ 'help.check-script.name'|trans }}</small></p>
                 </div>
             </div>
 
@@ -52,6 +55,40 @@
             </div>
 
         </form>
+
+    </div>
+
+</div>
+    
+<div class="card">
+    <div class="card-body">
+
+        <h4>{{ 'title.check-script.test'|trans }}</h4>
+
+        <div class="form-group">
+        <form 
+            hx-post="{{ path('test_check_script', {'id': checkScript.id }) }}?hx=1" 
+            hx-target="#check-script-test-results"
+            hx-swap="innerHTML"
+        >
+
+            <div 
+                id="check-script-parameter"
+                hx-get="{{ path('check_script_parameter', {'id': checkScript.id}) }}"
+                hx-trigger="load"
+                hx-target="#check-script-parameter"
+                hx-swap="textContent"
+            ></div>
+
+            <button type="submit" class="btn btn-primary">{{ 'label.test-script'|trans }}</button>
+
+        </form>
+
+        </div>
+    
+        <div class="form-group">
+            <div id="check-script-test-results"></div>
+        </div>
 
     </div>
 </div>
