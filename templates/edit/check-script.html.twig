@@ -18,7 +18,10 @@
             <div class="form-group">
                 <div hx-target="this" hx-swap="outerHTML">
                     <label for="name" class="form-label">{{ 'label.name'|trans }}</label>
-                    <input type="text" name="name" id="name" class="form-control" placeholder="{{ 'label.check-script.name.hint'|trans }}" value="{{ checkScript.name }}">
+                    <input type="text" name="name" id="name" class="form-control" placeholder="{{ 'label.check-script.name.hint'|trans }}" value="{{ checkScript.name }}" 
+                        {% if checkScript.id != 0 %}disabled{% endif %}
+                    >
+                    <p><small class="text-muted">{{ 'help.check-script.name'|trans }}</small></p>
                 </div>
             </div>
 

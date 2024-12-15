@@ -25,7 +25,7 @@ class CheckResultRepository extends AbstractServiceEntityRepository
         parent::__construct($this->registry, CheckResult::class);
     }
 
-    public function insertCheckResult(ScriptResultDataObject $scriptResult, string $serviceCheckName, int $checkResultId): void
+    public function insertCheckResult(ScriptResultDataObject $scriptResult, string $checkScriptName, int $checkResultId): void
     {
         $scriptMessage = $scriptResult->getMessage();
 
@@ -33,7 +33,7 @@ class CheckResultRepository extends AbstractServiceEntityRepository
             return;
         }
 
-        $tableName = $this->transformTableName($serviceCheckName);
+        $tableName = $this->transformTableName($checkScriptName);
 
         $keysSql = implode(',', array_keys($scriptMessage));
         $keysPlaceholerSql = implode(', :', array_keys($scriptMessage));
@@ -61,14 +61,14 @@ class CheckResultRepository extends AbstractServiceEntityRepository
 
         foreach ($scriptMessage as $key => $value) {
             $parameterType = MySqlTypeService::getParameterType($value);
-            $stmt->bindValue($key, $value, $parameterType);
+            $stmt->bindValue($key, MySqlTypeService::transformValue($value), $parameterType);
         }
 
         $stmt->executeStatement();
 
     }
 
-    public function updateCheckResultTableStructure(ScriptResultDataObject $scriptResult, string $serviceCheckName): void
+    public function updateCheckResultTableStructure(ScriptResultDataObject $scriptResult, string $checkScriptName): void
     {
         $scriptMessage = $scriptResult->getMessage();
 
@@ -76,10 +76,10 @@ class CheckResultRepository extends AbstractServiceEntityRepository
             return;
         }
 
-        $tableName = $this->transformTableName($serviceCheckName);
+        $tableName = $this->transformTableName($checkScriptName);
 
         $existingColumns = $this->getTableColumns($tableName);
-        
+
         $qFields = $this->createFieldsSql($existingColumns, $scriptMessage);
 
         if (empty($existingColumns)) {
@@ -131,13 +131,13 @@ class CheckResultRepository extends AbstractServiceEntityRepository
             }
 
             $mysqlType = MySqlTypeService::getType($value);
+
             $fields[$key] = sprintf('`%s` %s', $key, $mysqlType);
         }
 
         $fields = array_unique($fields);
 
         return implode(',', $fields);
-
     }
 
     /** @return array<int, array<string, mixed>> */
@@ -159,14 +159,11 @@ class CheckResultRepository extends AbstractServiceEntityRepository
         return $results->fetchAllAssociativeIndexed();
     }
 
-    private function transformTableName(string $serviceCheckName): string 
+    private function transformTableName(string $checkScriptName): string 
     {
-        $transformedServiceCheckName = StringDataTransformer::transformStringToLatin($serviceCheckName);
-        if (empty($transformedServiceCheckName)) {
-            throw new Exception('Transformed service check name is empty. Cannot create a result table without a valid serviceCheckName.');
-        }
+        $name = StringDataTransformer::transformStringToLatin($checkScriptName);
 
-        $tableName = strtolower($transformedServiceCheckName) . '_results';
+        $tableName = strtolower(sprintf('csr_%s', $name));
 
         if (strlen($tableName) > 64) {
             throw new Exception('Result table name is too long. Cannot create a result table without a valid serviceCheckName. Make sure it is not longer than 56 characters.');

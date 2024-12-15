@@ -82,3 +82,5 @@ label.check-result-message: 'Nachricht'
 label.check-result-note: 'Hinweis'
 label.check-result-raw: 'Rohdaten'
 label.check-result-output: 'Geparste Daten'
+help.check-script.name: 'Der Name wird die Tabellenbezeichnung im Datenbank sein. Wenn Sie den Namen andern, gehen die vorherigen Ergebnisse verloren. Die Datenbanktabelle wird erstellt, wenn der erste Check ausgeführt wird.'
+

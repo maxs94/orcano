@@ -9,6 +9,7 @@ namespace App\MessageHandler;
 use App\Condition\ConditionCollection;
 use App\DataObject\ScriptResultDataObject;
 use App\Entity\CheckResult;
+use App\Entity\CheckScript;
 use App\Message\CheckNotification;
 use App\Message\CheckResultNotification;
 use App\Repository\AssetServiceCheckRepository;
@@ -53,12 +54,23 @@ class CheckResultNotificationHandler
         $checkResultEntity = $this->transformCheckResult($checkResult, $originalNotification);
 
         $serviceCheckName = $checkResultEntity->getServiceCheck()->getName();
-        
+        $checkScript = $checkResultEntity->getServiceCheck()->getCheckScript();
+
+        if (!$checkScript instanceof CheckScript) {
+            $this->logger->error(sprintf('Check script not found for service check %s', $serviceCheckName));
+            return;
+        }
+
         $this->entityManager->persist($checkResultEntity);
         $this->entityManager->flush();
-        
-        $this->checkResultRepository->updateCheckResultTableStructure($checkResult, $serviceCheckName);
-        $this->checkResultRepository->insertCheckResult($checkResult, $serviceCheckName, $checkResultEntity->getId());
+
+        if ($checkScript->getName() === null) {
+            $this->logger->error(sprintf('Check script name not found for service check %s.', $serviceCheckName));
+            return;
+        }
+
+        $this->checkResultRepository->updateCheckResultTableStructure($checkResult, $checkScript->getName());
+        $this->checkResultRepository->insertCheckResult($checkResult, $checkScript->getName(), $checkResultEntity->getId());
     }
 
     private function transformCheckResult(ScriptResultDataObject $scriptResult, CheckNotification $checkNotification): CheckResult

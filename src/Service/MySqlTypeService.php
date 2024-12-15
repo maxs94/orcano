@@ -15,7 +15,11 @@ class MySqlTypeService
         if (is_null($value)) {
             return 'VARCHAR(255)';
         }
-        
+
+        if (is_array($value)) {
+            return 'JSON';
+        }
+
         if (filter_var($value, FILTER_VALIDATE_FLOAT) || is_float($value)) {
             return 'FLOAT';
         }
@@ -23,9 +27,13 @@ class MySqlTypeService
         if (filter_var($value, FILTER_VALIDATE_INT) || is_int($value)) {
             return 'INT';
         }
-        
+
         if (filter_var($value, FILTER_VALIDATE_BOOLEAN) || is_bool($value)) {
             return 'BOOLEAN';
+        }
+
+        if (!is_string($value)) {
+            dd("STOP");
         }
 
         if (preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/', $value)) {
@@ -53,6 +61,29 @@ class MySqlTypeService
         }
 
         return 'VARCHAR(255)';
+    }
+
+    public static function transformValue(mixed $value): mixed
+    {
+        $type = self::getType($value);
+
+        if ($type === 'INT') {
+            return (int) $value;
+        }
+
+        if ($type === 'FLOAT') {
+            return (float) $value;
+        }
+
+        if ($type === 'BOOLEAN') {
+            return boolval($value);
+        }
+
+        if ($type === 'JSON') {
+            return json_encode($value);
+        }
+
+        return $value;
     }
 
     public static function getParameterType(mixed $value): int 

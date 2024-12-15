@@ -24,7 +24,7 @@ class ConditionCollection extends DataObjectCollection
     /** @param array<string, array<ConditionCollectionItem>> $data */
     public function __unserialize(array $data): void
     {
-        $this->objects = $data['objects'];
+        $this->objects = $data['objects'] ?? [];
     }
 
     public function addCondition(string $resultKey, AbstractCondition $condition): void
