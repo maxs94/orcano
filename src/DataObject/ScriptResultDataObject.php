@@ -21,7 +21,11 @@ class ScriptResultDataObject implements DataObjectInterface
     /** @var array<string, mixed> */
     private array $scriptOutput = [];
 
+    private string $rawScriptOutput = '';
+
     private ?string $note = null;
+
+    private string $executedCommand = '';
 
     public function getCheckResult(): string
     {
@@ -71,6 +75,30 @@ class ScriptResultDataObject implements DataObjectInterface
     public function setScriptOutput(array $scriptOutput): self
     {
         $this->scriptOutput = $scriptOutput;
+
+        return $this;
+    }
+
+    public function getRawScriptOutput(): string
+    {
+        return $this->rawScriptOutput;
+    }
+
+    public function setRawScriptOutput(string $rawScriptOutput): self
+    {
+        $this->rawScriptOutput = $rawScriptOutput;
+
+        return $this;
+    }
+
+    public function getExecutedCommand(): string
+    {
+        return $this->executedCommand;
+    }
+
+    public function setExecutedCommand(string $executedCommand): self
+    {
+        $this->executedCommand = $executedCommand;
 
         return $this;
     }

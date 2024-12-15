@@ -18,9 +18,17 @@ if [ -z "${ipv6}" ]; then
     exit 2
 fi
 
-pingResult=$(ping6 -w 3 -c 1 $ipv6 2>/dev/null)
-pingResultCode=$?
-pingTime=$(echo "$pingResult" | grep -oP 'time=\K\S+')
+GREP=/bin/grep
+##GREP=/usr/local/bin/ggrep
 
-# LC_NUMERIC=C is needed to force printf to use a dot instead of a comma for the decimal separator
-LC_NUMERIC=C printf '{"result":%d,"time":"%f"}' $pingResultCode $pingTime
+PING6="ping6 -w 3 -c 1"
+##PING6="ping6 -t 3 -c 1"
+
+pingResult=$($PING6 $ipv6 2>/dev/null)
+pingResultCode=$?
+pingTime=$(echo "$pingResult" | $GREP -oP 'time=\K\S+')
+
+PRINTF="/usr/bin/printf"
+
+# LC_ALL=C is needed to force printf to use a dot instead of a comma for the decimal separator
+LC_ALL=C $PRINTF '{"ipv4":"%s","result":%d,"time":"%f","unit":"s"}' $ipv4 $pingResultCode $pingTime

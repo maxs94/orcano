@@ -38,6 +38,7 @@ class ScriptRunnerService
         }
 
         $process = $this->runProcess($scriptPath, $message);
+        $result->setExecutedCommand($process->getCommandLine());
 
         if (!$process->isSuccessful()) {
             $errorMessage = sprintf('Script %s failed with error: %s.', $scriptPath, $process->getErrorOutput());
@@ -48,14 +49,19 @@ class ScriptRunnerService
             return $result;
         }
 
-        $output = $process->getOutput();
+        $result->setRawScriptOutput($process->getOutput());
 
-        $jsonResponse = $this->resultParserService->extractJson($output);
-
-        $result->setScriptOutput($jsonResponse);
+        try {
+            $jsonResponse = $this->resultParserService->extractJson($result->getRawScriptOutput());
+            $result->setScriptOutput($jsonResponse);
+        } catch (\Exception $e) {
+            $errorMessage = sprintf('Script %s failed with error: %s.', $scriptPath, $e->getMessage());
+            $result->setNote($errorMessage);
+            $result->setCheckResult(ScriptResultDataObject::RESULT_ERROR);
+            $this->logger->error($errorMessage);
+        }
 
         return $result;
-
     }
 
     private function runProcess(string $scriptPath, CheckNotification $message): Process

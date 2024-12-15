@@ -1,0 +1,21 @@
+{% block check_script_test_output %}
+
+<label for="executed-command">{{ 'label.executed-command'|trans }}</label>
+<input type="text" id="executed-command" class="form-control" value="{{ executedCommand }}" readonly>
+
+<label for="check-result">{{ 'label.check-result'|trans }}</label>
+<input type="text" id="check-result" class="form-control" value="{{ checkResult }}" readonly>
+
+<label for="check-result-message">{{ 'label.check-result-message'|trans }}</label>
+{{ dump(message) }}
+
+<label for="check-result-note">{{ 'label.check-result-note'|trans }}</label>
+{{ dump(note) }}
+
+<label for="check-result-raw">{{ 'label.check-result-raw'|trans }}</label>
+{{ dump(rawScriptOutput) }}
+
+<label for="check-result-output">{{ 'label.check-result-output'|trans }}</label>
+{{ dump(scriptOutput) }}
+
+{% endblock %}

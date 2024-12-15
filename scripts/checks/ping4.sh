@@ -21,13 +21,14 @@ fi
 GREP=/bin/grep
 ##GREP=/usr/local/bin/ggrep
 
-PING="ping -w 3 -c 1"
-##PING="ping -t 3 -c 1"
+PING4="ping -w 3 -c 1"
+##PING4="ping -t 3 -c 1"
 
+PRINTF="/usr/bin/printf"
 
-pingResult=$($PING $ipv4 2>/dev/null)
+pingResult=$($PING4 $ipv4 2>/dev/null)
 pingResultCode=$?
 pingTime=$(echo "$pingResult" | $GREP -oP 'time=\K\S+')
 
-# LC_NUMERIC=C is needed to force printf to use a dot instead of a comma for the decimal separator
-LC_NUMERIC=C printf '{"result":%d,"time":"%f"}' $pingResultCode $pingTime
+# LC_ALL=C is needed to force printf to use a dot instead of a comma for the decimal separator
+LC_ALL=C $PRINTF '{"ipv4":"%s","result":%d,"time":"%f","unit":"s"}' $ipv4 $pingResultCode $pingTime

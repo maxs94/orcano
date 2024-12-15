@@ -66,6 +66,7 @@
         <form 
             hx-post="{{ path('test_check_script', {'id': checkScript.id }) }}?hx=1" 
             hx-target="#check-script-test-results"
+            hx-swap="innerHTML"
         >
 
             <div 
@@ -83,7 +84,7 @@
         </div>
     
         <div class="form-group">
-            <pre id="check-script-test-results" class="p-2 code-editor ace-tomorrow-night ace_dark"></pre>
+            <div id="check-script-test-results"></div>
         </div>
 
     </div>
