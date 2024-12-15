@@ -25,6 +25,8 @@ class ScriptRunnerService
 
     public function runScript(CheckNotification $message): ScriptResultDataObject
     {
+        $startTime = microtime(true);
+
         $result = new ScriptResultDataObject();
         $result->setCheckResult(ScriptResultDataObject::RESULT_UNKNOWN);
 
@@ -44,6 +46,7 @@ class ScriptRunnerService
             $errorMessage = sprintf('Script %s failed with error: %s.', $scriptPath, $process->getErrorOutput());
             $result->setNote($errorMessage);
             $result->setCheckResult(ScriptResultDataObject::RESULT_ERROR);
+            $result->setDurationMs($this->getScriptRuntimeInMs($startTime));
             $this->logger->error($errorMessage);
 
             return $result;
@@ -58,10 +61,18 @@ class ScriptRunnerService
             $errorMessage = sprintf('Script %s failed with error: %s.', $scriptPath, $e->getMessage());
             $result->setNote($errorMessage);
             $result->setCheckResult(ScriptResultDataObject::RESULT_ERROR);
+            $result->setDurationMs($this->getScriptRuntimeInMs($startTime));
             $this->logger->error($errorMessage);
         }
 
+        $result->setDurationMs($this->getScriptRuntimeInMs($startTime));
+
         return $result;
+    }
+
+    private function getScriptRuntimeInMs(float $startTimeMs): float 
+    {
+        return (microtime(true) - $startTimeMs) * 1000;
     }
 
     private function runProcess(string $scriptPath, CheckNotification $message): Process

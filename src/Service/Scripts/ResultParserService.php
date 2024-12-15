@@ -26,13 +26,9 @@ class ResultParserService
         return $this->transformAllKeys($array);
     }
 
-    /**
-     * @param array<string, mixed> $scriptResult
-     */
-    public function parseResultJson(array $scriptResult, ConditionCollection $conditions): ScriptResultDataObject
+    public function parseResultJson(ScriptResultDataObject $scriptResult, ConditionCollection $conditions): ScriptResultDataObject
     {
-        $result = new ScriptResultDataObject();
-        $result->setMessage($scriptResult);
+        $scriptResult->setMessage($scriptResult->getScriptOutput());
 
         foreach ($conditions->getConditions() as $conditionCollectionItem) {
 
@@ -42,27 +38,27 @@ class ResultParserService
             $value = $scriptResult[$oDataKey] ?? null;
             if ($value !== null) {
                 if ($condition->checkIfOk($value)) {
-                    $result->setCheckResult(ScriptResultDataObject::RESULT_OK);
+                    $scriptResult->setCheckResult(ScriptResultDataObject::RESULT_OK);
                 } else {
-                    $result->setCheckResult(ScriptResultDataObject::RESULT_ERROR);
+                    $scriptResult->setCheckResult(ScriptResultDataObject::RESULT_ERROR);
                 }
 
                 if ($condition->checkIfWarn($value)) {
-                    $result->setCheckResult(ScriptResultDataObject::RESULT_WARNING);
+                    $scriptResult->setCheckResult(ScriptResultDataObject::RESULT_WARNING);
                 }
 
-                $result->setNote(sprintf('"%s" is %s', $oDataKey, $value));
+                $scriptResult->setNote(sprintf('"%s" is %s', $oDataKey, $value));
             } else {
                 throw new MissingKeyException(sprintf('Key "%s" not found in the script return result: %s', $oDataKey, json_encode($scriptResult, JSON_THROW_ON_ERROR)));
             }
 
             // if a check fails, we can stop here
-            if ($result->getCheckResult() !== ScriptResultDataObject::RESULT_OK) {
+            if ($scriptResult->getCheckResult() !== ScriptResultDataObject::RESULT_OK) {
                 break;
             }
         }
 
-        return $result;
+        return $scriptResult;
     }
 
     /**

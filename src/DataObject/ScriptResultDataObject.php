@@ -23,6 +23,8 @@ class ScriptResultDataObject implements DataObjectInterface
 
     private string $rawScriptOutput = '';
 
+    private float $durationMs = 0;
+
     private ?string $note = null;
 
     private string $executedCommand = '';
@@ -99,6 +101,18 @@ class ScriptResultDataObject implements DataObjectInterface
     public function setExecutedCommand(string $executedCommand): self
     {
         $this->executedCommand = $executedCommand;
+
+        return $this;
+    }
+
+    public function getDurationMs(): float
+    {
+        return $this->durationMs;
+    }
+
+    public function setDurationMs(float $durationMs): self
+    {
+        $this->durationMs = $durationMs;
 
         return $this;
     }

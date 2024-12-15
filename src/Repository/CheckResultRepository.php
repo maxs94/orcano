@@ -4,6 +4,8 @@ namespace App\Repository;
 
 use App\DataObject\ScriptResultDataObject;
 use App\Entity\CheckResult;
+use App\Entity\CheckScript;
+use App\Entity\ServiceCheck;
 use App\Service\DataTransformer\StringDataTransformer;
 use App\Service\MySqlTypeService;
 use Doctrine\Persistence\ManagerRegistry;
@@ -23,6 +25,41 @@ class CheckResultRepository extends AbstractServiceEntityRepository
         private readonly LoggerInterface $logger
     ) {
         parent::__construct($this->registry, CheckResult::class);
+    }
+
+    /** @return array<string, mixed> */
+    public function fetchDetailsByCheckResult(CheckResult $checkResult): array
+    {
+        if ($checkResult->getId() === null) {
+            throw new \Exception('Check result id is null');
+        }
+
+        if (!$checkResult->getServiceCheck() instanceof ServiceCheck) {
+            throw new \Exception('Service check not found');
+        }
+
+        if (!$checkResult->getServiceCheck()->getCheckScript() instanceof CheckScript) {
+            throw new \Exception('Check script not found');
+        }
+
+        $checkScript = $checkResult->getServiceCheck()->getCheckScript();
+        $tableName = $this->transformTableName($checkScript->getName());
+
+        $q = "SELECT * FROM {$tableName} WHERE check_result_id = :check_result_id";
+
+        $em = $this->getEntityManager();
+        $conn = $em->getConnection();
+        $stmt = $conn->prepare($q);
+
+        $stmt->bindValue('check_result_id', $checkResult->getId());
+
+        $results = $stmt->executeQuery()->fetchAssociative();
+
+        if ($results === false) {
+            return [];
+        }
+
+        return $results;
     }
 
     public function insertCheckResult(ScriptResultDataObject $scriptResult, string $checkScriptName, int $checkResultId): void

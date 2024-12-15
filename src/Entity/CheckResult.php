@@ -27,6 +27,9 @@ class CheckResult implements DataObjectInterface, ApiEntityInterface
     #[ORM\Column(type: Types::TEXT)]
     private string $scriptOutput;
 
+    #[ORM\Column(type: Types::FLOAT)]
+    private float $durationMs;
+
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?Asset $asset = null;
@@ -43,6 +46,7 @@ class CheckResult implements DataObjectInterface, ApiEntityInterface
     {
         $this->createdAt = new \DateTime();
         $this->updatedAt = new \DateTime();
+        $this->durationMs = 0.0;
     }
 
     #[Ignore]
@@ -51,6 +55,7 @@ class CheckResult implements DataObjectInterface, ApiEntityInterface
         $this->setDataIfNotEmptyString($data, 'result', 'result');
         $this->setDataIfNotEmptyString($data, 'message', 'message');
         $this->setDataIfNotEmptyString($data, 'scriptOutput', 'scriptOutput');
+        $this->setDataIfNotEmptyFloat($data, 'durationMs', 'durationMs');
 
         return $this;
     }
@@ -123,6 +128,18 @@ class CheckResult implements DataObjectInterface, ApiEntityInterface
     public function setAssetServiceCheck(?AssetServiceCheck $assetServiceCheck): self
     {
         $this->assetServiceCheck = $assetServiceCheck;
+
+        return $this;
+    }
+
+    public function getDurationMs(): float
+    {
+        return $this->durationMs;
+    }
+
+    public function setDurationMs(float $durationMs): self
+    {
+        $this->durationMs = $durationMs;
 
         return $this;
     }

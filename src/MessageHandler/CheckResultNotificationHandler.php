@@ -42,16 +42,16 @@ class CheckResultNotificationHandler
             $originalNotification->getAssetServiceCheckId()
         );
 
-        $checkResult = $this->checkResult($result, $conditions);
+        $this->checkResult($result, $conditions);
 
         $this->logger->notice(sprintf('check %s on %s, result: %s (%s)',
             $originalNotification->getCheckScriptFilename(),
             $originalNotification->getHostname(),
-            $checkResult->getCheckResult(),
-            $checkResult->getNote()
+            $result->getCheckResult(),
+            $result->getNote()
         ));
 
-        $checkResultEntity = $this->transformCheckResult($checkResult, $originalNotification);
+        $checkResultEntity = $this->transformCheckResult($result, $originalNotification, $result);
 
         $serviceCheckName = $checkResultEntity->getServiceCheck()->getName();
         $checkScript = $checkResultEntity->getServiceCheck()->getCheckScript();
@@ -69,8 +69,8 @@ class CheckResultNotificationHandler
             return;
         }
 
-        $this->checkResultRepository->updateCheckResultTableStructure($checkResult, $checkScript->getName());
-        $this->checkResultRepository->insertCheckResult($checkResult, $checkScript->getName(), $checkResultEntity->getId());
+        $this->checkResultRepository->updateCheckResultTableStructure($result, $checkScript->getName());
+        $this->checkResultRepository->insertCheckResult($result, $checkScript->getName(), $checkResultEntity->getId());
     }
 
     private function transformCheckResult(ScriptResultDataObject $scriptResult, CheckNotification $checkNotification): CheckResult
@@ -79,6 +79,7 @@ class CheckResultNotificationHandler
         $checkResultEntity->setData([
             'result' => $scriptResult->getCheckResult(),
             'message' => json_encode($scriptResult->getMessage()),
+            'durationMs' => $scriptResult->getDurationMs(),
             'scriptOutput' => json_encode($scriptResult->getScriptOutput()),
         ]);
 
@@ -95,17 +96,13 @@ class CheckResultNotificationHandler
     }
 
 
-    private function checkResult(ScriptResultDataObject $result, ConditionCollection $conditions): ScriptResultDataObject
+    private function checkResult(ScriptResultDataObject $result, ConditionCollection $conditions): void
     {
-        $output = $result->getScriptOutput();
-
         try {
-            $result = $this->resultParserService->parseResultJson($output, $conditions);
+            $this->resultParserService->parseResultJson($result, $conditions);
         } catch (\Exception $e) {
             $this->logger->error(sprintf('ResultParserService failed: %s', $e->getMessage()), $output);
             $result->setCheckResult(ScriptResultDataObject::RESULT_UNKNOWN);
         }
-
-        return $result;
     }
 }
