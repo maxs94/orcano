@@ -29,7 +29,14 @@ class ListingPageLoader extends AbstractPageLoader
             $searches = [];
         }
 
-        $result = $repo->getListing($searches, null, null, $limit, $page);
+        $order = $request->query->getString('order');
+        if (!empty($order)) {
+            $orderBy = json_decode($order, true, 512, JSON_THROW_ON_ERROR);
+        } else {
+            $orderBy = null;
+        }
+
+        $result = $repo->getListing($searches, $orderBy, null, $limit, $page);
 
         $pagination = $this->createPagination($limit, $result->getTotalCount(), $page, $entityName);
 

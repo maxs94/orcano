@@ -6,6 +6,8 @@
 <tr>
     <td>{{ row.asset.hostname }}</td>
     <td>{{ row.serviceCheck.name }}</td>
+    <td>{{ row.result }}</td>
+    <td>{{ row.durationMs|millisecondsToTime }}</td>
     <td>{{ row.createdAt|date('d.m.Y H:i:s') }}</td>
     <td><a 
         class="btn btn-sm btn-primary"

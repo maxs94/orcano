@@ -19,8 +19,12 @@ class TimeConverterExtension extends AbstractExtension
         ];
     }
 
-    public function millisecondsToTime(float $ms): string
+    public function millisecondsToTime(?float $ms = null): string
     {
+        if ($ms === null) {
+            return '';
+        }
+
         return TimeConverter::millisecondsToTime($ms);
     }
 }

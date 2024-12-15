@@ -22,7 +22,8 @@
                     </a>
                 </li>
                 
-                <li class="sidebar-item {% if context.pathInfo == '/listing/check-result' %}active{% endif %}"> <a href="{{ path('listing', {'entity': 'check-result'}) }}" class="sidebar-link">
+                {% set checkResultOrder = {'createdAt': 'desc'} %}
+                <li class="sidebar-item {% if context.pathInfo == '/listing/check-result' %}active{% endif %}"> <a href="{{ path('listing', {'entity': 'check-result', 'order': checkResultOrder|json_encode}) }}" class="sidebar-link">
                         <i class="bi bi-grid-fill"></i>
                     <span>{{ 'sidebar.check-result'|trans }}</span>
                     </a>

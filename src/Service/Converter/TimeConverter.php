@@ -19,6 +19,8 @@ class TimeConverter
             'ms' => $milliseconds,
         ];
 
+        $timeParts = [];
+
         foreach ($sections as $name => $value){
             if ($value > 0){
                 $timeParts[] = $value . ' ' . $name;
